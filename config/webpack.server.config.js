@@ -32,7 +32,7 @@ const webpackDevConfig = Object.assign(webpackBaseConfig, {
     contentBase: false,
     compress: true,
     host: '0.0.0.0',
-    port: "8090",
+    port: "9999",
     open: false,
     overlay: {
       warnings: false,
@@ -41,7 +41,7 @@ const webpackDevConfig = Object.assign(webpackBaseConfig, {
     publicPath: '/',
     proxy: {
       '/api': {
-        target: 'http://10.55.110.211:3001',
+        target: 'http://10.55.110.211:3030',
         changeOrigin: true,
         secure: false,
         pathRewrite: {'^/api': '/'}
@@ -80,7 +80,7 @@ const webpackDevConfig = Object.assign(webpackBaseConfig, {
 
 // module.exports = webpackDevConfig;
 module.exports = new Promise((resolve, reject) => {
-  portfinder.basePort = process.env.PORT || "8090"
+  portfinder.basePort = process.env.PORT || "9999"
   portfinder.getPort((err, port) => {
     if (err) {
       reject(err)

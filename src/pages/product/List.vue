@@ -47,127 +47,124 @@
 </template>
 
 <script>
-  import Item from "@/components/ProductItem";
-  import Scroll from "@/components/Scroll";
+import Item from "@/components/ProductItem";
+import Scroll from "@/components/Scroll";
 
-  import data from "components/data/productData.js";
+import data from "components/data/productData.js";
 
-  export default {
-    name: "product",
-    components: {
-      Item,
-      Scroll
-    },
-    data() {
-      return {
-        pageNum: 1,
-        pageSize: 10,
-        activeName: "all",
-        productList: [],
+export default {
+  name: "product",
+  components: {
+    Item,
+    Scroll
+  },
+  data() {
+    return {
+      pageNum: 1,
+      pageSize: 10,
+      activeName: "all",
+      productList: [],
 
-        pullUpLoadObj: false
-      };
-    },
-    created() {
-      this.ajaxListData(this.pageNum, this.pageSize).then(data => {
-        if (data.length === this.pageSize) {
-          this.pageNum++;
-          this.pullUpLoadObj = {
-            threshold: 20
-          };
-        } else {
-          this.pullUpLoadObj = false;
-        }
-
-        setTimeout(() => {
-          this.$refs.scroll.initScroll();
-        }, 20);
-        this.handleData(data);
-      });
-    },
-    mounted() {
-      let vue = this;
-      vue.$G.tabBox(".tab-bar|tab", function(name) {
-        if (name === "tenement") {
-          vue.$jBox.confirm(`功能正在开发中<br>敬请期待`, {
-            element: {
-              width: "240px"
-            },
-            confirmType: 1,
-            btn: { array: [{ text: "确定" }] }
-          });
-          return false;
-        }
-        vue.activeName = name;
-        vue.scrollTo(0, 0);
-      });
-    },
-    methods: {
-      handleData(data) {
-        data.map(item => {
-          let expand = [];
-          item.product_expand_label &&
-            item.product_expand_label.split(",").map(x => {
-              expand.push(x);
-            });
-
-          this.productList.push({
-            name: item.product_name,
-            rate: this.$G.count.mul(item.product_rate, 100).toFixed(2),
-            day: item.deadline,
-            now: item.issuance_amount - item.product_balance,
-            amount: item.issuance_amount,
-            money: item.sale_amount,
-            link: "/product/s/details/" + item.product_code,
-            status: item.product_status,
-            repayType: item.product_payment_method,
-            explainList: expand
-          });
-        });
-      },
-      ajaxListData(pageNum, pageSize, type) {
-        return new Promise((resolve, reject) => {
-          this.proAPI
-            .getProductList({
-              pageSize,
-              pageNum,
-              type
-            })
-            .then(data => {
-              resolve(data);
-            })
-            .catch(data => {
-              reject(data);
-            });
-        });
-      },
-      scrollTo(x, y, t) {
-        this.$refs.scroll.scrollTo(x, y, t, "swipeBounce");
-      },
-      onPullingUp() {
-        this.ajaxListData(this.pageNum, this.pageSize, false).then(data => {
-          setTimeout(() => {
-            if (data.length !== 0) {
-              this.pageNum++;
-            }
-            if (data.length !== this.pageSize) {
-              this.$refs.scroll && this.$refs.scroll.forceUpdate();
-            }
-
-            this.handleData(data);
-          }, 1500);
-        });
+      pullUpLoadObj: false
+    };
+  },
+  created() {
+    this.ajaxListData(this.pageNum, this.pageSize).then(data => {
+      if (data.length === this.pageSize) {
+        this.pageNum++;
+        this.pullUpLoadObj = {
+          threshold: 20
+        };
+      } else {
+        this.pullUpLoadObj = false;
       }
-    }
-  };
-</script>
-<style lang="less" scoped>
-  .product-bar {
-    display: block;
-    padding: 15px 0 0 0;
-    .product-list {
-      padding: 0 15px;
+
+      setTimeout(() => {
+        this.$refs.scroll.initScroll();
+      }, 20);
+      this.handleData(data);
+    });
+  },
+  mounted() {
+    let vue = this;
+    vue.$G.tabBox(".tab-bar|tab", function(name) {
+      if (name === "tenement") {
+        vue.$jBox.warn(`功能正在开发中<br>敬请期待`, {
+          hideTitle: true,
+          content: { text_dir: "center" }
+        });
+        return false;
+      }
+      vue.activeName = name;
+      vue.scrollTo(0, 0);
+    });
+  },
+  methods: {
+    handleData(data) {
+      data.map(item => {
+        let expand = [];
+        item.product_expand_label &&
+          item.product_expand_label.split(",").map(x => {
+            expand.push(x);
+          });
+
+        this.productList.push({
+          name: item.product_name,
+          rate: this.$G.count.mul(item.product_rate, 100).toFixed(2),
+          day: item.deadline,
+          now: item.issuance_amount - item.product_balance,
+          amount: item.issuance_amount,
+          money: item.sale_amount,
+          link: "/product/s/details/" + item.product_code,
+          status: item.product_status,
+          repayType: item.product_payment_method,
+          explainList: expand
+        });
+      });
+    },
+    ajaxListData(pageNum, pageSize, type) {
+      return new Promise((resolve, reject) => {
+        this.proAPI
+          .getProductList({
+            pageSize,
+            pageNum,
+            type
+          })
+          .then(data => {
+            resolve(data);
+          })
+          .catch(data => {
+            reject(data);
+          });
+      });
+    },
+    scrollTo(x, y, t) {
+      this.$refs.scroll.scrollTo(x, y, t, "swipeBounce");
+    },
+    onPullingUp() {
+      this.ajaxListData(this.pageNum, this.pageSize, false).then(data => {
+        setTimeout(() => {
+          if (data.length !== 0) {
+            this.pageNum++;
+          }
+          if (data.length !== this.pageSize) {
+            this.$refs.scroll && this.$refs.scroll.forceUpdate();
+          }
+
+          this.handleData(data);
+        }, 1500);
+      });
     }
   }
+};
+</script>
+<style lang="less" scoped>
+.product-bar {
+  display: block;
+  padding: 15px 0 0 0;
+  .product-list {
+    padding: 0 15px;
+  }
+}
 </style>
 

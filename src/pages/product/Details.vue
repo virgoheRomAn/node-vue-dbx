@@ -151,7 +151,7 @@
       };
     },
     created() {
-      this.getDetails();
+      // this.getDetails();
     },
     watch: {
       $route: "getDetails"

@@ -47,7 +47,7 @@
       let userInfo = this.__G__.getItem([CONST.USERINFO]);
       if (!userInfo) {
         this.$jBox.error("获取用户信息错误<br>请重新登陆", {
-          closeFun: () => {
+          closeCallback: () => {
             vue.$router.push({
               name: "login",
               query: { redirect: vue.$route.fullPath }

@@ -12,22 +12,25 @@ import swiper from 'swiper/js/swiper.js';
 import Global from 'assets/js/global';
 import Plugins from 'assets/js/components';
 import jBox from 'assets/plugins/jBox';
-import api from 'assets/api/index';
+import api from '@/api';
 import __G__ from "assets/js/information";
 import CONST from "assets/js/const";
+
+import Mock from '@/mock';
 
 //引入全局样式
 import 'element-ui/lib/theme-chalk/index.css'
 import 'swiper/css/swiper.min.css';
 import './assets/less/base.less';
+import './assets/less/user.less';
 
 Vue.prototype.$ = jquery;
 Vue.prototype.$ajax = axios;
 Vue.prototype.$swiper = swiper;
 Vue.prototype.$G = Global;
 Vue.prototype.$jBox = jBox;
-Vue.prototype.userAPI = api.user;
-Vue.prototype.proAPI = api.product;
+Vue.prototype.API = api.method;
+Vue.prototype.USER = api.user;
 Vue.prototype.__G__ = __G__;
 Vue.prototype.CONST = CONST;
 
@@ -38,6 +41,11 @@ Vue.use(ElementUI);
 Vue.use(Plugins);
 Vue.use(VueClipboard);
 
+
+if (process.env.NODE_ENV === 'dev') {
+  Vue.prototype.MOCK = api.mock;
+  Mock.bootstrap()
+}
 
 var vue = new Vue({
   el: '#app',

@@ -86,19 +86,19 @@ const ajaxParataxisData = async (vue, ...arg) => {
 
       await Promise.all(funs)
         .then(data => {
-          vue.$jBox.close(loading, null, () => {
+          vue.$jBox.closeById(loading, () => {
             resolve(data);
           });
         })
         .catch(e => {
-          vue.$jBox.close(loading, null, () => {
+          vue.$jBox.closeById(loading, () => {
             reject(e);
           });
         });
 
     } catch (err) {
       console.error(err);
-      vue.$jBox.close(loading, null, () => {
+      vue.$jBox.closeById(loading, () => {
         vue.$jBox.error("网络服务异常");
       });
     }
@@ -122,11 +122,11 @@ const ajaxParataxisDataStep = async (vue, ary) => {
       }
       resolve(reuslt)
 
-      vue.$jBox.close(loading);
+      vue.$jBox.close();
 
     } catch (err) {
       console.error(err);
-      vue.$jBox.close(loading, null, () => {
+      vue.$jBox.closeById(loading, () => {
         vue.$jBox.error("网络服务异常");
         reject(err)
       });

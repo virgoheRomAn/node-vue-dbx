@@ -1,411 +1,552 @@
-
 import $ from "jquery";
 import jBoxImage from "./img/loadImage";
 require('./index.less');
+require('animate.css');
+
+/**
+ * 基于jQuery开发的弹出框组件
+ * v2.0
+ * xjq
+ */
 
 $.jBox = function () {
   var self = this;
+  var _OPTS_ = {};
+  var _IMG_ = {};
+  var _BOXID_ = [];
+
   //变量
   var isMobile = ("ontouchstart" in window);
   var startEvent, moveEvent, endEvent;
-  var options = {};
   var _clear_setTimeout_ = 0;
-  var _IMG_ = {};
+
   //默认全局参数
   self.defaults = {
-    //模式改用自动判断
-    //type: "H5",     //模式：默认：PC，可选：H5
     /**
-     * 展示模式：showNumber
-     * 0-透明遮罩半透明黑色
-     * 1-半透明黑色遮罩，白色内容
-     * 2-透明遮罩，白色内容
-     * 3-没有遮罩，白色内容
-     * 4-没有遮罩，半透明黑色
+     * 显示类型
+     * message：提示框
+     * confirm：确认框
      */
-    showNumber: "",
-    top: "auto",    //距离：默认："auto"，可选：number数字
-    title: "",  //弹出框提示信息标题
-    boxID: "",  //弹出框ID
-    skin: "",     //弹出框皮肤 green/blue
-    isCloseBtn: !isMobile, //是否包含关闭按钮（pc模式显示关闭按钮/h5模式不显示关闭按钮）
-    shadowType: "",   //是否阴影模式：默认：shadow，可选：none
-    animateCls: "jBox-fadeIn",  //动画样式
-    hasIcon: false, //是否启用图标-针对确认框
-    iconLoad: true,     //图标预加载-只可以外部设置
-    removeElement: true, //是否移除弹出框元素
-    closeTime: 2000,    //关闭时间-延迟时间关闭弹出框，适用-弹出提示
-    closeType: 1,    //关闭选项：默认：1-自动延时关闭（弹出提示），2-触发关闭（非自动关闭，没有延时），3-不关闭，手动调用函数关闭
+    module: "message",
+
     /**
-     * 确认框类型
-     * 1-极简（不含标题，只有一个确认按钮，可包含图标），
-     * 2-简单模式（不含标题，还有确认和取消两个按钮，可包含图标），
-     * 3-标准模式（含有标题，确认和取消两个按钮，可包含图标），
-     * 4-自定义模式（所有参数都自定义）
+     * 遮罩形式
+     * 0-黑色
+     * 1-白色
      */
-    confirmType: 3,
-    isMove: true,   //是否开启移动    PC默认开启、H5默认关闭
+    mask_module: "1",
+
+    //boxId
+    box_id: "",
+    //动画cls，进入|出去
+    box_animate: "fadeInDown|fadeOutUp",
+    //预加载图标
+    icon_load: true,
+
+    /**
+     * 确认框显示
+     * normal，ios，andriod，custom
+     */
+    confirm_type: "ios",
+
+    /**
+     * 关闭相关
+     * container_close_animate 容器本身是否开启关闭动画
+     * close_animate 是否开启关闭动画
+     * close_time 关闭的延迟时间ms
+     * close_type 关闭方式：1(自动关闭)，2(按钮关闭)，3(不关闭)
+     */
+    container_close_animate: false,
+    close_animate: true,
+    close_time: 2000,
+    close_type: 1,
+
+    //移动
+    isMove: !isMobile ? true : false,
+
+    //背景关闭
+    isMaskClose: false,
 
     //回掉函数
-    initFun: null,      //初始化函数（生成DOM元素之后，样式生效之前）
-    initBeforeFun: null,    //初始化之前执行（生成DOM元素之前）
-    initAfterFun: null,     //初始化之后执行（给DOM元素添加样式之后）
-    ensureFun: null,    //id="jBoxEnsure"的按钮确认回调
-    cancelFun: null,    //id="jBoxCancel"的按钮取消回调
-    closeFun: null      //关闭函数（关闭弹窗同时移除）
+    initCallback: null,      //初始化函数（生成DOM元素之后，样式生效之前）
+    initBeforeCallback: null,    //初始化之前执行（生成DOM元素之前）
+    initAfterCallback: null,     //初始化之后执行（给DOM元素添加样式之后）
+    ensureCallback: null,    //id="jBoxEnsure"的按钮确认回调
+    cancelCallback: null,    //id="jBoxCancel"的按钮取消回调
+    closeCallback: null     //关闭函数（关闭弹窗同时移除）
   };
 
   //box布局
   self.defaults.element = {
-    cls: "",
-    width: "auto",
-    height: "auto",
-    max_width: !isMobile ? "800px" : $(window).width() - 60,
-    min_width: "400px"
+    container_cls: "",
+    //垂直居中
+    vertical: "center",
+    //全屏
+    fullscreen: true,
+    //是否有遮罩
+    mask: true,
+    //背景是否透明
+    transparent: false,
+    //启用阴影
+    shadow: true,
+    box_width: "",
+    box_height: "",
+    max_width: !isMobile ? "800px" : $(window).width() * 0.85,
+    min_width: "",
+    message_max_width: !isMobile ? "250px" : "180px",
+    confirm_min_width: !isMobile ? "400px" : $(window).width() * 0.85
   };
 
+  //内容
+  self.defaults.content = {
+    cont_cls: "",
+    close_btn: !isMobile ? true : false,
+    title: "",
+    title_cls: "",
+    title_dir: "center",
+    text: "",
+    text_dir: "center",
+    text_cls: ""
+  }
+
   //按钮
-  self.defaults.btn = {
-    btnDir: "h",   //按钮排列方式：默认：h，可选：v
-    cls: "",    //按钮公用样式名称
-    css: "",    //按钮公用样式
-    array: [],   //按钮数组包含{href，id，cls，css，callback}
-    custom: []  //自定义按钮
+  self.defaults.button = {
+    btn_cls: "",
+    //按钮排列方向
+    direction: "h",
+    /**
+     * 按钮数组对象
+     * {href，id，cls，css，close_type，callback}
+     */
+    array: []
   };
 
   //图标
   self.defaults.icon = {
-    iconType: "img",    //图标模式：默认："img"-图片默认，可选："font"-字体模式，"none"-不使用图标
-    iconDir: !isMobile ? "h" : "v",       //图标显示模式：默认：h，可选：v
-    width: "32px",
-    height: "32px",
-    font: "",   //当模式为："font"时，需要输入font对应的字体图标
+    /**
+     * 图标模式
+     * "img"-图片默认
+     * "font"-字体模式
+     * "none"-不使用图标 
+     */
+    icon_type: "img",
+    icon_cls: "",
+    //图标显示模式：默认：h，可选：v
+    direction: !isMobile ? "h" : "v",
+    width: "",
+    height: "",
     path: "img/",
     src: "",
-    id: ""  //当前图片的标识
+    //当前图片的标识
+    id: ""
   };
 
-  //样式名称
-  self.defaults.cls = {
-    titleCls: "",
-    contCls: "",
-    btnCls: ""
-  };
-
-  //直接添加样式
-  self.defaults.css = {
-    titleCSS: {},
-    closeCSS: {},
-    titleTextCSS: {},
-    contCSS: {},
-    introCSS: {},
-    introContCSS: {},
-    iconCSS: {},
-    btnCSS: {}
-  };
-
-
-  //全局配置函数-会被initBeforeFun替换
-  self.configFun = function (option) {
-    var defaults = $.extend({}, self.defaults, option);
-    defaults.icon = $.extend({}, self.defaults.icon, option.icon);
-    defaults.css = $.extend({}, self.defaults.css, option.css);
-    defaults.cls = $.extend({}, self.defaults.cls, option.cls);
-    defaults.element = $.extend({}, self.defaults.element, option.element);
+  //全局配置函数-会被initBeforeCallback替换
+  self.config = function (option) {
+    var defaults = $.extend(true, {}, self.defaults, option);
     self.defaults = defaults;
   };
 
   //是否开启预加载
-  if (self.defaults.iconLoad) {
+  if (self.defaults.icon_load) {
     for (var key in jBoxImage) {
       _IMG_[key] = jBoxImage[key];
     }
   }
 
-  //弹出框函数
+
+  /****************************************************************************************************/
+  //消息提示框
+  /****************************************************************************************************/
+  /**
+   * 提醒函数 
+   * @param {String} text
+   * @param {Object} option
+   */
   self.alert = function (text, option) {
-    //alert不需要图片，iconType="none";
     var icon = {
       icon: {
-        iconType: "none"
+        icon_type: "none"
       }
     };
     option = $.extend({}, option, icon);
-    return showBoxInit(text, option, false);
+    return __jBox_init(text, option);
   };
+
+  /**
+   * 成功函数 
+   * @param {String} text
+   * @param {Object} option
+   */
   self.success = function (text, option) {
-    self.defaults.icon.src = jBoxImage.errorsuccess;
     self.defaults.icon.id = "success";
-    return showBoxInit(text, option, false);
+    return __jBox_init(text, option);
   };
+
+  /**
+   * 错误函数 
+   * @param {String} text
+   * @param {Object} option
+   */
   self.error = function (text, option) {
-    self.defaults.icon.src = jBoxImage.error;
     self.defaults.icon.id = "error";
-    return showBoxInit(text, option, false);
+    return __jBox_init(text, option);
   };
+
+  /**
+   * 警告函数 
+   * @param {String} text
+   * @param {Object} option
+   */
   self.waring = function (text, option) {
-    self.defaults.icon.src = jBoxImage.waring;
     self.defaults.icon.id = "waring";
-    return showBoxInit(text, option, false);
+    return __jBox_init(text, option);
   };
+
+  /**
+   * 加载函数 
+   * @param {String} text
+   * @param {Object} option
+   */
   self.loading = function (text, option) {
-    self.defaults.icon.src = jBoxImage.loading;
-    self.defaults.icon.id = "loading";
-    option = $.extend({}, option, { closeType: 3 });
-    return showBoxInit(text, option, false);
+    var defs = {
+      icon: {
+        id: "loading"
+      },
+      close_type: 3
+    };
+    option = $.extend({}, defs, option);
+    return __jBox_init(text, option);
   };
+
+  /**
+   * 倒计时函数 
+   * @param {String} text
+   * @param {Object} option
+   */
+  self.cutdown = function (text, time, option) {
+    var defs = {
+      element: { fullscreen: true, transparent: false, mask: true },
+      icon: {
+        finish_close: true,
+        cutdown_time: time,
+        icon_type: "cutdown"
+      },
+      close_type: 3
+    };
+    option = $.extend({}, defs, option);
+    return __jBox_init(text, option);
+  };
+
+  /****************************************************************************************************/
+  //确认框
+  /****************************************************************************************************/
+  /**
+   * 确认框参数
+   * @param option
+   */
+
+  function __jBox_confirm_opt(m, option) {
+    var defs = {
+      mask_module: "0",
+      content: {
+        title: !option.hideTitle ? option.title || "温馨提示" : "",
+        title_dir: "center",
+        text_dir: (m === "warn" || m === "prompt") ? "left" : "center"
+      },
+      element: {
+        fullscreen: false,
+        mask: true,
+        transparent: false
+      },
+      icon: {
+        icon_type: "none"
+      },
+      button: {
+        array: m === "warn" ? [{
+          text: "知道了",
+          cls: "confirm",
+          callback: option.confirm || ""
+        }] : [{
+          text: "取消",
+          cls: "cancel",
+          callback: option.cancel || ""
+        }, {
+          text: "确定",
+          cls: m === "prompt" ? "confirm prompt" : "confirm",
+          callback: option.confirm || ""
+        }]
+      },
+      close_type: 3,
+      module: m || "confirm"
+    };
+
+    var opt = $.extend(true, {}, defs, option);
+    var text_left = (opt.confirm_type === "andriod" || m === "prompt");
+
+    opt.content.title_dir = text_left ? "left" : opt.content.title_dir;
+    opt.content.text_dir = text_left ? "left" : opt.content.text_dir;
+
+    return opt
+  }
 
   /**
    * 确认框
    * @param text
    * @param option
-   * @param option.confirmType  类型：
-   * 1-极简（不含标题，只有一个确认按钮，可包含图标），
-   * 2-简单模式（不含标题，还有确认和取消两个按钮，可包含图标），
-   * 3-标准模式（含有标题，确认和取消两个按钮，可包含图标），
-   * 4-自定义模式（所有参数都自定义）
    */
   self.confirm = function (text, option) {
-    return showBoxInit(text, option, true);
+    return __jBox_init(text, __jBox_confirm_opt("confirm", option));
   };
 
   /**
-   * 外部提供关闭-默认关闭最近打开的弹出框
-   * @param ele   需要关闭的弹窗ID
-   * @param type  如果type=true，关闭所有（ele需为空）
+   * 文本输入框
+   * @param text
+   * @param title
+   * @param option
+   */
+  self.prompt = function (text, title, option) {
+    var opt = __jBox_confirm_opt("prompt", option);
+    opt.content.title = title;
+    return __jBox_init(text, opt);
+  };
+
+  /**
+   * 警告
+   * @param text
+   * @param option
+   */
+  self.warn = function (text, option) {
+    var opt = __jBox_confirm_opt("warn", option);
+    return __jBox_init(text, opt);
+  };
+
+  /**
+   * 自定义弹出框 
+   * @param {String} text
+   * @param {Object} option
+   */
+  self.custom = function (text, option) {
+    var defs = {
+      confirm_type: "custom",
+      element: {
+        fullscreen: false,
+        mask: true,
+        transparent: false
+      },
+      icon: {
+        icon_type: "none"
+      },
+      close_type: 3,
+      module: "custom"
+    };
+    option = $.extend({}, defs, option);
+    return __jBox_init(text, option);
+  };
+
+  /****************************************************************************************************/
+  //关闭操作
+  /****************************************************************************************************/
+  /**
+   * 关闭当前提示框
    * @param callback
    */
-  self.close = function (ele, type, callback) {
-    var $ele = !ele ? (type ? $(".jBox-container") : options.diskID) : $(ele);
-    var closeOpt = {
-      closeType: 1,
-      removeElement: true
-    };
-    closeBoxFun($ele, closeOpt, callback);
+  self.close = function (callback) {
+    __jBox_close_box({ close_type: 2 }, callback);
   };
 
   /**
-   * 移除弹出框
-   * @param {*} ele  需要移除的弹窗ID
-   * @param {*} option 参数
+   * 逐个关闭
+   * @param callback
    */
-  self.remove = function (ele, option, callback) {
-    var $ele = !ele ? options.diskID : $(ele);
-    var removeOpt = {
-      closeType: 1,
-      removeElement: true
-    };
+  self.closePick = function (callback) {
+    if (!_OPTS_._jBoxId_Ary_) return false;
+    var close_box = "#" + _OPTS_._jBoxId_Ary_[_OPTS_._jBoxId_Ary_.length - 1];
 
-    var opt = $.extend(removeOpt, option);
-    closeBoxFun($ele, opt, callback);
+    __jBox_close_box({ close_box: close_box, close_type: 2 }, callback);
   };
 
+  /**
+   * 关闭指定ID提示框
+   * @param callback
+   */
+  self.closeById = function (id, callback) {
+    __jBox_close_box({ close_box: id, close_type: 2 }, callback);
+  };
 
   /**
-   * 展示到页面
+   * 关闭所有
+   * @param callback
+   */
+  self.closeAll = function (callback) {
+    __jBox_close_box({ close_box: ".jBox-layout", close_type: 2 }, callback);
+  };
+
+  /****************************************************************************************************/
+  //初始化函数
+  /****************************************************************************************************/
+  /**
+   * 初始化函数
    * @param text  提示文本
-   * @param option    设置相关属性
-   * @param type  展示类型：false-提示弹出框，true-确认输入框
+   * @param option  设置相关属性
    */
-  function showBoxInit(text, option, type) {
-    var boxID = "";
-    var opt = options = $.extend({}, self.defaults, option);
-    opt.element = options.element = $.extend({}, self.defaults.element, !!option ? option.element || {} : {});
-    opt.cls = options.cls = $.extend({}, self.defaults.cls, !!option ? option.cls || {} : {});
-    opt.css = options.css = $.extend({}, self.defaults.css, !!option ? option.css || {} : {});
-    opt.icon = options.icon = $.extend({}, self.defaults.icon, !!option ? option.icon || {} : {});
-    opt.btn = options.btn = $.extend({}, self.defaults.btn, !!option ? option.btn || {} : {});
+  function __jBox_init(text, option) {
+    _OPTS_ = $.extend(true, {}, self.defaults, option);
+    _OPTS_._IMG_ = _IMG_;
 
-    //展示类型false-提示弹出框，true-确认输入框
-    var showType = opt.showType = type;
+    _OPTS_.initBeforeCallback && _OPTS_.initBeforeCallback.call(_OPTS_._target_ || this, _OPTS_);
 
-    opt._IMG_ = _IMG_;
-    opt.initBeforeFun && opt.initBeforeFun.call(this, opt);
+    var _module_ = _OPTS_.module.toString().toLowerCase();
+    var _is_message_ = _module_ === "message";
+    _OPTS_._module_ = _module_;
+    _OPTS_._is_message_ = _is_message_;
 
-    //展示模式showNumber
-    //提示框为0，确认框为1
-    opt.showNumber = opt.showNumber ? opt.showNumber : (!showType ? 0 : 1);
-    //如果含有小图标&&指定的图片没有加载
-    if (!_IMG_[opt.icon.id] && opt.icon.iconType.toString().toLowerCase() === "img") {
-      // loadingImage(opt.icon.path + opt.icon.src, function (src) {
-      //     _IMG_[opt.icon.id] = this;
-      //     if (!showType) {
-      //         //提示弹出框
-      //         opt.shadowType = opt.shadowType ? opt.shadowType : ((opt.showNumber === 1 || opt.showNumber === 2 || opt.showNumber === 3) ? "shadow" : "none");
-      //         boxID = createHTML(text, opt, false, false);
-      //     } else {
-      //         //确认框
-      //         opt.shadowType = opt.shadowType ? opt.shadowType : "shadow";
-      //         boxID = createHTML(text, opt, true, true);
-      //     }
-      // })
-      _IMG_[opt.icon.id] = opt.icon.src;
-      if (!showType) {
-        //提示弹出框
-        opt.shadowType = opt.shadowType ? opt.shadowType : ((opt.showNumber === 1 || opt.showNumber === 2 || opt.showNumber === 3) ? "shadow" : "none");
-        boxID = createHTML(text, opt, false, false);
-      }
-      else {
-        //确认框
-        opt.shadowType = opt.shadowType ? opt.shadowType : "shadow";
-        boxID = createHTML(text, opt, true, true);
-      }
-    } else {
-      if (!showType) {
-        //提示弹出框
-        opt.shadowType = opt.shadowType ? opt.shadowType : ((opt.showNumber === 1 || opt.showNumber === 2 || opt.showNumber === 3) ? "shadow" : "none");
-        boxID = createHTML(text, opt, false, false);
-      } else {
-        //确认框
-        opt.shadowType = opt.shadowType ? opt.shadowType : "shadow";
-        boxID = createHTML(text, opt, true, true);
-      }
-    }
-    return boxID;
+    //创建HTML
+    return __jBox_create_html(text);
   }
 
   /**
-   * 关闭函数
-   * @param ele   需要关闭的对象
-   * @param opt   传入参数
-   * @param callback  回调函数
-   * @returns {boolean}
-   */
-  function closeBoxFun(ele, opt, callback) {
-    if (!ele) return false;
-    switch (opt.closeType) {
-      case 1:
-        // clearTimeout(_clear_setTimeout_);
-        _clear_setTimeout_ = window.setTimeout(function () {
-          ele.fadeOut(300, function () {
-            //关闭之后毁掉，此时元素已经注销
-            callback && callback.call(this, opt);
-            opt.closeFun && opt.closeFun.call(this, opt);
-            opt.removeElement && $(this).remove();
-          });
-        }, opt.closeTime);
-        break;
-      case 2:
-        ele.fadeOut(300, function () {
-          //关闭之后毁掉，此时元素已经注销
-          callback && callback.call(this, opt);
-          opt.closeFun && opt.closeFun.call(this, opt);
-          opt.removeElement && $(this).remove();
-        });
-        break;
-      case 3:
-        callback && callback.call(ele[0], opt);
-        break;
-    }
-  }
-
-  /**
-   * 创建主题页面
+   * 创建HTML
    * @param text  提示文字
-   * @param opt    设置相关属性
-   * @param isTitle   是否含有标题
-   * @param isBtn     是否含有按钮
    */
-  var createHTML = function (text, opt, isTitle, isBtn) {
-    var jBoxID = opt.thisID = opt.boxID ? opt.boxID : "jBox" + new Date().getTime();
+  function __jBox_create_html(text) {
     var html = "";
-    var typeCls = !isMobile ? "jBox-container-pc" : "jBox-container-h5";
-    var shadowCls = opt.shadowType.toString().toLowerCase() === "shadow" ? "jBox-layout-shadow" : "";
-    var textDirCls = opt.icon.iconDir.toString().toLowerCase() === "h" ? "jBox-text-left" : "jBox-text-center";
-    //显示模式样式
-    var styleCls;
-    switch (parseInt(opt.showNumber)) {
-      case 0:
-        styleCls = "jBox-container-full jBox-container-black";
-        break;
-      case 1:
-        styleCls = "jBox-container-full jBox-container-white";
-        break;
-      case 2:
-        styleCls = "jBox-container-full jBox-container-white transparent";
-        break;
-      case 3:
-        styleCls = "jBox-container-transparent white";
-        break;
-      case 4:
-        styleCls = "jBox-container-transparent black";
-        break;
+    var jBoxId = _OPTS_.box_id || "jBox" + new Date().getTime();
+    _OPTS_.jBoxId = jBoxId;
+
+    if (_OPTS_.close_type === 3) {
+      //存储id-逐个关闭
+      _BOXID_.push(jBoxId);
+      _OPTS_._jBoxId_Ary_ = _BOXID_;
     }
-    //确认框模式
-    var confirmCls = "", skinCls = !opt.skin ? "" : "jBox-skin skin-" + opt.skin + "";
-    if (isTitle) {
-      switch (parseInt(opt.confirmType)) {
-        case 1:
-          confirmCls = "jBox-confirm-mini";
-          break;
-        case 2:
-          confirmCls = "jBox-confirm-simple";
-          break;
-        case 3:
-          confirmCls = "jBox-confirm-normal";
-          break;
-        case 4:
-          opt.element.width = "auto";
-          confirmCls = "jBox-confirm-custom";
-          break;
-      }
+
+    //样式分割空格分隔
+    var container_cls = !isMobile ? "jBox-container-pc " : "jBox-container-h5 ";
+    container_cls += _OPTS_._is_message_ ? "jBox-message " : "jBox-confirm __" + _OPTS_.confirm_type + "__ __" + _OPTS_.module + "__ ";
+    container_cls += _OPTS_.element.shadow ? "jBox-shadow " : "";
+
+    var hasMask = _OPTS_.element.mask;
+
+    if (hasMask) {
+      container_cls += "jBox-mask ";
+      container_cls += _OPTS_.element.fullscreen ? "jBox-fullscreen " : "";
     }
-    html += '<div class="jBox-container ' + typeCls + ' ' + styleCls + ' ' + confirmCls + ' ' + skinCls + '" id="' + jBoxID + '">';
-    html += '<div class="jBox-layout ' + shadowCls + ' animated ' + opt.animateCls + '" id="' + opt.element.id + '">';
-    html += isTitle ? createTitle(opt) : "";
-    html += '<div class="jBox-cont">';
-    html += '<div class="jBox-intro">';
-    html += '<div class="jBox-intro-cont">' + createIcon(opt) + '<div class="' + textDirCls + '">' + text + '</div></div>';
+
+    if (_OPTS_.element.transparent) {
+      container_cls += "jBox-transparent ";
+    } else {
+      container_cls += _OPTS_.mask_module === "0" ? "jBox-black " : "jBox-white ";
+    }
+
+    container_cls += _OPTS_.element.container_cls || "";
+
+    //构建html主体
+    html += '<div class="jBox-container ' + container_cls + '">';
+    html += '<div id="' + jBoxId + '" class="jBox-layout animate ' + _OPTS_.box_animate.split("|")[0] + '">';
+
+    html += __create_title_html();
+    html += __create_cont_html(text);
+    html += __create_button_html();
+
     html += '</div>';
-    html += isBtn ? createBtn(opt) : "";
     html += '</div>';
-    html += '</div>';
-    html += '</div>';
+
     //添加到页面上
     $(document.body).append(html);
 
-    //获取ID变量
-    var $ID = options.diskID = $("#" + opt.thisID);
+    var $box = $("#" + jBoxId);
 
-    //将元素添加到opt中，方便外部使用
-    opt.popElement = {
-      //三块主体
-      $title: $ID.find(".jBox-title"),
-      $cont: $ID.find(".jBox-cont"),
-      $btn: $ID.find(".jBox-btn"),
-
-      //其余分支
-      $titleLabel: $ID.find(".jBox-title > label"),
-      $titleClose: $ID.find(".jBox-close-btn"),
-      $intro: $ID.find(".jBox-cont .jBox-intro"),
-      $introCont: $ID.find(".jBox-cont .jBox-intro-cont"),
-      $icon: $ID.find(".jBox-cont .jBox-icon-box"),
-
-      //存放按钮
-      $btnAry: [],
-      //存放自定义按钮
-      $btnCustomAry: []
+    //添加元素
+    _OPTS_.jQueryElement = {
+      $jBoxContainer: $box.parent(),
+      $jBoxBox: $box,
+      $jBoxTitle: $box.find(".__title__"),
+      $jBoxCont: $box.find(".__content__"),
+      $jBoxContBox: $box.find(".__content_box__"),
+      $jBoxButton: $box.find(".__button__"),
+      $jBoxClose: $box.find(".__close_btn__"),
+      $jBoxPrompt: $box.find(".__prompt_label__"),
+      $jBoxButtonAry: []
     };
 
-    //将缓存的图片添加到页面，防止多次请求
-    // opt.popElement.$icon.append(_IMG_[opt.icon.id]);
+    var btn = _OPTS_.button;
 
-    //存放按钮列表（btn.array）
-    opt.popElement.$btn.find("a").each(function (i) {
-      opt.popElement.$btnAry[i] = $(this);
+    //按钮数组
+    $box.find(".__button__ a").each(function (i) {
+      _OPTS_.jQueryElement.$jBoxButtonAry.push($(this));
+
+      $(this).on("click", function () {
+        //确认输入框按钮
+        if (_OPTS_._module_ === "prompt" && $(this).hasClass("prompt")) {
+          //文本确认框-内容
+          var __prompt_value = (_OPTS_._module_ === "prompt") ? _OPTS_.jQueryElement.$jBoxPrompt.find("input").val() : "";
+          var __validator_text__ = _OPTS_.prompt_validator && _OPTS_.prompt_validator(__prompt_value);
+
+          if (__validator_text__) {
+            _OPTS_.jQueryElement.$jBoxPrompt.find("input").addClass("err").next().remove();
+            _OPTS_.jQueryElement.$jBoxPrompt.append('<span>' + __validator_text__ + '</span>');
+            return false;
+          }
+
+          _OPTS_.prompt = { value: __prompt_value };
+        }
+
+        __jBox_close_box({ close_type: btn.array[i].close_type || 2 }, function () {
+          btn.array[i].callback && btn.array[i].callback.call(_OPTS_._target_ || this, _OPTS_);
+        });
+      });
     });
 
-    //绑定预留 "jBoxEnsure" 和 "jBoxCancel" 两个按钮
-    $(document).on("click", "#jBoxEnsure", function () {
-      if (opt.ensureFun) opt.ensureFun.call($ID, opt)
+    //文本确认框
+    if (_OPTS_._module_ === "prompt") {
+      _OPTS_.jQueryElement.$jBoxPrompt.find("input").on("focus", function () {
+        $(this).removeClass("err").next().remove();
+      }).focus();
+    }
+
+    //背景关闭
+    if (_OPTS_.isMaskClose) {
+      _OPTS_.jQueryElement.$jBoxContainer.on("click", function (event) {
+        if (event.target == this) {
+          __jBox_close_box({ close_type: 2 });
+        }
+      });
+    }
+
+    //关闭按钮
+    _OPTS_.jQueryElement.$jBoxClose.on("click", function () {
+      __jBox_close_box({ close_type: 2 });
     });
 
-    $(document).on("click", "#jBoxCancel", function () {
-      if (opt.cancelFun) opt.cancelFun.call($ID, opt)
-    });
+    _OPTS_.initCallback && opt.initCallback.call(_OPTS_._target_ || $box, _OPTS_);
 
-    //初始化回调
-    opt.initFun && opt.initFun.call($ID[0], opt);
+    //计算布局大小
+    __jBox_set_layout($box);
+
+    //自动关闭
+    if (_OPTS_._is_message_) {
+      __jBox_close_box();
+    }
+
+    //倒计时
+    if (_OPTS_.icon.icon_type === "cutdown") {
+      _OPTS_.__cut_down__ = setInterval(function () {
+        _OPTS_.icon.cutdown_time--;
+        if (_OPTS_.icon.cutdown_time < 0) {
+          clearInterval(_OPTS_.__cut_down__);
+          if (_OPTS_.icon.finish_close) {
+            __jBox_close_box({ close_type: 2 }, function () {
+              _OPTS_.cutdownFinishCallBack && _OPTS_.cutdownFinishCallBack.call(_OPTS_._target_ || $box, _OPTS_)
+            });
+          } else {
+            _OPTS_.cutdownFinishCallBack && _OPTS_.cutdownFinishCallBack.call(_OPTS_._target_ || $box, _OPTS_)
+          }
+        } else {
+          _OPTS_.jQueryElement.$jBoxContBox.find(".__cutdown__").html(_OPTS_.icon.cutdown_time);
+        }
+      }, 1000);
+    }
+
 
     //移动函数绑定-判断模式
     if (!isMobile) {
@@ -413,105 +554,146 @@ $.jBox = function () {
       moveEvent = "mousemove";
       endEvent = "mouseup";
     } else {
-      //强制关闭移动端移动
-      opt.isMove = false;
       startEvent = "touchstart";
       moveEvent = "touchmove";
       endEvent = "touchend";
     }
 
     //判断是否开启移动
-    if (opt.isMove) {
-      $ID.find(".jBox-title").on(startEvent, { opt: opt }, startMove);
+    if (_OPTS_.isMove) {
+      _OPTS_.jQueryElement.$jBoxTitle.on(startEvent, startMove);
     }
-
-    //设置当前box大小
-    setBoxLayout($ID, opt);
-
-    //没有按钮为提示弹框
-    if (!isBtn) {
-      closeBoxFun($ID, opt);
-    }
-
-    //返回box生成ID
-    return $ID;
+    return "#" + _OPTS_.jBoxId;
   };
 
   /**
    * 创建标题
-   * @param opt   传入设置对象OPT
-   * @returns {string}    返回标题HTML
+   * @returns {String} 返回标题HTML
    */
-  function createTitle(opt) {
-    var titleHtml = "";
-    var closeHTML = opt.isCloseBtn ? '<a class="jBox-close-btn" href="javascript:;">&times;</a>' : '';
-    if (opt.title) {
-      titleHtml += '<div class="jBox-title">';
-      titleHtml += '<label class="jBox-title-text">' + opt.title + '</label>';
-      titleHtml += closeHTML;
-      titleHtml += '</div>';
+  function __create_title_html() {
+    var html = "";
+    var _close_html_ = _OPTS_.content.close_btn ? '<label class="__colse__"><button class="__close_btn__">&times;</button></label>' : '';
+    var _title_cls_ = _OPTS_.content.title_dir.toString().toLowerCase() === "center" ? "__center__ " : "";
+    _title_cls_ += _OPTS_.isMove ? "__move__ " : "";
+    _title_cls_ += _OPTS_.content.title_cls || "";
+
+    if (_OPTS_._is_message_) {
+      html += '';
     } else {
-      titleHtml += '<div class="jBox-close-bar">' + closeHTML + '</div>';
+      if (_OPTS_.content.title) {
+        html += '<div class="__title__ ' + _title_cls_ + '">'
+        html += '<label class="__title_text__">' + _OPTS_.content.title + '</label>';
+        html += _close_html_;
+        html += '</div>';
+      } else {
+        html += '<div class="__title__ __min__ ' + _title_cls_ + '">' + _close_html_ + '</div>';
+      }
     }
-    return titleHtml;
+
+    return html;
   }
 
   /**
-   * 创建按钮
-   * @param opt   传入设置对象OPT
-   * @returns {string}     返回按钮HTML
+   * 创建内容布局
+   * @param text
+   * @returns {String}
    */
-  function createBtn(opt) {
-    var btn = opt.btn;
-    var btnHtml = "";
-    var btnTypeCls = btn.btnDir.toString().toLowerCase() === "h" ? "jBox-btn-horizontal" : "jBox-btn-vertical";
-    var length = btn.array.length;
-    if (length) {
-      btnHtml += '<div class="jBox-btn ' + btnTypeCls + '">';
-      btnHtml += '<div class="jBox-btn-row' + btn.array.length + '">';
-      for (var i = 0; i < length; i++) {
-        var href = btn.array[i].href ? btn.array[i].href : "javascript:;";
-        var cls = btn.array[i].cls ? btn.array[i].cls : "";
-        var id = btn.array[i].id ? btn.array[i].id : "";
-        btnHtml += '<a class="' + cls + '" id="' + id + '" href="' + href + '">' + btn.array[i].text + '</a>';
-      }
-      btnHtml += '</div>';
-      btnHtml += '</div>';
+  function __create_cont_html(text) {
+    var html = "";
+    var _cont_cls_ = _OPTS_._module_ === "prompt" ? "__prompt__ " : "";
+    _cont_cls_ += _OPTS_.content.title ? "__has_title__ " : "__none_title__ ";
+    _cont_cls_ += _OPTS_.content.cont_cls || "";
+
+    var _dir_cls_ = _OPTS_.icon.direction.toString().toLowerCase() === "h" ? "__hor__ " : "__ver__ ";
+    _dir_cls_ += _OPTS_.content.text_dir.toString().toLowerCase() === "center" ? "__center__" : "__left__";
+
+    var _text_cls_ = _OPTS_.icon.icon_type.toString().toLowerCase() === "none" ? "__none__ " : "";
+    _text_cls_ += _OPTS_.content.text_cls || "";
+
+    html += '<div class="__content__ ' + _cont_cls_ + '">';
+    html += '<div class="__content_box__ ' + _dir_cls_ + '">';
+    html += __create_icon_html();
+
+    if (_OPTS_._module_ === "prompt") {
+      var input_type = _OPTS_.prompt_input_type || "text";
+      var input_value = _OPTS_.prompt_input_value || "请输入内容";
+      html += !!text ? '<div class="__content_text__ ' + _text_cls_ + '">' + text + '</div>' : "";
+      html += '<label class="__prompt_label__">';
+      html += '<input type="' + input_type + '" placeholder="' + input_value + '">';
+      html += '</label>';
     } else {
-      btnHtml = "";
+      html += !!text ? '<div class="__content_text__ ' + _text_cls_ + '">' + text + '</div>' : "";
     }
-    return btnHtml;
+
+    html += '</div>';
+    html += '</div>';
+
+    return html;
   }
 
   /**
    * 创建图标布局
-   * @param opt
-   * @returns {string}
+   * @returns {String}
    */
-  function createIcon(opt) {
-    var iconOpt = opt.icon;
-    var iconHtml = "";
-    var iconStyle = "width: " + iconOpt.width + "; height: " + iconOpt.height + ";";
-    var iconDirCls = iconOpt.iconDir.toString().toLowerCase() === "h" ? "jBox-icon-horizontal" : "jBox-icon-vertical";
-    if (opt.showType) {
-      iconOpt.iconType = !opt.hasIcon ? "none" : iconOpt.iconType;
-    }
-    switch (iconOpt.iconType.toString().toLowerCase()) {
+  function __create_icon_html() {
+    var html = "";
+    var _icon_ = _OPTS_.icon;
+    var _icon_css_ = (_icon_.width && _icon_.height) ? "width: " + _icon_.width + "; height: " + _icon_.height + ";" : "";
+    var _icon_cls_ = _icon_.icon_cls || "";
+
+    switch (_icon_.icon_type.toString().toLowerCase()) {
       case "img":
-        iconHtml += '<label class="jBox-icon-box ' + iconDirCls + ' jBox-icon-img" style="' + iconStyle + '">';
-        iconHtml += '<img src="' + _IMG_[iconOpt.id] + '">';
-        iconHtml += '</label>';
+        html += '<label class="__icon__ ' + _icon_cls_ + '">';
+        html += '<img src="' + _IMG_[_icon_.id] + '" style="' + _icon_css_ + '">';
+        html += '</label>';
         break;
       case "font":
-        iconHtml += '<label class="jBox-icon-box ' + iconDirCls + ' jBox-icon-font" style="' + iconStyle + '">';
-        iconHtml += '<i class="iconfont ' + iconOpt.font + '"></i>';
-        iconHtml += '</label>';
+        html += '<label class="__icon__ ' + _icon_cls_ + '>';
+        html += '<i class="__icon_font__ ' + _icon_.font + '" " style="' + _icon_css_ + '"></i>';
+        html += '</label>';
+        break;
+      case "cutdown":
+        html = '<label class="__cutdown__ ' + _icon_cls_ + '">' + _icon_.cutdown_time + '</label>';
         break;
       case "none":
-        iconHtml = '';
+        html = '';
         break;
     }
-    return iconHtml;
+
+    return html;
+  }
+
+  /**
+   * 创建按钮
+   * @returns {String} 返回按钮HTML
+   */
+  function __create_button_html() {
+    var html = "";
+
+    var _button_ = _OPTS_.button;
+    var _button_cls_ = _button_.direction.toString().toLowerCase() === "h" ? "__hor__ " : "__ver__ ";
+    _button_cls_ += _button_.btn_cls || "";
+
+    var _length_ = _button_.array.length;
+    if (_length_) {
+      html += '<div class="__button__ ' + _button_cls_ + '">';
+      html += '<div class="__button_row__' + _length_ + '">';
+
+      for (var i = 0; i < _length_; i++) {
+        var item = _button_.array[i];
+        var href = item.href || "javascript:;";
+        var cls = item.cls || "";
+        var id = item.id || "";
+        html += '<a class="' + cls + '" id="' + id + '" href="' + href + '">' + item.text + '</a>';
+      }
+
+      html += '</div>';
+      html += '</div>';
+    } else {
+      html = "";
+    }
+
+    return html;
   }
 
   /**
@@ -538,132 +720,189 @@ $.jBox = function () {
 
   /**
    * 设置box位置
-   * @param box   传入的box对象
-   * @param opt    参数
+   * @param box 传入的box对象
    */
-  function setBoxLayout(box, opt) {
-    var $box = box.find(".jBox-layout");
-    var icon = opt.icon;
-    var btn = opt.btn;
-    var elementCls = opt.cls;
-    var elementCSS = opt.css;
-    var elementOpt = opt.element;
+  function __jBox_set_layout($box) {
+    var _width = $box.outerWidth(true);
+    var _height = $box.outerHeight(true);
 
-    //给 标题/内容/按钮 添加样式名称
-    opt.popElement.$title.addClass(elementCls.titleCls);
-    opt.popElement.$cont.addClass(elementCls.contCls);
-    opt.popElement.$btn.addClass(elementCls.btnCls);
+    var confirm_min_width = parseFloat(_OPTS_.element.confirm_min_width);
+    var message_max_width = parseFloat(_OPTS_.element.message_max_width);
+    var max_width = _OPTS_._is_message_ ? message_max_width : parseFloat(_OPTS_.element.max_width);
+    var min_width = _OPTS_._is_message_ ? parseFloat(_OPTS_.element.min_width) : confirm_min_width;
+    var box_width = parseFloat(_OPTS_.element.box_width) || null;
+    var box_height = parseFloat(_OPTS_.element.box_height) || null;
 
-    //元素添加css样式
-    opt.popElement.$title.css(elementCSS.titleCSS);  // 标题
-    opt.popElement.$titleLabel.css(elementCSS.titleTextCSS);  // 标题文字
-    opt.popElement.$titleClose.css(elementCSS.closeCSS);  // 关闭按钮
-    opt.popElement.$cont.css(elementCSS.contCSS);  // 内容
-    opt.popElement.$intro.css(elementCSS.introCSS);  //内容详包含图标情
-    opt.popElement.$introCont.css(elementCSS.introContCSS);  // 内容文字详情
-    opt.popElement.$icon.css(elementCSS.iconCSS);  // 内容图标详情
-    opt.popElement.$btn.css(elementCSS.btnCSS);  // 按钮
+    var _is_vertical = _OPTS_.element.vertical.toString().toLowerCase() === "center";
+    var top = _is_vertical ? "50%" : _OPTS_.element.vertical;
+    var left = "50%";
 
-    //给按钮添加样式
-    $box.find(".jBox-btn a").each(function (i) {
-      $(this).addClass(!btn.array[i].cls ? "" : btn.array[i].cls).css(!btn.array[i].css ? {} : btn.array[i].css).click(function () {
-        closeBoxFun(box, { closeType: btn.array[i].closeType || 2, removeElement: opt.removeElement }, function () {
-          btn.array[i].callback && btn.array[i].callback.call(this, opt);
-        });
-      });
-    });
-
-    //给自定义按钮添加事件
-    btn.custom.map(function (item, i) {
-      let $this = $("#" + item.ID);
-      $this.addClass(!btn.custom[i].cls ? "" : btn.custom[i].cls).css(!btn.custom[i].css ? {} : btn.custom[i].css).click(function () {
-        closeBoxFun(box, { closeType: btn.custom[i].closeType || 2, removeElement: opt.removeElement }, function () {
-          btn.custom[i].callback && btn.custom[i].callback.call(this, opt);
-        });
-      });
-      opt.popElement.$btnCustomAry[i] = $this;
-    });
-
-    //关闭按钮
-    opt.popElement.$titleClose.on("click", function () {
-      closeBoxFun(box, { closeType: 2, removeElement: opt.removeElement }, function () {
-        if (opt.cancelFun) opt.cancelFun.call($box[0], opt);
-      });
-    });
-
-    //如果包含图标需要给paddingLeft
-    if (icon.iconType !== "none" && icon.iconDir.toString().toLowerCase() === "h") {
-      opt.popElement.$introCont.css("padding-left", !icon.width ? 0 : parseInt(icon.width) + 10);
-    }
-
-    var width = $box.outerWidth(true),
-      height = $box.outerHeight(true);
-    var new_width, new_height, left = "50%", top;
-    var isVertical = opt.top.toString().toLowerCase() === "auto";
-    var hasWidth = elementOpt.width.toString().toLowerCase() !== "auto";
-    var hasHeight = elementOpt.height.toString().toLowerCase() !== "auto";
-
-    //如果设置了高度，需要让内容部分垂直剧中
-    if (hasHeight) {
-      //如果设置了垂直居中属性在居中
-      if (opt.eleVertical) {
-        if (!opt.showType) {
-          opt.popElement.$cont.addClass("jBox-height");
-        } else {
-          opt.popElement.$intro.height(parseInt(elementOpt.height) - opt.popElement.$title.outerHeight(true) - opt.popElement.$btn.outerHeight(true));
-        }
-        opt.popElement.$intro.addClass("jBox-table").find(".jBox-intro-cont").addClass("jBox-cell");
-      }
-    }
-
-    top = isVertical ? "50%" : opt.top;
-    if (hasWidth && !hasHeight) {
+    var set_width, set_height;
+    if (box_width && !box_height) {
       //设置宽，没有设置高
-      new_width = elementOpt.width;
-      $box.css("width", elementOpt.width);
-      new_height = isVertical ? $box.outerHeight(true) : "auto";
-    } else if (!hasWidth && hasHeight) {
+      set_width = box_width;
+      $box.css("width", set_width);
+      set_height = _is_vertical ? $box.outerHeight(true) : "auto";
+
+    } else if (!box_width && box_height) {
       //设置高，没有设置宽
-      new_height = elementOpt.height;
-      $box.css("height", elementOpt.height);
-      new_width = $box.outerWidth(true);
-    } else if (hasWidth && hasHeight) {
+      set_height = box_height;
+      $box.css("height", set_height);
+      set_width = $box.outerWidth(true);
+
+    } else if (box_width && box_height) {
       //同时设置高宽
-      new_width = elementOpt.width;
-      new_height = elementOpt.height;
-      //加上固定大小的样式
-      // elementOpt.cls += " jBox-fixed-box";
+      set_width = box_width;
+      set_height = elementOpt.height;
+
     } else {
       //都没设置高宽
       //+1解决中英文在一起出现的问题
-      if (width >= parseInt(opt.element.max_width)) {
-        new_width = parseInt(opt.element.max_width);
-      } else if (width >= 350) {
-        new_width = width + 1;
+      if (_width >= max_width) {
+        set_width = max_width;
+      } else if (_width <= min_width) {
+        set_width = min_width;
       } else {
-        //弹出框自适应宽度
-        if (opt.showType) {
-          new_width = !isMobile ? 350 : 280;
-        } else {
-          new_width = !isMobile ? (width + 1) : (width + 1);
-        }
+        set_width = !isMobile ? (_width + 1) : (_width + 1);
       }
-      $box.css("width", new_width);
-      new_height = isVertical ? $box.outerHeight(true) : "auto";
+
+      $box.css("width", set_width);
+      set_height = _is_vertical ? $box.outerHeight(true) : "auto";
     }
 
     //设置位置
     $box.css({
-      width: new_width,
-      height: new_height,
+      width: set_width,
+      height: !!box_height && set_height,
       top: top,
       left: left,
-      marginTop: isVertical ? -parseInt(new_height) / 2 + "px" : 0,
-      marginLeft: -parseInt(new_width) / 2 + "px"
-    }).addClass(elementOpt.cls);
+      marginTop: _is_vertical ? -set_height / 2 + "px" : 0,
+      marginLeft: -set_width / 2 + "px"
+    }).addClass(_OPTS_.content.content_cls);
 
     //初始化之后回调
-    opt.initAfterFun && opt.initAfterFun.call($box, opt);
+    _OPTS_.initAfterCallback && _OPTS_.initAfterCallback.call(_OPTS_._target_ || $box, _OPTS_);
+  }
+
+  /**
+   * 关闭函数
+   * @param box 关闭对象
+   * @param callback 回调函数
+   */
+  function __jBox_close_box(opt, callback) {
+    //Id在Id组中的位置
+    var current;
+    var $box;
+
+    if (!!opt && !!opt.close_box) {
+      //传入box的ID
+      if (opt.close_box.indexOf(".") < 0 && opt.close_box.indexOf("#") > -1) {
+        //删除传入的ID
+        current = _OPTS_._jBoxId_Ary_.indexOf(opt.close_box.split("#")[1]);
+      }
+      $box = $(opt.close_box);
+    } else {
+      //确认框需要手动触发关闭
+      if (!_OPTS_._is_message_) {
+        current = (_OPTS_.jBoxId && _OPTS_._jBoxId_Ary_ && _OPTS_._jBoxId_Ary_.length) && _OPTS_._jBoxId_Ary_.indexOf(_OPTS_.jBoxId);
+      }
+
+      $box = _OPTS_.jQueryElement && _OPTS_.jQueryElement.$jBoxBox;
+    }
+
+    if (current > -1) {
+      _OPTS_._jBoxId_Ary_.splice(current, 1);
+    }
+
+    if (!$box || !$box.length) return false;
+
+    var container_close_animate = _OPTS_.container_close_animate;
+    var close_animate = _OPTS_.close_animate;
+    var animate = _OPTS_.box_animate;
+
+    //关闭选项，有配置读配置
+    var close_type = opt ? opt.close_type : _OPTS_.close_type;
+
+    //关闭回调
+    var __close_callback = function (ele) {
+      callback && callback.call(ele, _OPTS_);
+      _OPTS_.closeCallback && _OPTS_.closeCallback.call(_OPTS_._target_ || ele, _OPTS_);
+
+      if (container_close_animate) {
+        $(ele).parent().fadeOut("fast", function () {
+          $(this).remove();
+        })
+      } else {
+        $(ele).parent().remove();
+      }
+
+      _OPTS_.__cut_down__ && clearInterval(_OPTS_.__cut_down__);
+    }
+
+    //关闭方法
+    var __close_fun = function () {
+      if (close_animate) {
+        $box.removeClass(animate.split("|")[0]).addClass(animate.split("|")[1]);
+        __jBox_animate($box, function () {
+          __close_callback(this);
+        });
+      } else {
+        $box.removeClass(animate.split("|")[0]);
+        $box.fadeOut(300, function () {
+          __close_callback(this);
+        });
+      }
+    }
+
+    switch (close_type) {
+      case 1:
+        _clear_setTimeout_ = window.setTimeout(function () {
+          __close_fun();
+        }, _OPTS_.close_time);
+        break;
+      case 2:
+        __close_fun();
+        break;
+      case 3:
+        callback && callback.call($box[0], _OPTS_);
+        break;
+    }
+
+  }
+
+  /**
+   * 监听动画结束
+   * @param {Function} callback 回掉函数 
+   */
+  function __jBox_animate(box, callback) {
+    var animate_env = __browser_animate_name(box[0]);
+
+    box.one(animate_env, function () {
+      callback && callback.call(this);
+    });
+  }
+
+  /**
+   * 判断浏览器动画名称
+   * @param {Object} el document对象
+   * @returns {String} 动画名称 
+   */
+  function __browser_animate_name(el) {
+    var animations = {
+      "OAnimation": "oAnimationEnd",
+      "MSAnimation": "MSAnimationEnd",
+      "MozAnimation": "mozAnimationEnd",
+      "WebkitAnimation": "webkitAnimationEnd",
+      "animation": "animationEnd"
+    }
+
+    for (var t in animations) {
+      if (animations.hasOwnProperty(t)) {
+        if (el.style[t] !== undefined) {
+          return animations[t];
+        }
+      }
+    }
   }
 
 
@@ -675,23 +914,15 @@ $.jBox = function () {
 
   /**
    * 绑定移动
-   * @param {String} id 
-   * @param {Object} option 
    */
-  self.bindMove = function (id, option) {
+  self.bindMove = function (box) {
     var startEvent = ("ontouchstart" in window) ? "touchstart" : "mousedown";
-    var opt = $.extend({
-      thisID: id
-    }, option);
-    $("#" + id).find(".jBox-title").on(startEvent, { opt: opt }, startMove);
+    $(box).on(startEvent, startMove);
   }
 
   function startMove(e) {
     var evt = e || window.event;
-    // evt.stopPropagation();
-    // evt.preventDefault();
-    var opt = evt.data.opt;
-    var $box = $("#" + opt.thisID).find(".jBox-layout");
+    var $box = _OPTS_.jQueryElement.$jBoxBox;
     saveData.startX = !isMobile ? (evt.clientX || evt.pageX) : evt.originalEvent.touches[0].pageX;
     saveData.startY = !isMobile ? (evt.clientY || evt.pageY) : evt.originalEvent.touches[0].pageY;
     saveData.top = parseFloat($box.css("top"));
@@ -700,19 +931,24 @@ $.jBox = function () {
     saveData.marginLeft = parseFloat($box.css("marginLeft"));
     if (!_isMoved_) {
       _isMoved_ = true;
-      $(document).on(moveEvent, { opt: opt }, moving);
-      $(document).on(endEvent, { opt: opt }, endMove);
+      $(document).on(moveEvent, moving);
+      $(document).on(endEvent, endMove);
     }
   }
 
   function moving(e) {
     var evt = e || window.event;
-    evt.stopPropagation();
-    evt.preventDefault();
-    var opt = evt.data.opt;
-    var $box = $("#" + opt.thisID).find(".jBox-layout");
-    var x = !isMobile ? (evt.clientX || evt.pageX) : evt.originalEvent.touches[0].pageX;
-    var y = !isMobile ? (evt.clientY || evt.pageY) : evt.originalEvent.touches[0].pageY;
+    evt = !isMobile ? evt : evt.originalEvent;
+    // 判断默认行为是否可以被禁用
+    if (evt.cancelable) {
+      // 判断默认行为是否已经被禁用
+      if (!evt.defaultPrevented && e.preventDefault) {
+        evt.preventDefault();
+      }
+    }
+    var $box = _OPTS_.jQueryElement.$jBoxBox;
+    var x = !isMobile ? (evt.clientX || evt.pageX) : evt.touches[0].pageX;
+    var y = !isMobile ? (evt.clientY || evt.pageY) : evt.touches[0].pageY;
     if (_isMoved_) {
       var mx = x - saveData.startX + saveData.left;
       var my = y - saveData.startY + saveData.top;
@@ -739,10 +975,6 @@ $.jBox = function () {
     $(document).off("mouseup", endMove);
   }
 };
-
-// $.extend({
-//     jBox: new $.jBox()
-// });
 
 const jBox = new $.jBox();
 

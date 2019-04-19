@@ -1,7 +1,7 @@
 <template>
   <div class="user-bar">
     <div class="user-form">
-      <h2 class="title"><span class="has-line">支付密码修改</span></h2>
+      <h2 class="title"><span class="has-line">修改注册手机号</span></h2>
       <div class="item">
         <span>手机号：</span>
         <div class="input">

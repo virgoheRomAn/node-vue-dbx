@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import ajaxAPI from '@/assets/api'
+import API from '@/api'
 import jBox from 'assets/plugins/jBox'
 import Index from '@/pages/Index'
 import ErrorPage from '@/pages/404'
@@ -28,7 +28,8 @@ const routes = [
     name: 'index',
     component: Index,
     meta: {
-      title: '首页'
+      title: '首页',
+      isAuth: true
     }
   },
   {
@@ -254,12 +255,8 @@ router.beforeEach((to, from, next) => {
     return false;
   }
 
-  if (to.name === "login" || to.name === "register") {
-    ajaxAPI.user.userLogout();
-  }
-
   if (to.meta.isAuth) {
-    ajaxAPI.user.getUserLoginStaus().then(status => {
+    API.user.getUserLoginStaus().then(status => {
       if (status) {
         next();
       } else {

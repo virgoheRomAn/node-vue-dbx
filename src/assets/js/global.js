@@ -36,7 +36,7 @@ const zero = FB.zero = (num, n) => {
     num = "0" + num;
     len++;
   }
-  return num;
+  return num.toString();
 };
 
 /**
@@ -77,86 +77,36 @@ FB.getQueryString = (name) => {
 };
 
 /**
- * 获取当前时间
- * @param type
- * @returns {string}
- */
-FB.getNowTime = (type) => {
-  let myDate = new Date();
-  let year = myDate.getFullYear();
-  let month = myDate.getMonth() + 1;
-  let date = myDate.getDate();
-  let h = myDate.getHours();
-  let m = myDate.getMinutes();
-  let s = myDate.getSeconds();
-
-  switch (type) {
-    case "timeAll":
-      return zero(h, 2) + ':' + zero(m, 2) + ":" + zero(s, 2);
-    case "date":
-      return year + '-' + zero(month, 2) + "-" + zero(date, 2);
-    case "timeSimple":
-      return zero(h, 2) + ':' + zero(m, 2);
-    case "timeString":
-      return year + zero(month, 2) + zero(date, 2) + zero(h, 2) + zero(m, 2) + zero(s, 2);
-    default:
-      return year + '-' + zero(month, 2) + "-" + zero(date, 2) + " " + zero(h, 2) + ':' + zero(m, 2) + ":" + zero(s, 2);
-  }
-};
-
-/**
- * 获取当前时间相关信息
- * @returns {Funciton}
- */
-FB.getNowTime = () => {
-  let myDate = new Date();
-  let year = myDate.getFullYear();
-  let month = myDate.getMonth() + 1;
-  let date = myDate.getDate();
-  let h = myDate.getHours();
-  let m = myDate.getMinutes();
-  let s = myDate.getSeconds();
-
-  return {
-    getYear: () => {
-      return year;
-    },
-    getMonth: () => {
-      return month;
-    },
-    getDate: () => {
-      return date;
-    }
-  }
-};
-
-
-/**
  * 通过毫秒计算时间
  * @param time
  * @param type
+ * @param split
  * @returns {string}
  */
-FB.getDateByTime = (time, type) => {
-  let myDate = new Date(time);
-  let year = myDate.getFullYear();
-  let month = myDate.getMonth() + 1;
-  let date = myDate.getDate();
-  let h = myDate.getHours();
-  let m = myDate.getMinutes();
-  let s = myDate.getSeconds();
+FB.getDateByTime = (time, type, split) => {
+  let _date_ = new Date(time);
+  let year = _date_.getFullYear();
+  let month = _date_.getMonth() + 1;
+  let date = _date_.getDate();
+  let h = _date_.getHours();
+  let m = _date_.getMinutes();
+  let s = _date_.getSeconds();
 
   switch (type) {
-    case "timeAll":
-      return zero(h, 2) + ':' + zero(m, 2) + ":" + zero(s, 2);
+    case "hour":
+      return `${zero(h, 2)}:${zero(m, 2)}`;
+    case "time":
+      return `${zero(h, 2)}:${zero(m, 2)}:${zero(s, 2)}`;
     case "date":
-      return year + '-' + zero(month, 2) + "-" + zero(date, 2);
-    case "timeSimple":
-      return zero(h, 2) + ':' + zero(m, 2);
-    case "timeSting":
-      return year + zero(month, 2) + zero(date, 2) + zero(h, 2) + zero(m, 2) + zero(s, 2);
+      return `${year}-${zero(month, 2)}-${zero(date, 2)}`;
+    case "dateStr":
+      return `${year}年${zero(month, 2)}月${zero(date, 2)}日`;
+    case "dateSplit":
+      return `${year}${split}${zero(month, 2)}${split}${zero(date, 2)}`;
+    case "timestamp":
+      return time;
     default:
-      return year + '-' + zero(month, 2) + "-" + zero(date, 2) + " " + zero(h, 2) + ':' + zero(m, 2) + ":" + zero(s, 2);
+      return `${year}-${zero(month, 2)}-${zero(date, 2)} ${zero(h, 2)}:${zero(m, 2)}:${zero(s, 2)}`;
   }
 };
 
@@ -266,6 +216,59 @@ FB.count = {
     return FB.count.mul((r1 / r2), Math.pow(10, t2 - t1));
   }
 };
+
+/**
+ * 验证密码强度
+ * @param {string} val
+ * @param {object} options
+ */
+FB.verifyPassword = (val, options) => {
+  var defaults = {
+    isSimple: true,    //开启简单密码检验
+    isCaps: true,  //开启键盘大写验证
+    isShift: false,   //开启Shift按键验证
+    showTag: true, //开启小tag提示
+    minLength: 6,
+    simpleLength: 6,
+    strongLength: 12,
+    nullText: "密码不能为空！",
+    lengthLess: "密码不能小于6位！",
+    successText: "设置密码成功！",
+    errorText: "设置密码失败！",
+    capsText: "注意：键盘大写锁定已打开，请注意大小写！",
+    shiftText: "注意：您按住了Shift键",
+    normalTips: "密码由6-20位数字和字符组合",
+    psdSimple: "密码太简单，有被盗风险，请换复杂的密码组合！"
+  };
+  var opt = $.extend({}, defaults, options);
+  var l = val.toString().length;
+  var resultOPT = {};
+  if (l === 0) {
+    resultOPT.type = 0;
+    resultOPT.text = opt.nullText;
+  } else if (l < opt.minLength) {
+    resultOPT.type = 0;
+    resultOPT.text = opt.lengthLess;
+  } else {
+    if (eval(FB.verifyExp.strengthA.number).test(val) || eval(FB.verifyExp.strengthA.letterCaps).test(val) || eval(FB.verifyExp.strengthA.letterLows).test(val) || eval(FB.verifyExp.strengthA.symbol).test(val)) {
+      //单纯字母，数字，特殊字符
+      resultOPT.type = 1;
+      resultOPT.text = opt.normalTips;
+    } else if (eval(FB.verifyExp.strengthB.numLetterC).test(val)) {
+      //符合数字+字符，可选特殊字符
+      resultOPT.type = 2;
+      resultOPT.text = opt.successText;
+    } else {
+      //不符合数字+字符
+      resultOPT.type = 3;
+      resultOPT.text = opt.normalTips;
+    }
+  }
+  //回调
+  resultOPT.options = opt;
+  return resultOPT;
+};
+
 
 /**
  * @msg: 简易循环轮播
@@ -387,120 +390,6 @@ const cloneHtml = (container, tagEle, cloneNum, type) => {
 };
 
 /**
- * @msg: 简易tab选项卡
- * @param beforeEnd {} 切换之前方法
- * @return: 
- */
-FB.tabBox = (selector, selectCallBack) => {
-  let id = selector.split("|")[0];
-  let name = selector.indexOf("|") > -1 ? selector.split("|")[1] : "";
-  let $ele = $(id);
-  let $tabNav, $tabNavItme, $tabContent, $tabLine;
-  let _tabWidth, _tabLeft, _tabPadLeft, _tabPadRight;
-
-  $tabNav = $(".tab-nav[name='" + name + "']");
-  $tabContent = $(".tab-content[name='" + name + "']");
-
-  $tabLine = $tabNav.find(".tab-line");
-  // $tabNavItme = $tabNav.find(".item");
-  // _tabWidth = $tabNavItme.outerWidth(true);
-  // _tabLeft = $tabNavItme.position().left;
-  // _tabPadLeft = parseInt($tabNavItme.css("padding-left"));
-  // _tabPadRight = parseInt($tabNavItme.css("padding-right"));
-
-  $tabLine.each(function () {
-    $tabNavItme = $(this).parents(".tab-nav").find(".item");
-    _tabWidth = $tabNavItme.outerWidth(true);
-    _tabLeft = $tabNavItme.position().left;
-    _tabPadLeft = parseInt($tabNavItme.css("padding-left"));
-    _tabPadRight = parseInt($tabNavItme.css("padding-right"));
-    $(this).css({
-      width: _tabWidth - _tabPadLeft - _tabPadRight,
-      left: _tabLeft + _tabPadLeft
-    });
-  })
-
-  $tabNav.find(".item").each(function (i) {
-    let _name = $(this).attr("name");
-    $tabContent.find(".pane-item").eq(i).attr("id", "pane-" + _name);
-  });
-
-  $tabNav.find(".item").click(function () {
-    if ($(this).hasClass("active")) return false;
-    let _name = $(this).attr("name");
-    let _index = $(this).index();
-    // let _offsetLeft = $(this).position().left;
-    // let _tabPadLeft = parseInt($(this).css("padding-left"));
-
-    if ($(this).hasClass("disabled")) {
-      selectCallBack && selectCallBack.call(this, _name);
-      return false;
-    }
-
-    $tabLine.each(function () {
-      let _offsetLeft = $(this).parents(".tab-nav").find(".item").eq(_index).position().left;
-      let _tabPadLeft = parseInt($(this).parents(".tab-nav").find(".item").eq(_index).css("padding-left"));
-      $(this).animate({ left: _offsetLeft + _tabPadLeft }, 300, function () {
-        selectCallBack && selectCallBack.call(this, _name);
-        //$("#pane-" + _name).addClass("active").siblings().removeClass("active");
-      });
-    });
-  });
-};
-
-/**
- * 验证密码强度
- * @param {string} val
- * @param {object} options
- */
-FB.verifyPassword = (val, options) => {
-  var defaults = {
-    isSimple: true,    //开启简单密码检验
-    isCaps: true,  //开启键盘大写验证
-    isShift: false,   //开启Shift按键验证
-    showTag: true, //开启小tag提示
-    minLength: 6,
-    simpleLength: 6,
-    strongLength: 12,
-    nullText: "密码不能为空！",
-    lengthLess: "密码不能小于6位！",
-    successText: "设置密码成功！",
-    errorText: "设置密码失败！",
-    capsText: "注意：键盘大写锁定已打开，请注意大小写！",
-    shiftText: "注意：您按住了Shift键",
-    normalTips: "密码由6-20位数字和字符组合",
-    psdSimple: "密码太简单，有被盗风险，请换复杂的密码组合！"
-  };
-  var opt = $.extend({}, defaults, options);
-  var l = val.toString().length;
-  var resultOPT = {};
-  if (l === 0) {
-    resultOPT.type = 0;
-    resultOPT.text = opt.nullText;
-  } else if (l < opt.minLength) {
-    resultOPT.type = 0;
-    resultOPT.text = opt.lengthLess;
-  } else {
-    if (eval(FB.verifyExp.strengthA.number).test(val) || eval(FB.verifyExp.strengthA.letterCaps).test(val) || eval(FB.verifyExp.strengthA.letterLows).test(val) || eval(FB.verifyExp.strengthA.symbol).test(val)) {
-      //单纯字母，数字，特殊字符
-      resultOPT.type = 1;
-      resultOPT.text = opt.normalTips;
-    } else if (eval(FB.verifyExp.strengthB.numLetterC).test(val)) {
-      //符合数字+字符，可选特殊字符
-      resultOPT.type = 2;
-      resultOPT.text = opt.successText;
-    } else {
-      //不符合数字+字符
-      resultOPT.type = 3;
-      resultOPT.text = opt.normalTips;
-    }
-  }
-  //回调
-  resultOPT.options = opt;
-  return resultOPT;
-};
-
-/**
  * 验证是否是微信浏览器
  */
 FB.isWeiXin = () => {
@@ -538,6 +427,178 @@ FB.isWeiXin = () => {
   }
 
   return result;
+};
+
+/**
+ * 返回某年某月的天数
+ * @param date 年月：2019-03
+ * @returns {String} 当月的天数
+ */
+FB.getCountDays = (date) => {
+  let curDate = new Date(date);
+  let curMonth = curDate.getMonth();
+  curDate.setMonth(curMonth + 1);
+  curDate.setDate(0);
+  return curDate.getDate();
+}
+
+/**
+ * 返回年月日
+ * @param start 开始年份
+ * @param end 结束年份
+ * @returns {Object} 
+ */
+FB.getFormatYMD = ({ start = 1950, end = new Date().getFullYear(), dayL = 31 } = {}) => {
+  let years = [],
+    months = [],
+    days = [];
+  for (let yI = start, yL = end; yI <= yL; yI++) {
+    years.push({
+      code: yI.toString(),
+      text: yI.toString()
+    });
+  }
+  for (let mI = 1, mL = 12; mI <= mL; mI++) {
+    months.push({
+      code: zero(mI, 2),
+      text: zero(mI, 2)
+    });
+  }
+  for (let dI = 1, dL = dayL; dI <= dL; dI++) {
+    days.push({
+      code: zero(dI, 2),
+      text: zero(dI, 2)
+    });
+  }
+
+  return { years, months, days }
+};
+
+/**
+ * 根据传入值返回在数组的位置
+ * @param value  某个字符
+ * @param arr  数组
+ * @param fields  数组中判断依据的字段
+ * @returns {Number} 
+ */
+FB.getArrayIndexByVal = (value, arr, fields = 'id') => {
+  for (let i = 0; i < arr.length; i++) {
+    let item = arr[i];
+    if (!!item[fields]) {
+      if (item[fields] === value) {
+        return i;
+      }
+    } else {
+      if (item === value) {
+        return i;
+      }
+    }
+  }
+
+  return -1;
+}
+
+/**
+ * 根据传入Id返回对应的值
+ * @param id  id
+ * @param arr  数组
+ * @param fields  数组中判断依据的字段
+ * @param rFields  数组中判断依据的字段返回想要的字段
+ * @returns {String} 
+ */
+FB.getArrayValueById = (id, arr, fields = 'code', rFields = 'text') => {
+  for (let i = 0; i < arr.length; i++) {
+    let item = arr[i];
+    if (!!item[fields]) {
+      if (item[fields] === id) {
+        return item[rFields];
+      }
+    } else {
+      if (item === id) {
+        return item[rFields];
+      }
+    }
+  }
+
+  return "";
+}
+
+/**
+ * 通过省份ID获取城市列表
+ * @param {String} pId  省份ID
+ * @param {Array} city  城市数组
+ * @returns {Array} 返回城市数组的数据
+ */
+FB.getCityData = (pId, city) => {
+  let cityAry = [];
+  city.map(item => {
+    if (item.provinceId === pId) {
+      cityAry.push(item)
+    }
+  })
+
+  return cityAry;
+};
+
+/**
+ * 通过城市ID获取区县列表
+ * @param {String} cId  城市ID
+ * @param {Array} county  区县数组
+ * @returns {Array} 返回区县数组的数据
+ */
+FB.getCountyData = (cId, county) => {
+  let countyAry = [];
+  county.map(item => {
+    if (item.cityId === cId) {
+      countyAry.push(item)
+    }
+  })
+
+  return countyAry;
+};
+
+/**
+ * 格式化picker选择数据
+ * @param {Array} data  数据源
+ * @param {String} text  替换的文本
+ * @param {String} code  替换的code
+ * @returns {Array} 返回改造后的数据
+ */
+FB.formatPickerData = (data, text, code) => {
+  data.map(item => {
+    item['text'] = item[text];
+    item['code'] = item[code];
+  })
+
+  return data;
+};
+
+
+/**
+ * 身份证出生日格式
+ * @param {String} val  数据源
+ * @param {Boolean} ary  是否是数组
+ * @param {String} split  格式化
+ * @returns {String} 日期格式
+ */
+FB.formatBirthdayData = (val, ary = false, split = "-") => {
+  let y = val.substring(0, 4);
+  let m = val.substring(4, 6);
+  let d = val.substring(6, 8);
+  if (ary) {
+    return [y, m, d];
+  } else {
+    return `${y}${split}${m}${split}${d}`;
+  }
+};
+
+/**
+ * 验证是否是数组
+ * @param {Array} ary  数据源
+ * @returns {Boolean} 
+ */
+FB.isArray = (ary) => {
+  return Object.prototype.toString.call(ary) === "[object Array]"
 }
 
 FB._ = _;

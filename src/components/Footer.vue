@@ -9,9 +9,9 @@
           </router-link>
         </li>
         <li>
-          <router-link to="/product">
-            <i class="sprite s-icon-product"></i>
-            <span>产品</span>
+          <router-link to="/invite/s/index">
+            <i class="sprite s-icon-invite"></i>
+            <span>邀请</span>
           </router-link>
         </li>
         <li>
@@ -21,18 +21,6 @@
           </router-link>
         </li>
       </ul>
-    </div>
-    <div class="fast">
-      <label class="left">
-        <a href="javascript:;" @click="jump()">
-          <img src="../assets/img/tips/invite.png">
-        </a>
-      </label>
-      <label class="right">
-        <a href="https://tb.53kf.com/code/wx/10186089/1">
-          <img src="../assets/img/tips/customer.png">
-        </a>
-      </label>
     </div>
   </div>
 </template>

@@ -27,7 +27,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import BScroll from "better-scroll";
+  // import { BScroll } from "assets/plugins/betterScroll";
+  const PICKER = require("assets/plugins/betterScroll");
 
   const STATE_HIDE = 0;
   const STATE_SHOW = 1;
@@ -79,7 +80,7 @@
       };
     },
     created() {
-      if (!this.pickerSelectedIndex.length) {
+      if (!!this.pickerSelectedIndex && !this.pickerSelectedIndex.length) {
         this.pickerSelectedIndex = [];
         for (let i = 0; i < this.pickerData.length; i++) {
           this.pickerSelectedIndex[i] = 0;
@@ -159,13 +160,6 @@
           this.wheels[i].disable();
         }
       },
-      setData(data) {
-        this.pickerData = data.slice();
-        this.dirty = true;
-      },
-      setSelectedIndex(index) {
-        this.pickerSelectedIndex = index;
-      },
       refill(datas) {
         let ret = [];
         if (!datas.length) {
@@ -178,7 +172,6 @@
       },
       refillColumn(index, data) {
         if (this.state !== STATE_SHOW) {
-          console.error("当前没有显示的picker");
           return;
         }
         const wheelWrapper = this.$refs.wheelWrapper;
@@ -206,12 +199,21 @@
           return dist;
         }
       },
+      setData(data) {
+        this.pickerData = data.slice();
+        this.dirty = true;
+      },
+      setSelectedIndex(index) {
+        this.pickerSelectedIndex = index;
+      },
       scrollTo(index, dist) {
+        if (!this.wheels) return false;
         const wheel = this.wheels[index];
         this.pickerSelectedIndex[index] = dist;
         wheel.wheelTo(dist);
       },
       refresh() {
+        if (!this.wheels) return false;
         this.$nextTick(() => {
           this.wheels.forEach((wheel, index) => {
             wheel.refresh();
@@ -220,7 +222,7 @@
       },
       _createWheel(wheelWrapper, i) {
         if (!this.wheels[i]) {
-          this.wheels[i] = new BScroll(wheelWrapper.children[i], {
+          this.wheels[i] = new PICKER.BScroll(wheelWrapper.children[i], {
             wheel: {
               selectedIndex: this.pickerSelectedIndex[i],
               wheelWrapperClass: "wheel-scroll",
@@ -262,137 +264,5 @@
 </script>
 
 <style scoped lang="less">
-  @import url("../assets/less/_variable.less");
-
-  .picker {
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 100;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    text-align: center;
-    font-size: @fs-14;
-    background-color: rgba(37, 38, 45, 0.4);
-    &.picker-fade-enter,
-    &.picker-fade-leave-active {
-      opacity: 0;
-    }
-    &.picker-fade-enter-active,
-    &.picker-fade-leave-active {
-      transition: all 0.3s ease-in-out;
-    }
-
-    .picker-panel {
-      position: absolute;
-      z-index: 600;
-      bottom: 0;
-      width: 100%;
-      height: 273px;
-      background: @white;
-      &.picker-move-enter,
-      &.picker-move-leave-active {
-        transform: translate3d(0, 273px, 0);
-      }
-      &.picker-move-enter-active,
-      &.picker-move-leave-active {
-        transition: all 0.3s ease-in-out;
-      }
-
-      .picker-choose {
-        position: relative;
-        height: 60px;
-        color: @g-999;
-        .picker-title {
-          margin: 0;
-          line-height: 60px;
-          font-weight: normal;
-          text-align: center;
-          font-size: @fs-18;
-          color: @g-333;
-        }
-        .confirm,
-        .cancel {
-          position: absolute;
-          top: 6px;
-          padding: 16px;
-          font-size: @fs-14;
-        }
-        .confirm {
-          right: 0;
-          color: @main;
-          &:active {
-            color: @link;
-          }
-        }
-        .cancel {
-          left: 0;
-          &:active {
-            color: @g-ccc;
-          }
-        }
-      }
-
-      .picker-content {
-        position: relative;
-        top: 20px;
-        .mask-top,
-        .mask-bottom {
-          z-index: 10;
-          width: 100%;
-          height: 68px;
-          pointer-events: none;
-          transform: translateZ(0);
-        }
-        .mask-top {
-          position: absolute;
-          top: 0;
-          background: linear-gradient(
-            to top,
-            rgba(255, 255, 255, 0.4),
-            rgba(255, 255, 255, 0.8)
-          );
-        }
-        .mask-bottom {
-          position: absolute;
-          bottom: 1px;
-          background: linear-gradient(
-            to bottom,
-            rgba(255, 255, 255, 0.4),
-            rgba(255, 255, 255, 0.8)
-          );
-        }
-
-        .wheel-wrapper {
-          display: flex;
-          padding: 0 16px;
-          .wheel {
-            flex: 1;
-            flex-basis: 0.000000001px;
-            width: 1%;
-            height: 173px;
-            overflow: hidden;
-            font-size: @fs-16;
-            .wheel-scroll {
-              padding: 0;
-              margin-top: 68px;
-              line-height: 36px;
-              list-style: none;
-              .wheel-item {
-                list-style: none;
-                height: 36px;
-                overflow: hidden;
-                white-space: nowrap;
-                color: @g-333;
-              }
-            }
-          }
-        }
-      }
-      .picker-footer {
-        height: 20px;
-      }
-    }
-  }
+  @import url("../assets/plugins/betterScroll/index.less");
 </style>

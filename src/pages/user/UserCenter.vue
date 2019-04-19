@@ -2,8 +2,11 @@
   <div class="module-container">
     <div class="user-center-bar">
       <div class="person-info">
-        <label><img :src="headPhoto"></label>
-        <span>{{userNameReg}}</span>
+        <label class="image"><img :src="userInfo.portrait"></label>
+        <div class="user-intro">
+          <label>{{userInfo.username}}<em class="status" :class="userInfo.approveCls">{{userInfo.approveText}}</em></label>
+          <span>{{userInfo.mobile}}</span>
+        </div>
         <a href="javascript:;" @click="goToSetting()">
           <i class="sprite s-icon-setting"></i>
         </a>
@@ -16,57 +19,30 @@
         <div class="box-list-arrow">
           <ul>
             <li>
-              <a :href="'/usercenter/s/banks/' + userName">
+              <a :href="'/usercenter/s/banks/'">
                 <label><i class="sprite s-icon-bank"></i></label>
-                <span>我的银行卡</span>
+                <span>我的保单</span>
                 <em><i class="sprite s-icon-arrow"></i></em>
               </a>
             </li>
             <li>
-              <a :href="'/usercenter/s/capital/' + userName">
+              <a :href="'/usercenter/s/capital/'">
                 <label><i class="sprite s-icon-capital"></i></label>
-                <span>资金管理</span>
+                <span>客户管理</span>
                 <em><i class="sprite s-icon-arrow"></i></em>
               </a>
             </li>
             <li>
-              <a :href="'/usercenter/s/trades/' + userName">
+              <a :href="'/usercenter/s/trades/'">
                 <label><i class="sprite s-icon-trade"></i></label>
-                <span>交易记录</span>
+                <span>理赔帮助</span>
                 <em><i class="sprite s-icon-arrow"></i></em>
               </a>
             </li>
             <li>
-              <a :href="isAppraisal ? '/usercenter/s/appraisalResult/' + userName : '/usercenter/s/appraisal/' + userName">
+              <a href="">
                 <label><i class="sprite s-icon-appraisal"></i></label>
-                <span>风险评测</span>
-                <em><i class="sprite s-icon-arrow"></i></em>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="person-card">
-        <div class="box-list-arrow">
-          <ul>
-            <li>
-              <a :href="'/usercenter/s/activity/' + userName">
-                <label><i class="sprite s-icon-activity"></i></label>
-                <span>活动管理</span>
-                <em><i class="sprite s-icon-arrow"></i></em>
-              </a>
-            </li>
-            <li>
-              <a :href="'/usercenter/s/message/' + userName">
-                <label><i class="sprite s-icon-message"></i></label>
-                <span>消息管理</span>
-                <em><i class="sprite s-icon-arrow"></i></em>
-              </a>
-            </li>
-            <li>
-              <a :href="'/usercenter/s/password/' + userName">
-                <label><i class="sprite s-icon-password"></i></label>
-                <span>密码管理</span>
+                <span>常见问题</span>
                 <em><i class="sprite s-icon-arrow"></i></em>
               </a>
             </li>
@@ -80,122 +56,96 @@
 </template>
 
 <script>
-  import $G from "@/assets/js/global";
-  import CONST from "@/assets/js/const";
-  import PersonAssets from "@/components/PersonAssets";
+import $G from "@/assets/js/global";
+import CONST from "@/assets/js/const";
+import PersonAssets from "@/components/PersonAssets";
 
-  export default {
-    name: "usercenter",
-    components: {
-      PersonAssets
-    },
-    data() {
-      return {
-        headPhoto: require("../../assets/img/user/headImg.png"),
-        userName: "",
-        isAppraisal: false,
-        user_count_data: {
-          totalAssets: "0",
-          currentBalance: "0",
-          totalIncomeAmount: "0",
-          totalInvestAmount: "0"
-        }
-      };
-    },
-    created() {
-      let obj = [
-        {
-          fun: this.getUserExtData(),
-          callback: data => {
-            if (Object.keys(data).length !== 0 && data && data.riskAssessment) {
-              this.isAppraisal = true;
-            } else {
-              this.isAppraisal = false;
-            }
-
-            if (Object.keys(data).length !== 0 && data && data.headPortrait) {
-              this.headPhoto = data.headPortrait;
-            } else {
-              this.headPhoto = require("../../assets/img/user/headImg.png");
-            }
-          }
-        },
-        {
-          fun: this.getUserCount(),
-          callback: data => {
-            if (!!data) {
-              this.user_count_data.totalAssets = data.total_assets;
-              this.user_count_data.currentBalance = data.current_balance;
-              this.user_count_data.totalIncomeAmount = data.totalIncomeAmount;
-              this.user_count_data.totalInvestAmount = data.totalInvestAmount;
-            }
-          }
-        }
-      ];
-      this.__G__.ajaxParataxisDataStep(this, obj);
-    },
-    mounted() {
-      let userInfo = this.__G__.getItem([CONST.USERINFO]);
-      if (!userInfo) {
-        this.$jBox.error("获取用户信息错误<br>请重新登陆", {
-          closeFun: () => {
-            vue.$router.push({
-              name: "login",
-              query: { redirect: vue.$route.fullPath }
-            });
-          }
-        });
-        return false;
+export default {
+  name: "usercenter",
+  components: {
+    PersonAssets
+  },
+  data() {
+    return {
+      userInfo: {
+        username: "",
+        approve: "",
+        approveCls: "",
+        mobile: "",
+        portrait: require("../../assets/img/user/headImg.png")
+      },
+      user_count_data: {
+        totalAssets: "0",
+        currentBalance: "0"
       }
+    };
+  },
+  created() {
+    let obj = [
+      {
+        fun: this.getUserInfo(),
+        callback: data => {
+          let reg = /^(\d{3})\d{4}(\d{4})$/;
 
-      this.userName = JSON.parse(userInfo).userName;
-    },
-    computed: {
-      userNameReg: function() {
-        let reg = /^(\d{3})\d{4}(\d{4})$/;
-        return this.userName
-          ? this.userName.replace(reg, "$1****$2")
-          : "请先登录";
+          this.userInfo = data;
+
+          this.userInfo.mobile = this.userInfo.mobile.replace(reg, "$1****$2");
+          this.userInfo.approveCls =
+            this.userInfo.approve === 0 ? "failed" : "success";
+
+          this.userInfo.approveText =
+            this.userInfo.approve === 0 ? "未认证" : "已认证";
+
+          this.user_count_data.totalAssets = data.amout;
+          this.user_count_data.currentBalance = data.balance;
+        }
       }
+      // {
+      //   fun: this.getUserCount(),
+      //   callback: data => {
+      //     if (!!data) {
+      //       this.user_count_data.totalAssets = data.total_assets;
+      //       this.user_count_data.currentBalance = data.current_balance;
+      //       this.user_count_data.totalIncomeAmount = data.totalIncomeAmount;
+      //       this.user_count_data.totalInvestAmount = data.totalInvestAmount;
+      //     }
+      //   }
+      // }
+    ];
+    this.__G__.ajaxParataxisDataStep(this, obj);
+  },
+  methods: {
+    getUserInfo() {
+      return new Promise((resolve, reject) => {
+        this.MOCK.get({ url: `/usercenter/userInfo` })
+          .then(data => {
+            resolve(data);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
     },
-    methods: {
-      getUserExtData() {
-        return new Promise((resolve, reject) => {
-          this.$ajax
-            .get(`/userCenter/userExtData`)
-            .then(res => {
-              let data = res.data.data;
+    getUserCount() {
+      return new Promise((resolve, reject) => {
+        this.$ajax
+          .get(`/userCenter/account`)
+          .then(res => {
+            let data = res.data.data;
+            if (res.data.code !== 200) {
+              reject(res.data);
+            } else {
               resolve(data);
-            })
-            .catch(err => {
-              reject(err);
-            });
-        });
-      },
-      getUserCount() {
-        return new Promise((resolve, reject) => {
-          this.$ajax
-            .get(`/userCenter/account`)
-            .then(res => {
-              let data = res.data.data;
-              if (res.data.code !== 200) {
-                reject(res.data);
-              } else {
-                resolve(data);
-              }
-            })
-            .catch(err => {
-              reject(err);
-            });
-        });
-      },
-      goToSetting() {
-        this.$router.push({ name: "settings" });
-      }
+            }
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
+    goToSetting() {
+      this.$router.push({ name: "settings" });
     }
-  };
+  }
+};
 </script>
-
-<style lang="less">
-  @import "../../assets/less/user.less";
-</style>

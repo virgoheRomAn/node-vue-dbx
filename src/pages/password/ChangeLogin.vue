@@ -36,42 +36,39 @@
 </template>
 
 <script>
-  export default {
-    name: "changeLogin",
-    data() {
-      return {
-        userMobile: "",
-        oldPsd: "",
-        newPsd: "",
-        newAgainPsd: ""
-      };
-    },
-    created() {
-      this.userMobile = this.$route.params.mobile || "";
-    },
-    methods: {
-      sure() {
-        this.userAPI
-          .changePassword({
-            oldPassword: this.oldPsd,
-            newPassword: this.newPsd,
-            again: this.newAgainPsd
-          })
-          .then(data => {
-            //登陆页面
-            this.$router.push({
-              name: "login"
-            });
+export default {
+  name: "changeLogin",
+  data() {
+    return {
+      userMobile: "",
+      oldPsd: "",
+      newPsd: "",
+      newAgainPsd: ""
+    };
+  },
+  created() {
+    this.userMobile = this.$route.params.mobile || "";
+  },
+  methods: {
+    sure() {
+      this.userAPI
+        .changePassword({
+          oldPassword: this.oldPsd,
+          newPassword: this.newPsd,
+          again: this.newAgainPsd
+        })
+        .then(data => {
+          //登陆页面
+          this.$router.push({
+            name: "login"
           });
-      },
-      forget() {
-        this.$router.push({
-          name: "forgetLogin",
-          params: { mobile: this.userMobile }
         });
-      }
+    },
+    forget() {
+      this.$router.push(`/usercenter/s/psd/forgetlogin`);
     }
-  };
+  }
+};
 </script>
 
 

@@ -1,27 +1,34 @@
 <template>
-  <div :id="id" class="popup-box" @click.self="closeBtn($event)">
-    <div class="container" :class="container" :style="popupStyle">
-      <div class="box">
-        <div v-if="isTitle" class="title" :class="titleCls">
-          <slot name="title"></slot>
-          <label class="close" :class="colseCls" @click.self.stop="closeBtn($event)">
-            <slot name="closeBtn"></slot>
-          </label>
-        </div>
+  <transition name="custom-container" enter-active-class="animate fadeIn" leave-active-class="animate fadeOut">
+    <div :id="id" class="popup-box" v-show="state===1" @click.self="cancel()">
+      <transition name="custom-box" enter-active-class="animate slideInUp" leave-active-class="animate slideOutDown">
+        <div class="container" v-show="state===1" :class="containerCls" :style="popupStyle">
+          <div class="box">
+            <div v-if="isTitle" class="title" :class="titleCls">
+              <slot name="title"></slot>
+              <label class="close" :class="colseCls" @click="cancel()">
+                <slot name="closeBtn"></slot>
+              </label>
+            </div>
 
-        <div class="content" :class="contentCls">
-          <slot name="nav"></slot>
-          <div class="cont">
-            <slot name="cont"></slot>
+            <div class="content" :class="contentCls">
+              <slot name="nav"></slot>
+              <div class="cont">
+                <slot name="cont"></slot>
+              </div>
+            </div>
+
+            <div v-if="isFooter" class="footer" :class="footerCls">
+              <div class="button">
+                <a href="javascript:;" @click="cancel()">取消</a>
+                <a href="javascript:;" @click="sure($event)">确定</a>
+              </div>
+            </div>
           </div>
         </div>
-
-        <div v-if="isFooter" class="footer" :class="footerCls">
-          <slot name="btn"></slot>
-        </div>
-      </div>
+      </transition>
     </div>
-  </div>
+  </transition>
 </template>
 <script>
   export default {
@@ -45,7 +52,7 @@
       },
       containerCls: {
         type: String,
-        default: null
+        default: "bottom"
       },
       titleCls: {
         type: String,
@@ -61,47 +68,36 @@
       },
       footerCls: {
         type: String,
-        default: null
+        default: "black"
       }
     },
     data() {
       return {
-        container: this.containerCls || "bottom animated-bottom"
+        state: 0
       };
     },
-    created() {
-      if (this.__timer__) {
-        clearTimeout(this.__timer__);
-      }
-    },
     methods: {
-      closeBtn(event) {
-        let ele = event.currentTarget;
-        let $this = this.$(ele).hasClass("close")
-          ? this.$(ele).parents(".popup-box")
-          : this.$(ele);
-        this.closePopup($this);
+      show() {
+        this.state = 1;
+        this.$emit("show", this.id);
       },
-      closePopup: function(box) {
-        let $this = this.$(box);
-        let $child = $this.children(".container");
-        $child.removeClass("active");
-        this.__timer__ = setTimeout(() => {
-          $this.fadeOut();
-        }, 300);
+      hide() {
+        this.state = 0;
+        this.$emit("hide", this.id);
       },
-      showPopup: function(id) {
-        let $this = id ? this.$(id) : this.$(".popup-box");
-        let $child = $this.children(".container");
-        $this.fadeIn(30, function() {
-          $child.addClass("active");
-        });
+      cancel() {
+        this.hide();
+      },
+      sure(event) {
+        this.hide();
+        this.$emit("ensure", event);
       }
     }
   };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
+  @import url("../assets/less/_variable.less");
   .popup-box {
     position: fixed;
     top: 0;
@@ -110,7 +106,7 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    display: none;
+    display: block;
 
     .container {
       position: absolute;
@@ -140,7 +136,7 @@
       }
       &.bottom {
         width: 100%;
-        height: 65%;
+        height: auto;
       }
 
       > .box {
@@ -157,9 +153,35 @@
           width: 100%;
           height: 50px;
           padding: 0 15px;
+          &.border {
+            border-bottom: 1px solid @bd;
+          }
+          &.big {
+            height: 70px;
+            > span {
+              font-size: @fs-20;
+              color: @black;
+            }
+            > .close {
+              background-size: 20px 20px;
+            }
+          }
+          &.center {
+            > span {
+              display: block;
+              width: 100%;
+              text-align: center;
+            }
+            > .close {
+              position: absolute;
+              top: 50%;
+              right: 15px;
+              margin-top: -20px;
+            }
+          }
           > span {
             font-size: 16px;
-            color: #333;
+            color: @g-333;
           }
           > .close {
             position: relative;
@@ -186,6 +208,33 @@
             overflow: auto;
             -webkit-overflow-scrolling: touch;
             transform: translate3d(0, 0, 0);
+          }
+        }
+
+        > .footer {
+          display: block;
+          height: 50px;
+          border-top: 1px solid @bd;
+
+          &.black {
+            background: @black;
+            border-top: 1px solid #4e4e4e;
+            .button a {
+              color: @white;
+            }
+          }
+          .button {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            height: 100%;
+            a {
+              display: block;
+              text-align: center;
+              font-size: @fs-15;
+              color: @g-333;
+            }
           }
         }
       }
