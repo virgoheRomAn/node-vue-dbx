@@ -108,7 +108,7 @@
     background: rgba(0, 0, 0, 0.5);
     display: block;
 
-    .container {
+    >.container {
       position: absolute;
       z-index: 100;
       background: #ffffff;

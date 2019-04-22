@@ -1,7 +1,7 @@
 <template>
   <div class="item">
     <div class="content">
-      <a class="link" href="javascript:;" @click="jump(data.link)">
+      <a class="link" :href="data.link">
         <label class="image"><img :src="data.img" :alt="data.name"></label>
         <div class="information">
           <label class="name">

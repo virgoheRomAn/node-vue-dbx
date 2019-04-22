@@ -14,6 +14,18 @@ const userInfo = {
   areaName: "渝北区"
 }
 
+const capitalRecord = [
+  { type: "0", time: "2019-04-22", info: "至尾号5626招商银行卡", amount: 100 },
+  { type: "0", time: "2019-04-22", info: "至尾号5626招商银行卡", amount: 100 },
+  { type: "0", time: "2019-04-22", info: "至尾号5626招商银行卡", amount: 100 },
+  { type: "0", time: "2019-04-22", info: "至尾号5626招商银行卡", amount: 100 },
+  { type: "0", time: "2019-04-22", info: "至尾号5626招商银行卡", amount: 100 },
+  { type: "0", time: "2019-04-22", info: "至尾号5626招商银行卡", amount: 100 },
+  { type: "0", time: "2019-04-22", info: "至尾号5626招商银行卡", amount: 100 },
+  { type: "0", time: "2019-04-22", info: "至尾号5626招商银行卡", amount: 100 },
+  { type: "0", time: "2019-04-22", info: "至尾号5626招商银行卡", amount: 100 }
+];
+
 
 export default {
   /**
@@ -27,6 +39,23 @@ export default {
       return new Promise((resolve, reject) => {
         resolve([200, { code: 200, message: '成功', data: userInfo }])
       });
+    }),
+
+    /**
+     * 提现列表
+     */
+    mock.onGet(`/usercenter/capital`).reply(config => {
+      let { pageNum, pageSize } = config;
+
+      return new Promise((resolve, reject) => {
+        let res = []
+        let startIndex = (pageNum - 1) * pageSize
+        if (capitalRecord.length > startIndex) {
+          let endIndex = startIndex + pageSize
+          res = capitalRecord.slice(startIndex, endIndex)
+        }
+        resolve([200, { code: 200, message: '成功', data: res }])
+      })
     })
   }
 }

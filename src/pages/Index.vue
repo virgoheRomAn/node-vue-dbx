@@ -140,7 +140,9 @@ export default {
             this.$refs.scroll.initScroll();
           }, 20);
 
-          this.handleData(data);
+          if (!!data) {
+            this.handleData(data);
+          }
         }
       }
     ];
@@ -231,7 +233,8 @@ export default {
           lower_money: item.lower_money,
           company: item.company,
           id: item.id,
-          class: item.class
+          class: item.class,
+          link: item.bxh5_url
         });
       });
     },

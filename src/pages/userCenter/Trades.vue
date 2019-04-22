@@ -4,11 +4,7 @@
 
       <scroll ref="scroll" class="wrapper" :data="holdList" :pullUpLoad="pullUpLoadObj" @pullingUp="onPullingUp">
         <div class="trades-bar user-center-bar">
-
-          <!-- <person-assets class="bg mt-0" :userHandle="false" :see_total_assets="false"></person-assets> -->
-          <person-assets class="bg mt-0" :userHandle="false" :see_total_assets="false" :ajax_user_count="false"
-            :ajax_count_data="user_count_data"></person-assets>
-
+          
           <div class="person-trades">
             <div class="box-list-information">
               <ul>

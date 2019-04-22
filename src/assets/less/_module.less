@@ -790,12 +790,12 @@
         >label {
           display: flex;
           flex-direction: column;
-          flex: 1;
+          width: 90px;
           overflow: hidden;
 
           >span {
             color: @main;
-            font-size: @fs-15;
+            font-size: @fs-14;
           }
 
           >em {
@@ -803,6 +803,12 @@
             color: @g-999;
             margin-top: 3px;
           }
+        }
+
+        >p {
+          flex: 1;
+          font-size: @fs-14;
+          color: @g-333;
         }
 
         >span {
@@ -1279,6 +1285,7 @@
   display: block;
   text-align: center;
   margin-top: 5px;
+  margin-bottom: 10px;
 }
 
 //页面底部固定按钮
