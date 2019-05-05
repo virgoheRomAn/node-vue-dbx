@@ -154,7 +154,7 @@ const routes = [
     children: [
       { path: 'banks/:mobile?', name: 'banks', component: UserCenter.Banks, meta: { title: '我的银行卡', isAuth: true } },
       { path: 'capital/:mobile?', name: 'capital', component: UserCenter.Capital, meta: { title: '资金管理', isAuth: true } },
-      { path: 'trades/:mobile?', name: 'trades', component: UserCenter.Trades, meta: { title: '交易记录', isAuth: true } },
+      { path: 'income/:mobile?', name: 'income', component: UserCenter.Income, meta: { title: '我的收入', isAuth: true } },
       { path: 'appraisal/:mobile?', name: 'appraisal', component: UserCenter.Appraisal, meta: { title: '风险测评', isAuth: true } },
       { path: 'appraisalResult/:mobile?', name: 'appraisalResult', component: UserCenter.AppraisalResult, meta: { title: '风险测评-已测评', isAuth: true } },
       { path: 'activity/:mobile?', name: 'activity', component: UserCenter.Activity, meta: { title: '活动管理', isAuth: true } },

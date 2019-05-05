@@ -57,14 +57,9 @@
 
 <script>
 import $G from "@/assets/js/global";
-import CONST from "@/assets/js/const";
-import PersonAssets from "@/components/PersonAssets";
 
 export default {
   name: "usercenter",
-  components: {
-    PersonAssets
-  },
   data() {
     return {
       userInfo: {

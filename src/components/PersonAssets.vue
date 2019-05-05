@@ -5,9 +5,9 @@
         <li v-for="(value,key,index) in user_assets_count" :key="key">
           <div class="content">
             <label class="t">
-              <span>{{assets[index]}}</span>
+              <span>{{user_assets_field[index]}}</span>
               <template v-if="index===0">
-                <em>(元)</em>
+                <em></em>
                 <a href="javascript:;" v-if="see_total_assets" @click="showAssets()" :class="{'unlook':!uAssetsLook}">
                   <i class="sprite s-icon-look"></i>
                 </a>
@@ -30,7 +30,7 @@
       </ul>
     </div>
     <div class="handle" v-if="userHandle">
-      <a :href="'/usercenter/s/recharge/' + userName">查看收入</a>
+      <a :href="'/usercenter/s/income/' + userName">查看收入</a>
       <a :href="'/usercenter/s/withdraw/' + userName">余额提现</a>
     </div>
   </div>
@@ -61,6 +61,12 @@ export default {
     see_total_assets: {
       type: Boolean,
       default: true
+    },
+    user_assets_field: {
+      type: Array,
+      default: function() {
+        return ["我的收入(元)", "我的余额"];
+      }
     }
   },
   data() {
@@ -70,8 +76,7 @@ export default {
       user_assets_count: {
         totalAssets: "0",
         currentBalance: "0"
-      },
-      assets: ["我的收入", "我的余额"]
+      }
     };
   },
   created() {

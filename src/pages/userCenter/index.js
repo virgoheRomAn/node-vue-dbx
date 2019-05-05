@@ -1,6 +1,6 @@
 import Banks from "./Banks";
 import Capital from "./Capital";
-import Trades from "./Trades";
+import Income from "./Income";
 import Appraisal from "./Appraisal";
 import AppraisalResult from "./AppraisalResult";
 import Activity from "./Activity";
@@ -15,7 +15,7 @@ import Done from "./Done";
 export default {
   Banks, 
   Capital,
-  Trades,
+  Income,
   Appraisal,
   AppraisalResult,
   Activity,

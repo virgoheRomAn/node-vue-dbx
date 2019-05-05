@@ -12,7 +12,7 @@ const userInfo = {
   cityName: "市辖区",
   areaId: "500112",
   areaName: "渝北区"
-}
+};
 
 const capitalRecord = [
   { type: "0", time: "2019-04-22", info: "至尾号5626招商银行卡", amount: 100 },
@@ -24,6 +24,18 @@ const capitalRecord = [
   { type: "0", time: "2019-04-22", info: "至尾号5626招商银行卡", amount: 100 },
   { type: "0", time: "2019-04-22", info: "至尾号5626招商银行卡", amount: 100 },
   { type: "0", time: "2019-04-22", info: "至尾号5626招商银行卡", amount: 100 }
+];
+
+const incomeRecord = [
+  { source: "0", source_text: "推广出单", number: "0", insurance_amount: "50", generalize_amount: "100" },
+  { source: "0", source_text: "合伙人出单", number: "1", insurance_amount: "50", generalize_amount: "100" },
+  { source: "0", source_text: "推广出单", number: "1", insurance_amount: "50", generalize_amount: "100" },
+  { source: "0", source_text: "推广出单", number: "1", insurance_amount: "50", generalize_amount: "100" },
+  { source: "0", source_text: "推广出单", number: "1", insurance_amount: "50", generalize_amount: "100" },
+  { source: "0", source_text: "推广出单", number: "1", insurance_amount: "50", generalize_amount: "100" },
+  { source: "0", source_text: "推广出单", number: "1", insurance_amount: "50", generalize_amount: "100" },
+  { source: "0", source_text: "推广出单", number: "1", insurance_amount: "50", generalize_amount: "100" },
+  { source: "0", source_text: "推广出单", number: "1", insurance_amount: "50", generalize_amount: "100" }
 ];
 
 
@@ -41,21 +53,38 @@ export default {
       });
     }),
 
-    /**
-     * 提现列表
-     */
-    mock.onGet(`/usercenter/capital`).reply(config => {
-      let { pageNum, pageSize } = config;
+      /**
+       * 提现列表
+       */
+      mock.onGet(`/usercenter/capital`).reply(config => {
+        let { pageNum, pageSize } = config;
 
-      return new Promise((resolve, reject) => {
-        let res = []
-        let startIndex = (pageNum - 1) * pageSize
-        if (capitalRecord.length > startIndex) {
-          let endIndex = startIndex + pageSize
-          res = capitalRecord.slice(startIndex, endIndex)
-        }
-        resolve([200, { code: 200, message: '成功', data: res }])
+        return new Promise((resolve, reject) => {
+          let res = []
+          let startIndex = (pageNum - 1) * pageSize
+          if (capitalRecord.length > startIndex) {
+            let endIndex = startIndex + pageSize
+            res = capitalRecord.slice(startIndex, endIndex)
+          }
+          resolve([200, { code: 200, message: '成功', data: res }])
+        })
+      }),
+
+      /**
+       * 收入列表
+       */
+      mock.onGet(`/usercenter/income`).reply(config => {
+        let { pageNum, pageSize } = config;
+
+        return new Promise((resolve, reject) => {
+          let res = []
+          let startIndex = (pageNum - 1) * pageSize
+          if (incomeRecord.length > startIndex) {
+            let endIndex = startIndex + pageSize
+            res = incomeRecord.slice(startIndex, endIndex)
+          }
+          resolve([200, { code: 200, message: '成功', data: res }])
+        })
       })
-    })
   }
 }

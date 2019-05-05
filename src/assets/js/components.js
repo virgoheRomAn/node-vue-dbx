@@ -10,7 +10,9 @@ import Scroll from "components/Scroll";
 import BankCard from "components/BankCard";
 import Picker from "components/Picker";
 import ProductItem from "components/ProductItem";
-import { VueCropper } from 'vue-cropper'
+import PersonAssets from "components/PersonAssets";
+import Calendar from "components/calendar/Calendar.vue";
+import { VueCropper } from 'vue-cropper';
 
 export default {
   install(Vue) {
@@ -27,5 +29,7 @@ export default {
     Vue.component('picker', Picker);
     Vue.component('product-item', ProductItem);
     Vue.component('vue-cropper', VueCropper);
+    Vue.component('calendar-item', Calendar);
+    Vue.component('person-assets', PersonAssets);
   }
 }
