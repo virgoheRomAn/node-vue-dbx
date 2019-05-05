@@ -28,9 +28,9 @@
       <label class="btn">
         <el-button class="user-btn" @click="sure()">确定修改</el-button>
       </label>
-      <label class="tips">
+      <!-- <label class="tips">
         <a href="javascript:;" @click="forget()">忘记原密码？</a>
-      </label>
+      </label> -->
     </div>
   </div>
 </template>
@@ -51,18 +51,24 @@ export default {
   },
   methods: {
     sure() {
-      this.userAPI
-        .changePassword({
-          oldPassword: this.oldPsd,
-          newPassword: this.newPsd,
-          again: this.newAgainPsd
-        })
-        .then(data => {
-          //登陆页面
-          this.$router.push({
-            name: "login"
-          });
+      if (this.newPsd !== this.newAgainPsd) {
+        this.$jBox.error("确认密码不一致");
+        return false;
+      }
+
+      this.API.post({
+        url: `/usercenter/changeLoginPwd`,
+        params: {
+          oldPwd: this.oldPsd,
+          newPwd: this.newPsd,
+          confrimPwd: this.newAgainPsd
+        }
+      }).then(data => {
+        //登陆页面
+        this.$router.push({
+          name: "login"
         });
+      });
     },
     forget() {
       this.$router.push(`/usercenter/s/psd/forgetlogin`);

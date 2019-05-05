@@ -153,13 +153,7 @@ export default {
   methods: {
     getNotice() {
       return new Promise((resolve, reject) => {
-        this.MOCK.get({
-          url: `/basic/getNotice`,
-          params: {
-            pageNum: 1,
-            pageSize: 5
-          }
-        })
+        this.API.get({ url: `/basic/notice`, type: false })
           .then(data => {
             resolve(data);
           })
@@ -170,13 +164,7 @@ export default {
     },
     getBanner() {
       return new Promise((resolve, reject) => {
-        this.MOCK.get({
-          url: `/basic/banner`,
-          params: {
-            pageNum: 1,
-            pageSize: 5
-          }
-        })
+        this.API.get({ url: `/basic/banner`, type: false })
           .then(data => {
             resolve(data);
           })
@@ -196,14 +184,14 @@ export default {
           });
       });
     },
-    ajaxListData(pagenum, pagesize) {
+    ajaxListData(pageNum, pageSize) {
       return new Promise((resolve, reject) => {
         this.API.post({
           url: `/product/list`,
           params: {
-            pagenum,
-            pagesize,
-            prodclass: ""
+            pageNum,
+            pageSize,
+            prodClass: ""
           },
           type: false
         })
@@ -218,16 +206,9 @@ export default {
     handleData(data) {
       data.map(item => {
         this.productList.push({
-          img:
-            item.thumb_img &&
-            item.thumb_img.indexOf("http:") > -1 &&
-            item.thumb_img.indexOf(".jpg") > -1
-              ? item.thumb_img
-              : require("../assets/img/p1.jpg"),
+          img: item.thumb_img,
           name: item.name,
-          intro:
-            item.summary ||
-            "平安财险含意外身故、意外医疗、意外津贴的综合意外险",
+          intro: item.summary,
           bx_daylimit: item.bx_daylimit,
           agelimit: item.agelimit,
           lower_money: item.lower_money,

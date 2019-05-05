@@ -51,7 +51,6 @@ router.post('/user/login', function (request, response, next) {
     response.send(res.data)
   }).catch(function (err) {
     console.log(err)
-    response.send(common.parseErrorData(err))
   })
 });
 

@@ -91,7 +91,7 @@ export default {
           this.userInfo.approveText =
             this.userInfo.approve === 0 ? "未认证" : "已认证";
 
-          this.user_count_data.totalAssets = data.amout;
+          this.user_count_data.totalAssets = data.amount;
           this.user_count_data.currentBalance = data.balance;
         }
       }
@@ -112,26 +112,9 @@ export default {
   methods: {
     getUserInfo() {
       return new Promise((resolve, reject) => {
-        this.MOCK.get({ url: `/usercenter/userInfo` })
+        this.API.get({ url: `/usercenter/userInfo`, type: false })
           .then(data => {
             resolve(data);
-          })
-          .catch(err => {
-            reject(err);
-          });
-      });
-    },
-    getUserCount() {
-      return new Promise((resolve, reject) => {
-        this.$ajax
-          .get(`/userCenter/account`)
-          .then(res => {
-            let data = res.data.data;
-            if (res.data.code !== 200) {
-              reject(res.data);
-            } else {
-              resolve(data);
-            }
           })
           .catch(err => {
             reject(err);

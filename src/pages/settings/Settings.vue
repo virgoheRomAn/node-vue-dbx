@@ -133,7 +133,7 @@ export default {
   methods: {
     getUserInfo() {
       return new Promise((resolve, reject) => {
-        this.MOCK.get({ url: `/usercenter/userInfo` })
+        this.API.get({ url: `/usercenter/userInfo` })
           .then(data => {
             resolve(data);
           })

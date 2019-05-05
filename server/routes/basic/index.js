@@ -11,4 +11,42 @@ var port = require('../../config/interface')
 var router = express.Router()
 var common = require('../common')
 
+/**
+ * banner列表
+ */
+router.get('/basic/banner', function (request, response, next) {
+  let url = native + port.url.basic.banner;
+  let sessionid = request.session.token;
+  if (!sessionid) {
+    common.notUserInfo(request, response);
+    return false;
+  }
+  let param = { sessionid };
+  $ajax.post(url, param).then(function (res) {
+    let data = res.data;
+    response.send(data)
+  }).catch(function (err) {
+    console.log(err)
+  })
+})
+
+/**
+ * notice列表
+ */
+router.get('/basic/notice', function (request, response, next) {
+  let url = native + port.url.basic.notice;
+  let sessionid = request.session.token;
+  if (!sessionid) {
+    common.notUserInfo(request, response);
+    return false;
+  }
+  let param = { sessionid };
+  $ajax.post(url, param).then(function (res) {
+    let data = res.data;
+    response.send(data)
+  }).catch(function (err) {
+    console.log(err)
+  })
+})
+
 module.exports = router

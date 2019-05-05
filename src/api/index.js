@@ -8,7 +8,7 @@ const handleData = (data, resolve, reject) => {
   if (data.code === 200) {
     resolve(data.data);
   } else {
-    jBox.error(data.message, {
+    jBox.error(data.msg, {
       closeCallback: () => {
         setTimeout(() => {
           reject(data);

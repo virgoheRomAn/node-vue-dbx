@@ -35,15 +35,15 @@
                     </ul>
                   </div>
                   <div class="content">
-                    <div class="item row2">
+                    <div class="item row1">
                       <span>保费：</span>
                       <label>{{item.insurance_amount}}元</label>
                     </div>
-                    <div class="item row2">
+                    <div class="item row1">
                       <span>推广费：</span>
                       <label>{{item.generalize_amount}}元</label>
                     </div>
-                    <div class="item row2">
+                    <div class="item row1">
                       <span>数量：</span>
                       <label>{{item.num}}</label>
                     </div>
@@ -108,7 +108,11 @@ export default {
   created() {
     let obj = [
       {
-        fun: this.ajaxListData(this.pageNum, this.pageSize, false),
+        fun: this.ajaxListData(
+          this.search.startTime,
+          this.search.endTime,
+          false
+        ),
         callback: data => {
           if (data.length === this.pageSize) {
             this.pageNum++;
@@ -129,13 +133,11 @@ export default {
         }
       },
       {
-        // fun: this.getUserCount,
+        fun: this.getUserCount(),
         callback: data => {
           if (!!data) {
-            this.user_count_data.totalAssets = data.total_assets;
-            this.user_count_data.currentBalance = data.current_balance;
-            this.user_count_data.totalIncomeAmount = data.totalIncomeAmount;
-            this.user_count_data.totalInvestAmount = data.totalInvestAmount;
+            this.user_count_data.totalAssets = data.effect_amount;
+            this.user_count_data.currentBalance = data.await_amount;
           }
         }
       }
@@ -145,36 +147,20 @@ export default {
   methods: {
     getUserCount() {
       return new Promise((resolve, reject) => {
-        this.$ajax
-          .get(`/userCenter/account`)
-          .then(res => {
-            let data = res.data.data;
-            if (res.data.code !== 200) {
-              reject(res.data);
-            } else {
-              resolve(data);
-            }
+        this.API.get({ url: `/usercenter/account`, type: false })
+          .then(data => {
+            resolve(data);
           })
           .catch(err => {
             reject(err);
           });
       });
     },
-    handleData(data) {
-      data.map(item => {
-        this.list.push({
-          type: item.source_text,
-          num: item.number,
-          insurance_amount: this.$G.moneyFormat(item.insurance_amount, 2),
-          generalize_amount: this.$G.moneyFormat(item.generalize_amount, 2)
-        });
-      });
-    },
-    ajaxListData(pageNum, pageSize, type) {
+    ajaxListData(startTime, endTime, type) {
       return new Promise((resolve, reject) => {
-        this.MOCK.get({
+        this.API.post({
           url: `/usercenter/income`,
-          params: { pageSize, pageNum },
+          params: { startTime, endTime },
           type
         })
           .then(data => {
@@ -185,35 +171,22 @@ export default {
           });
       });
     },
+    handleData(data) {
+      this.list.splice(0, this.list.length);
+      data.map(item => {
+        this.list.push({
+          type: item.source_text,
+          num: item.number,
+          insurance_amount: this.$G.moneyFormat(item.insurance_amount, 2),
+          generalize_amount: this.$G.moneyFormat(item.generalize_amount, 2)
+        });
+      });
+    },
     scrollTo(x, y, t) {
       this.$refs.scroll.scrollTo(x, y, t, "swipeBounce");
     },
-    scroll(pos) {
-      //监听滚动，暂时屏蔽
-      let $container = this.$("#container");
-      let $top = this.$(".person-assets");
-      let $ele = this.$(".tab-nav");
-      if (Math.abs(pos.y) >= 15 + $top.outerHeight(true) + 45) {
-        $container.addClass("header");
-        this.isShowHeader = true;
-
-        let $tabNavItme = this.$("#tab").find(".item.active");
-        let $tabLine = this.$("#line");
-        let _tabWidth = $tabNavItme.outerWidth(true);
-        let _tabLeft = $tabNavItme.position().left;
-        let _tabPadLeft = parseInt($tabNavItme.css("padding-left"));
-        let _tabPadRight = parseInt($tabNavItme.css("padding-right"));
-        $tabLine.css({
-          width: _tabWidth - _tabPadLeft - _tabPadRight,
-          left: _tabLeft + _tabPadLeft
-        });
-      } else {
-        $container.removeClass("header");
-        this.isShowHeader = false;
-      }
-    },
     onPullingUp() {
-      this.ajaxListData(this.pageNum, this.pageSize, false)
+      this.ajaxListData(this.search.startTime, this.search.endTime, false)
         .then(data => {
           setTimeout(() => {
             if (data.length !== 0) {
@@ -232,18 +205,22 @@ export default {
     },
     selectTime() {
       this.calendar.value = this.search.time ? this.search.time : [];
-
       this.$refs.calendar.init();
-
       this.$refs.popupBox.show();
     },
     calendarSelect(result) {
       this.search.timeTxt =
-        result.begin.join("-") + " 至 " + result.end.join("-");
+        result.begin.join("/") + " 至 " + result.end.join("/");
       this.search.time = [result.begin, result.end];
-      this.search.startTime = result.begin.join("-");
-      this.search.endTime = result.end.join("-");
+      this.search.startTime = result.begin.join("/");
+      this.search.endTime = result.end.join("/");
       this.$refs.popupBox.hide();
+
+      this.ajaxListData(this.search.startTime, this.search.endTime, true).then(
+        data => {
+          this.handleData(data);
+        }
+      );
     }
   }
 };

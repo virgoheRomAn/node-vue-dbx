@@ -87,8 +87,8 @@ export default {
     },
     ajaxListData(pageNum, pageSize, type) {
       return new Promise((resolve, reject) => {
-        this.MOCK.get({
-          url: `/usercenter/capital`,
+        this.API.post({
+          url: `/usercenter/withdraw`,
           params: {
             pageSize,
             pageNum

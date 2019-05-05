@@ -120,7 +120,7 @@ export default {
   filters: {
     fMoney: function(value) {
       return value.toString().indexOf("*") < 0
-        ? $G.moneyFormat($G.count.div(value, 100))
+        ? $G.moneyFormat(value)
         : value;
     }
   },

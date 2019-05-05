@@ -28,14 +28,7 @@ const capitalRecord = [
 
 const incomeRecord = [
   { source: "0", source_text: "推广出单", number: "0", insurance_amount: "50", generalize_amount: "100" },
-  { source: "0", source_text: "合伙人出单", number: "1", insurance_amount: "50", generalize_amount: "100" },
-  { source: "0", source_text: "推广出单", number: "1", insurance_amount: "50", generalize_amount: "100" },
-  { source: "0", source_text: "推广出单", number: "1", insurance_amount: "50", generalize_amount: "100" },
-  { source: "0", source_text: "推广出单", number: "1", insurance_amount: "50", generalize_amount: "100" },
-  { source: "0", source_text: "推广出单", number: "1", insurance_amount: "50", generalize_amount: "100" },
-  { source: "0", source_text: "推广出单", number: "1", insurance_amount: "50", generalize_amount: "100" },
-  { source: "0", source_text: "推广出单", number: "1", insurance_amount: "50", generalize_amount: "100" },
-  { source: "0", source_text: "推广出单", number: "1", insurance_amount: "50", generalize_amount: "100" }
+  { source: "0", source_text: "合伙人出单", number: "1", insurance_amount: "50", generalize_amount: "100" }
 ];
 
 
