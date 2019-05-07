@@ -6,7 +6,7 @@
         <div class="container">
           <money-input class="button" ref="moneyInput" :isClose="false">
             <label slot="info" class="tips">
-              <span>可提现金额<em>{{balanceStr}}</em>元</span>
+              <span>可提现金额<em>{{balance}}</em>元</span>
             </label>
             <a slot="button" class="button" @click="allWithdraw()">全部提现</a>
           </money-input>
@@ -78,25 +78,63 @@ export default {
       balance: "",
       bankNo: "",
       bankInfo: { code: "", text: "" },
-      bankData: [this.CONST.BANK],
+      bankData: [[]],
       password: ""
     };
   },
-  mounted() {
-    this.MOCK.get({ url: `/usercenter/userInfo` })
-      .then(data => {
-        this.balance = data.balance;
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  },
-  computed: {
-    balanceStr: function() {
-      return this.$G.moneyFormat(this.balance);
-    }
+  created() {
+    let obj = [
+      {
+        fun: this.getWidthdrawInfo(),
+        callback: data => {
+          if (!!data) {
+            this.balance = this.$G.moneyFormat(data.balance);
+            this.bankNo = this.$G.formatBankNoData(data.bankcardno);
+            this.bankInfo = {
+              code: data.bankcode,
+              text: data.bankname
+            };
+          }
+        }
+      },
+      {
+        fun: this.getBankList(),
+        callback: data => {
+          console.log(data);
+          data.map(item => {
+            this.bankData[0].push({
+              code: item.bankcode,
+              text: item.bankname
+            });
+          });
+        }
+      }
+    ];
+    this.__G__.ajaxParataxisDataStep(this, obj);
   },
   methods: {
+    getWidthdrawInfo() {
+      return new Promise((resolve, reject) => {
+        this.API.get({ url: `/usercenter/withdrawInfo`, type: false })
+          .then(data => {
+            resolve(data);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
+    getBankList() {
+      return new Promise((resolve, reject) => {
+        this.API.get({ url: `/usercenter/bankList`, type: false })
+          .then(data => {
+            resolve(data);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
     allWithdraw() {
       this.$refs.moneyInput.money = this.balance.toString();
       this.$refs.moneyInput.blur();

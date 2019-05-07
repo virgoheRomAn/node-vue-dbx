@@ -72,7 +72,6 @@ export default {
         { title: "省份城市", text: "", type: "city", picker: true },
         { title: "资质认证", text: "" },
         { title: "登陆密码", text: "", type: "password" },
-        { title: "银行卡号", text: "", type: "bank" },
         { title: "提现密码", text: "", type: "payPSD" }
       ],
 
@@ -115,14 +114,13 @@ export default {
           },
           { title: "资质认证", text: data.approve === 0 ? "未认证" : "已认证" },
           { title: "登陆密码", text: "", type: "password" },
-          { title: "银行卡号", text: "", type: "bank" },
           { title: "提现密码", text: "", type: "payPSD" }
         ];
 
         this.userInfo = {
           address: {
-            code: [data.provinceId, data.cityId, data.areaId],
-            text: ""
+            code: [data.provinceId, data.cityId],
+            text: `${data.provinceName}，${data.cityName}`
           }
         };
       })
@@ -174,13 +172,11 @@ export default {
       });
     },
     pickerInit(data) {
-      let p = this.$G.getArrayValueById(data.initData.code[0], data.pList);
-      let c = this.$G.getArrayValueById(data.initData.code[1], data.cList);
-      let a =
-        this.$G.getArrayValueById(data.initData.code[2], data.aList) || "区县";
+      // let p = this.$G.getArrayValueById(data.initData.code[0], data.pList);
+      // let c = this.$G.getArrayValueById(data.initData.code[1], data.cList);
 
-      let cAry = [p, c, a];
-      this.userInfo.address.text = cAry.join("，");
+      // let cAry = [p, c];
+      // this.userInfo.address.text = cAry.join("，");
     },
     showPicker(ref) {
       if (this.$G.isArray(this.$refs[ref])) {

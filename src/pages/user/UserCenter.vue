@@ -91,25 +91,32 @@ export default {
           this.userInfo.approveText =
             this.userInfo.approve === 0 ? "未认证" : "已认证";
 
-          this.user_count_data.totalAssets = data.amount;
           this.user_count_data.currentBalance = data.balance;
         }
+      },
+      {
+        fun: this.getUserIncome(),
+        callback: data => {
+          if (!!data) {
+            this.user_count_data.totalAssets = data.amount;
+          }
+        }
       }
-      // {
-      //   fun: this.getUserCount(),
-      //   callback: data => {
-      //     if (!!data) {
-      //       this.user_count_data.totalAssets = data.total_assets;
-      //       this.user_count_data.currentBalance = data.current_balance;
-      //       this.user_count_data.totalIncomeAmount = data.totalIncomeAmount;
-      //       this.user_count_data.totalInvestAmount = data.totalInvestAmount;
-      //     }
-      //   }
-      // }
     ];
     this.__G__.ajaxParataxisDataStep(this, obj);
   },
   methods: {
+    getUserIncome() {
+      return new Promise((resolve, reject) => {
+        this.API.get({ url: `/usercenter/income`, type: false })
+          .then(data => {
+            resolve(data);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
     getUserInfo() {
       return new Promise((resolve, reject) => {
         this.API.get({ url: `/usercenter/userInfo`, type: false })

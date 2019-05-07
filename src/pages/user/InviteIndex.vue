@@ -1,6 +1,6 @@
 <template>
   <div class="invite-bar">
-    <h2 class="title">邀请好友投资</h2>
+    <h2 class="title">邀请好友注册</h2>
     <div class="content">
       <i class="i-top"><img src="../../assets/img/invite/icon2.png"></i>
       <i class="i-left"><img src="../../assets/img/invite/icon1.png"></i>

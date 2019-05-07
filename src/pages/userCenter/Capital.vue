@@ -88,7 +88,7 @@ export default {
     ajaxListData(pageNum, pageSize, type) {
       return new Promise((resolve, reject) => {
         this.API.post({
-          url: `/usercenter/withdraw`,
+          url: `/usercenter/withdrawRecord`,
           params: {
             pageSize,
             pageNum

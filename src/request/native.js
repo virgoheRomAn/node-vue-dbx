@@ -11,7 +11,7 @@ if (ENV === "prod") {
   _share_host_ = "http://money.test.tongrong365.net";
 } else {
   _ajax_host_ = "/api";
-  _share_host_ = "http://10.55.110.211:8090";
+  _share_host_ = "http://10.55.110.211:9999";
 }
 
 export const ajax_host = _ajax_host_;

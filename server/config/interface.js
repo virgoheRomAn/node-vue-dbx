@@ -1,17 +1,21 @@
 const URL = {
   basic: {
     banner: "/front/api/user/banner",
-    notice: "/front/api/user/notice"
+    notice: "/front/api/user/notice",
+    city: "/front/api/user/province_city"
   },
   user: {
     login: "/front/api/login"
   },
   usercenter: {
     userInfo: "/front/api/user/user_info",
-    withdraw: "/front/api/user/withdraw_list",
-    income: "/front/api/user/user_profit_total",
-    profit: "/front/api/user/user_profit",
-    changeLoginPwd:"/front/api/user/change_loginpassword"
+    withdrawRecord: "/front/api/user/withdraw_list",
+    incomeRecord: "/front/api/user/user_profit_total",
+    profitInfo: "/front/api/user/user_profit",
+    changeLoginPwd: "/front/api/user/change_loginpassword",
+    income: "/front/api/user/user_income",
+    withdrawInfo: "/front/api/user/withdraw",
+    bankList: "/front/api/user/bank_list"
   },
   product: {
     classes: "/front/api/user/product_classes",

@@ -12,9 +12,7 @@ import User from '@/pages/user/index'
 import Settings from '@/pages/settings/index'
 import Product from '@/pages/product/index'
 import UserCenter from '@/pages/userCenter/index'
-import Bank from '@/pages/banks/index'
 import Password from '@/pages/password/index'
-import Activity from '@/pages/activity/index'
 
 Vue.use(Router)
 
@@ -65,24 +63,6 @@ const routes = [
     }
   },
   {
-    path: '/notice',
-    name: 'notice',
-    component: UserCenter.Notice,
-    meta: {
-      title: '公告列表',
-      isAuth: false
-    }
-  },
-  {
-    path: '/notice/details/:noticeID',
-    name: 'noticeDetails',
-    component: UserCenter.NoticeDetails,
-    meta: {
-      title: '公告详情',
-      isAuth: false
-    }
-  },
-  {
     path: '/usercenter',
     name: 'usercenter',
     component: User.UserCenter,
@@ -123,19 +103,6 @@ const routes = [
     ]
   },
   {
-    path: '/product/:id',
-    name: 'productInformation',
-    component: EmptyRouter,
-    meta: {
-      title: '产品信息'
-    },
-    children: [
-      { path: 'details/:code?', name: 'details', component: Product.Details, meta: { title: '产品详情' } },
-      { path: 'buy/:code?', name: 'buy', component: Product.Buy, meta: { title: '购买页面', isAuth: true } },
-      { path: 'done/:code?', name: 'buyDone', component: Product.Done, meta: { title: '完成页面', isAuth: true } }
-    ]
-  },
-  {
     path: '/usercenter/settings',
     name: 'settings',
     component: Settings.Settings,
@@ -152,41 +119,9 @@ const routes = [
       title: '个人中心'
     },
     children: [
-      { path: 'banks/:mobile?', name: 'banks', component: UserCenter.Banks, meta: { title: '我的银行卡', isAuth: true } },
       { path: 'capital/:mobile?', name: 'capital', component: UserCenter.Capital, meta: { title: '资金管理', isAuth: true } },
       { path: 'income/:mobile?', name: 'income', component: UserCenter.Income, meta: { title: '我的收入', isAuth: true } },
-      { path: 'appraisal/:mobile?', name: 'appraisal', component: UserCenter.Appraisal, meta: { title: '风险测评', isAuth: true } },
-      { path: 'appraisalResult/:mobile?', name: 'appraisalResult', component: UserCenter.AppraisalResult, meta: { title: '风险测评-已测评', isAuth: true } },
-      { path: 'activity/:mobile?', name: 'activity', component: UserCenter.Activity, meta: { title: '活动管理', isAuth: true } },
-      { path: 'message/:mobile?', name: 'message', component: UserCenter.Message, meta: { title: '消息管理', isAuth: true } },
-      { path: 'password/:mobile?', name: 'password', component: UserCenter.Password, meta: { title: '密码管理', isAuth: true } },
-      { path: 'withdraw/:mobile?', name: 'withdraw', component: UserCenter.Withdraw, meta: { title: '提现', isAuth: true } },
-      { path: 'recharge/:mobile?', name: 'recharge', component: UserCenter.Recharge, meta: { title: '充值', isAuth: true } },
-      { path: 'result/:result?', name: 'result', component: UserCenter.Done, meta: { title: '结果页', isAuth: true } }
-    ]
-  },
-  {
-    path: '/usercenter/:id/bank',
-    name: 'bankSettings',
-    component: EmptyRouter,
-    meta: {
-      title: '绑定银行卡'
-    },
-    children: [
-      { path: 'add/:user?', name: 'addBank', component: Bank.Add, meta: { title: '添加银行卡', isAuth: true } },
-      { path: 'change/:cardNo?', name: 'changeBank', component: Bank.Change, meta: { title: '更换银行卡', isAuth: true } },
-      { path: 'done/:cardNo?', name: 'bankDone', component: Bank.Done, meta: { title: '绑定结果页面', isAuth: true } }
-    ]
-  },
-  {
-    path: '/usercenter/:id/active',
-    name: 'activitySettings',
-    component: EmptyRouter,
-    meta: {
-      title: '活动管理'
-    },
-    children: [
-      { path: 'packet/:user?', name: 'packet', component: Activity.Packet, meta: { title: '我的红包', isAuth: true } }
+      { path: 'withdraw/:mobile?', name: 'withdraw', component: UserCenter.Withdraw, meta: { title: '提现', isAuth: true } }
     ]
   },
   {
@@ -201,18 +136,6 @@ const routes = [
       { path: 'settingpay/:mobile?', name: 'settingPay', component: Password.SettingPay, meta: { title: '设置支付密码', isAuth: true } },
       { path: 'forgetlogin/:mobile?', name: 'forgetLogin', component: Password.ForgetLogin, meta: { title: '忘记登陆密码' } },
       { path: 'changelogin/:mobile?', name: 'changeLogin', component: Password.ChangeLogin, meta: { title: '登录密码修改', isAuth: true } }
-    ]
-  },
-  {
-    path: '/usercenter/settings/',
-    name: 'settingsMenu',
-    component: EmptyRouter,
-    meta: {
-      title: '个人设置'
-    },
-    children: [
-      { path: 'approve/:mobile?', name: 'approve', component: Settings.Approve, meta: { title: '身份认证', isAuth: true } },
-      { path: 'approveInfo/:identity?', name: 'approveInfo', component: Settings.ApproveInfo, meta: { title: '选择个人信息', isAuth: true } }
     ]
   },
   {

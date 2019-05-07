@@ -49,4 +49,23 @@ router.get('/basic/notice', function (request, response, next) {
   })
 })
 
+/**
+ * 城市列表
+ */
+router.get('/basic/city', function (request, response, next) {
+  let url = native + port.url.basic.city;
+  let sessionid = request.session.token;
+  if (!sessionid) {
+    common.notUserInfo(request, response);
+    return false;
+  }
+  let param = { sessionid };
+  $ajax.post(url, param).then(function (res) {
+    let data = res.data;
+    response.send(data)
+  }).catch(function (err) {
+    console.log(err)
+  })
+})
+
 module.exports = router

@@ -27,7 +27,7 @@
               <a :href="item.url">{{item.title}}</a>
             </li>
           </ul>
-          <a class="more" href="javascript:;" @click="moreNotice()">更多</a>
+          <!-- <a class="more" href="javascript:;" @click="moreNotice()">更多</a> -->
         </div>
 
         <div class="product-bar pl-20 pr-20">

@@ -593,6 +593,22 @@ FB.formatBirthdayData = (val, ary = false, split = "-") => {
 };
 
 /**
+ * 切割银行卡号
+ * @param {String} number  数据源
+ * @param {String} split  格式化
+ * @returns {String} 日期格式
+ */
+FB.formatBankNoData = (number, split = "*") => {
+  let length = number.length;
+  let reg = /^(\d{4})\d+(\d{4})$/;
+  let str = "";
+  for (let i = 0; i < length - 8; i++) {
+    str += split;
+  }
+  return number.replace(reg, `$1${str}$2`)
+};
+
+/**
  * 验证是否是数组
  * @param {Array} ary  数据源
  * @returns {Boolean} 

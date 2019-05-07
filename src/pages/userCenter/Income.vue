@@ -147,7 +147,7 @@ export default {
   methods: {
     getUserCount() {
       return new Promise((resolve, reject) => {
-        this.API.get({ url: `/usercenter/account`, type: false })
+        this.API.get({ url: `/usercenter/profitInfo`, type: false })
           .then(data => {
             resolve(data);
           })
@@ -159,7 +159,7 @@ export default {
     ajaxListData(startTime, endTime, type) {
       return new Promise((resolve, reject) => {
         this.API.post({
-          url: `/usercenter/income`,
+          url: `/usercenter/incomeRecord`,
           params: { startTime, endTime },
           type
         })

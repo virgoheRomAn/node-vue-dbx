@@ -23,8 +23,8 @@ router.get('/usercenter/userInfo', function (request, response, next) {
 /**
  * 用户提现记录
  */
-router.post('/usercenter/withdraw', function (request, response, next) {
-  let url = native + port.url.usercenter.withdraw;
+router.post('/usercenter/withdrawRecord', function (request, response, next) {
+  let url = native + port.url.usercenter.withdrawRecord;
   let sessionid = request.session.token;
   let pageNum = request.body.pageNum || 1;
   let pageSize = request.body.pageSize || 10;
@@ -37,7 +37,7 @@ router.post('/usercenter/withdraw', function (request, response, next) {
     startTime,
     endTime
   }
-  console.log("用户提现记录参数：" + JSON.stringify(param));
+  console.log("用户提现记录参数：" + JSON.stringify(params));
   $ajax.post(url, params).then(function (res) {
     let data = res.data;
     response.send(data)
@@ -49,8 +49,8 @@ router.post('/usercenter/withdraw', function (request, response, next) {
 /**
  * 收入列表
  */
-router.post('/usercenter/income', function (request, response, next) {
-  let url = native + port.url.usercenter.income
+router.post('/usercenter/incomeRecord', function (request, response, next) {
+  let url = native + port.url.usercenter.incomeRecord
   let sessionid = request.session.token;
   let startTime = request.body.startTime || "";
   let endTime = request.body.endTime || "";
@@ -69,10 +69,55 @@ router.post('/usercenter/income', function (request, response, next) {
 })
 
 /**
- * 收入详情
+ * 我的收入
  */
-router.get('/usercenter/account', function (request, response, next) {
-  let url = native + port.url.usercenter.profit
+router.get('/usercenter/income', function (request, response, next) {
+  let url = native + port.url.usercenter.income
+  let sessionid = request.session.token;
+  let params = { sessionid }
+  $ajax.post(url, params).then(function (res) {
+    let data = res.data;
+    response.send(data)
+  }).catch(function (err) {
+    console.log(err)
+  })
+})
+
+/**
+ * 我的收入详情
+ */
+router.get('/usercenter/profitInfo', function (request, response, next) {
+  let url = native + port.url.usercenter.profitInfo
+  let sessionid = request.session.token;
+  let params = { sessionid };
+  $ajax.post(url, params).then(function (res) {
+    let data = res.data;
+    response.send(data)
+  }).catch(function (err) {
+    console.log(err)
+  })
+})
+
+/**
+ * 提现信息查询
+ */
+router.get('/usercenter/withdrawInfo', function (request, response, next) {
+  let url = native + port.url.usercenter.withdrawInfo
+  let sessionid = request.session.token;
+  let params = { sessionid };
+  $ajax.post(url, params).then(function (res) {
+    let data = res.data;
+    response.send(data)
+  }).catch(function (err) {
+    console.log(err)
+  })
+})
+
+/**
+ * 提现银行卡查询
+ */
+router.get('/usercenter/bankList', function (request, response, next) {
+  let url = native + port.url.usercenter.bankList
   let sessionid = request.session.token;
   let params = { sessionid };
   $ajax.post(url, params).then(function (res) {
