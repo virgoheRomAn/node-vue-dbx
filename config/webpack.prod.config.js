@@ -23,7 +23,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('prod')
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     }),
     new UglifyJsPlugin({
       uglifyOptions: {
