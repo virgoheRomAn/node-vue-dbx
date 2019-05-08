@@ -59,13 +59,13 @@ export default {
       if (index !== 9 && index !== 11) {
         this.$store.state.psdIndex++;
         if (this.$store.state.psdIndex <= 6) {
-          this.$store.dispatch("addPayPasswore", text);
+          this.$store.dispatch("addPayPassword", text);
           if (this.$store.state.psdIndex === 6) {
             this.payPassword.map(item => {
               psd += item;
             });
-            this.callback && this.callback.call(this, psd);
             this.$store.dispatch("hideKeyBoard");
+            this.callback && this.callback.call(this, psd);
           }
         }
       } else if (index === 9) {

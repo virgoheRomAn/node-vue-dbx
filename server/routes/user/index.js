@@ -54,4 +54,24 @@ router.post('/user/login', function (request, response, next) {
   })
 });
 
+/**
+ * 用户登出
+ * @param {String} username 用户手机号
+ * @param {String} password 密码
+ */
+router.get('/user/logout', function (request, response, next) {
+  let url = native + port.url.user.logout;
+  $ajax.post(url).then(function (res) {
+    let data = res.data;
+    if (data.code === 200) {
+      request.session.token = "";
+      request.session.username = "";
+    }
+
+    response.send(res.data)
+  }).catch(function (err) {
+    console.log(err)
+  })
+});
+
 module.exports = router

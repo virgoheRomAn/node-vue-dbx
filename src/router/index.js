@@ -132,7 +132,8 @@ const routes = [
       title: '密码管理'
     },
     children: [
-      { path: 'changepay/:mobile?', name: 'changePay', component: Password.ChangePay, meta: { title: '支付密码修改', isAuth: true } },
+      { path: 'vermobile/:type?', name: 'vermobile', component: Password.VerMobile, meta: { title: '验证手机', isAuth: true } },
+      { path: 'changepaypwd/:mobile?', name: 'changepaypwd', component: Password.ChangePayPwd, meta: { title: '修改支付密码' } },
       { path: 'settingpay/:mobile?', name: 'settingPay', component: Password.SettingPay, meta: { title: '设置支付密码', isAuth: true } },
       { path: 'forgetlogin/:mobile?', name: 'forgetLogin', component: Password.ForgetLogin, meta: { title: '忘记登陆密码' } },
       { path: 'changelogin/:mobile?', name: 'changeLogin', component: Password.ChangeLogin, meta: { title: '登录密码修改', isAuth: true } }

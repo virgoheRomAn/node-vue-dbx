@@ -6,7 +6,7 @@
         <div class="container">
           <money-input class="button" ref="moneyInput" :isClose="false">
             <label slot="info" class="tips">
-              <span>可提现金额<em>{{balance}}</em>元</span>
+              <span>可提现金额<em>{{balanceStr}}</em>元</span>
             </label>
             <a slot="button" class="button" @click="allWithdraw()">全部提现</a>
           </money-input>
@@ -26,7 +26,7 @@
             <li>
               <div class="content">
                 <span>银行卡号</span>
-                <el-input class="input" type="tel" placeholder="请输入银行卡号" v-model="bankNo" clearable></el-input>
+                <el-input class="input" type="tel" placeholder="请输入银行卡号" v-model="bankNoStr" clearable></el-input>
               </div>
             </li>
           </ul>
@@ -45,7 +45,7 @@
       <span>2、每月20日-30日可提现上月及之前已生效推广费，提现额度50元起</span>
     </div>
 
-    <popup-box id="popupBox" ref="popupBox" :isTitle="false" @ensure="ensure">
+    <popup-box id="popupBox" ref="popupBox" :isTitle="false">
       <div class="pay-pwd-bar" slot="cont">
         <pay-input>
           <span slot="title">请输入支付密码</span>
@@ -79,8 +79,17 @@ export default {
       bankNo: "",
       bankInfo: { code: "", text: "" },
       bankData: [[]],
-      password: ""
+      password: "",
+      payPwd: false
     };
+  },
+  computed: {
+    balanceStr() {
+      return this.$G.moneyFormat(this.balance);
+    },
+    bankNoStr() {
+      return this.bankNo && this.$G.formatBankNoData(this.bankNo);
+    }
   },
   created() {
     let obj = [
@@ -88,19 +97,19 @@ export default {
         fun: this.getWidthdrawInfo(),
         callback: data => {
           if (!!data) {
-            this.balance = this.$G.moneyFormat(data.balance);
-            this.bankNo = this.$G.formatBankNoData(data.bankcardno);
+            this.balance = data.balance;
+            this.bankNo = data.bankcardno;
             this.bankInfo = {
               code: data.bankcode,
               text: data.bankname
             };
+            this.payPwd = data.payPwd;
           }
         }
       },
       {
         fun: this.getBankList(),
         callback: data => {
-          console.log(data);
           data.map(item => {
             this.bankData[0].push({
               code: item.bankcode,
@@ -169,6 +178,15 @@ export default {
         return false;
       }
 
+      if (this.payPwd !== 1) {
+        this.$jBox.warn("您还没有设置支付密码<br>去设置支付密码", {
+          confirm: () => {
+            this.$router.push("/usercenter/s/psd/settingpay");
+          }
+        });
+        return false;
+      }
+
       this.$refs.popupBox.show();
     },
     sure(psd) {
@@ -176,9 +194,27 @@ export default {
       let realMoney = m.moneyNumber;
 
       this.$refs.popupBox.sure();
-    },
-    ensure() {
+
       this.$store.dispatch("emptyPayPassword");
+
+      this.API.post({
+        url: `/usercenter/withdraw`,
+        params: {
+          money: realMoney,
+          password: psd,
+          bankCode: this.bankInfo.code,
+          bankCardno: this.bankNo
+        }
+      }).then(data => {
+        this.$jBox.success("提现成功！", {
+          closeCallback: () => {
+            this.$router.push("/usercenter");
+          }
+        });
+      });
+    },
+    forget() {
+      this.$router.push("/usercenter/s/psd/vermobile");
     }
   }
 };

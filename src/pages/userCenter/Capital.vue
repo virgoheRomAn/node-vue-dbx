@@ -79,7 +79,7 @@ export default {
       data.map(item => {
         this.list.push({
           type: "提现",
-          time: item.time,
+          time: item.time.split(" ")[0],
           info: item.info,
           amount: this.$G.moneyFormat(item.amount, 2)
         });

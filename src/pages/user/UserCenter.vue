@@ -19,28 +19,28 @@
         <div class="box-list-arrow">
           <ul>
             <li>
-              <a :href="'/usercenter/s/banks/'">
+              <a href="#">
                 <label><i class="sprite s-icon-bank"></i></label>
                 <span>我的保单</span>
                 <em><i class="sprite s-icon-arrow"></i></em>
               </a>
             </li>
             <li>
-              <a :href="'/usercenter/s/capital/'">
+              <a href="#">
                 <label><i class="sprite s-icon-capital"></i></label>
                 <span>客户管理</span>
                 <em><i class="sprite s-icon-arrow"></i></em>
               </a>
             </li>
             <li>
-              <a :href="'/usercenter/s/trades/'">
+              <a href="#">
                 <label><i class="sprite s-icon-trade"></i></label>
                 <span>理赔帮助</span>
                 <em><i class="sprite s-icon-arrow"></i></em>
               </a>
             </li>
             <li>
-              <a href="">
+              <a href="#">
                 <label><i class="sprite s-icon-appraisal"></i></label>
                 <span>常见问题</span>
                 <em><i class="sprite s-icon-arrow"></i></em>

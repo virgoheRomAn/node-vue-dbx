@@ -1,11 +1,13 @@
 import SettingPay from "./SettingPay";
-import ChangePay from "./ChangePay";
+import VerMobile from "./VerMobile";
 import ChangeLogin from "./ChangeLogin";
 import ForgetLogin from "./ForgetLogin";
+import ChangePayPwd from "./ChangePayPwd";
 
 export default {
   SettingPay,
-  ChangePay,
+  VerMobile,
   ChangeLogin,
-  ForgetLogin
+  ForgetLogin,
+  ChangePayPwd
 }

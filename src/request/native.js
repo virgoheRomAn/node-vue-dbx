@@ -7,8 +7,8 @@ if (ENV === "prod") {
   _ajax_host_ = "http://money.tongrong365.com";
   _share_host_ = "http://money.tongrong365.com";
 } else if (ENV === "test") {
-  _ajax_host_ = "http://money.test.tongrong365.net";
-  _share_host_ = "http://money.test.tongrong365.net";
+  _ajax_host_ = "http://wtest.dongbaoxian.cn";
+  _share_host_ = "http://wtest.dongbaoxian.cn";
 } else {
   _ajax_host_ = "/api";
   _share_host_ = "http://10.55.110.211:9999";

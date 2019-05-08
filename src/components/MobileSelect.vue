@@ -2,7 +2,7 @@
   <li>
     <div class="content">
       <slot name="text"></slot>
-      <em><i class="sprite s-icon-arrow" v-if="editor"></i></em>
+      <em v-if="editor"><i class="sprite s-icon-arrow"></i></em>
     </div>
     <picker @select="handleSelect(arguments)" :data="pickerData" :selected-index="pickerSelect" ref="picker" :title="title"
       @change="handleChange" cancelTxt="取消" confirmTxt="确定"></picker>
@@ -82,9 +82,9 @@ export default {
     }
   },
   watch: {
-    cityInitData(val) {
-      this.init();
-    },
+    // cityInitData(val) {
+    //   this.init();
+    // },
     pickerData() {
       this.$refs.picker && this.$refs.picker.refresh();
     }

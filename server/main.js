@@ -61,8 +61,8 @@ if (env === 'native1') {
 } else {
   app.use(cookieParser('session'));
   app.use(session({
-    name: 'sessionId',
-    secret: 'session',
+    name: 'dbxSessionId',
+    secret: 'dbxSession',
     resave: true,
     saveUninitialized: true,
     cookie: {

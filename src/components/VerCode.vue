@@ -10,99 +10,95 @@
 </template>
 
 <script>
-  export default {
-    name: "ver-code",
-    props: {
-      mobile: {
-        type: String,
-        default: null
-      },
-      bindCard: {
-        type: null,
-        default: false
-      }
+export default {
+  name: "ver-code",
+  props: {
+    mobile: {
+      type: String,
+      default: null
     },
-    data() {
-      return {
-        verCode: "",
-        isMobile: false,
-        isCodeLoading: false,
-        codeText: "获取验证码"
-      };
-    },
-    created() {
-      this.isMobile = /^1[0-9]{10}$/.test(this.mobile);
-    },
-    watch: {
-      mobile(val) {
-        this.isMobile = /^1[0-9]{10}$/.test(val);
-      }
-    },
-    methods: {
-      cutDown() {
-        let r = 60;
-        this.isMobile = true;
-        this.isCodeLoading = true;
+    payPwd: {
+      type: null,
+      default: true
+    }
+  },
+  data() {
+    return {
+      verCode: "",
+      isMobile: false,
+      isCodeLoading: false,
+      codeText: "获取验证码"
+    };
+  },
+  created() {
+    this.isMobile = /^1[0-9]{10}$/.test(this.mobile);
+  },
+  watch: {
+    mobile(val) {
+      this.isMobile = /^1[0-9]{10}$/.test(val);
+    }
+  },
+  methods: {
+    cutDown() {
+      let r = 60;
+      this.isMobile = true;
+      this.isCodeLoading = true;
 
-        this.codeText = r + "s重新发送";
-        let verifyAuto = setInterval(() => {
-          this.codeText = --r + "s重新发送";
-          if (r <= 0) {
-            this.codeText = "获取验证码";
-            clearInterval(verifyAuto);
-            this.isCodeLoading = false;
-          }
-        }, 1000);
-      },
-      getVerCode(event) {
-        if (!this.isMobile) return false;
-        if (this.isCodeLoading) return false;
+      this.codeText = r + "s重新发送";
+      let verifyAuto = setInterval(() => {
+        this.codeText = --r + "s重新发送";
+        if (r <= 0) {
+          this.codeText = "获取验证码";
+          clearInterval(verifyAuto);
+          this.isCodeLoading = false;
+        }
+      }, 1000);
+    },
+    getVerCode(event) {
+      if (!this.isMobile) return false;
+      if (this.isCodeLoading) return false;
 
-        if (!this.bindCard) {
-          this.userAPI
-            .getSmsCode({
-              mobile: this.mobile
-            })
-            .then(data => {
-              if (data && data.code === 200) {
-                this.cutDown();
-                this.$jBox.alert("验证码已发送!");
-              } else {
-                this.$jBox.error("验证码发送失败!");
-              }
-            });
+      if (this.payPwd) {
+        this.API.get({ url: `/usercenter/payPwdSmscode` })
+          .then(data => {
+            this.cutDown();
+            this.$jBox.alert("验证码已发送!");
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        if (!this.bindCard.change) {
+          let params = {
+            realName: this.bindCard.realName,
+            certificateNo: this.bindCard.certificateNo,
+            bankName: this.bindCard.bankName,
+            cardNo: this.bindCard.cardNo,
+            phone: this.mobile
+          };
+
+          this.userAPI.getBindCardSmsCode(params).then(data => {
+            this.cutDown();
+            this.orderData = data.data;
+            this.$jBox.alert("验证码已发送!");
+          });
         } else {
-          if (!this.bindCard.change) {
-            let params = {
-              realName: this.bindCard.realName,
-              certificateNo: this.bindCard.certificateNo,
-              bankName: this.bindCard.bankName,
-              cardNo: this.bindCard.cardNo,
-              phone: this.mobile
-            };
+          let params = {
+            bankName: this.bindCard.bankName,
+            cardNo: this.bindCard.cardNo,
+            phone: this.mobile
+          };
 
-            this.userAPI.getBindCardSmsCode(params).then(data => {
-              this.cutDown();
-              this.orderData = data.data;
-              this.$jBox.alert("验证码已发送!");
-            });
-          } else {
-            let params = {
-              bankName: this.bindCard.bankName,
-              cardNo: this.bindCard.cardNo,
-              phone: this.mobile
-            };
-
-            this.userAPI.changeCardSmsCode(params).then(data => {
-              this.cutDown();
-              this.orderData = data.data;
-              this.$jBox.alert("验证码已发送!");
-            });
-          }
+          this.userAPI.changeCardSmsCode(params).then(data => {
+            this.cutDown();
+            this.orderData = data.data;
+            this.$jBox.alert("验证码已发送!");
+          });
         }
       }
     }
-  };
+  }
+};
 </script>
 
 <style>

@@ -5,7 +5,8 @@ const URL = {
     city: "/front/api/user/province_city"
   },
   user: {
-    login: "/front/api/login"
+    login: "/front/api/login",
+    logout: "/front/api/logout"
   },
   usercenter: {
     userInfo: "/front/api/user/user_info",
@@ -15,7 +16,10 @@ const URL = {
     changeLoginPwd: "/front/api/user/change_loginpassword",
     income: "/front/api/user/user_income",
     withdrawInfo: "/front/api/user/withdraw",
-    bankList: "/front/api/user/bank_list"
+    bankList: "/front/api/user/bank_list",
+    withdraw: "/front/api/user/save_withdraw",
+    payPwdSmscode: "/front/api/user/smscode_tkpassword",
+    changePayPwd: "/front/api/user/change_tkpassword"
   },
   product: {
     classes: "/front/api/user/product_classes",

@@ -28,7 +28,7 @@
           </div>
         </li>
 
-        <mobile-select v-else ref="addressPicker" title="选择省市区" resultField="address" :pickerData="addressAry"
+        <mobile-select v-else ref="addressPicker" title="选择省市区" resultField="address" :pickerData="addressAry" :editor="false"
           :cityInitData="userInfo.address" :cityPicker="true" :linkage="true" @init="pickerInit" @select="selectResult"
           @change="addressChange">
           <template slot="text">
@@ -103,13 +103,13 @@ export default {
         this.headPhoto = data.portrait;
 
         this.personInfo = [
-          { title: "昵称", text: data.username, type: "name" },
-          { title: "手机号", text: data.mobile, type: "phone" },
-          { title: "邮箱", text: data.email, type: "emall" },
+          { title: "昵称", text: data.username, type: "" },
+          { title: "手机号", text: data.mobile, type: "" },
+          { title: "邮箱", text: data.email, type: "" },
           {
             title: "省份城市",
             text: "",
-            type: "city",
+            type: "",
             picker: true
           },
           { title: "资质认证", text: data.approve === 0 ? "未认证" : "已认证" },
@@ -172,11 +172,11 @@ export default {
       });
     },
     pickerInit(data) {
-      // let p = this.$G.getArrayValueById(data.initData.code[0], data.pList);
-      // let c = this.$G.getArrayValueById(data.initData.code[1], data.cList);
+      let p = this.$G.getArrayValueById(data.initData.code[0], data.pList);
+      let c = this.$G.getArrayValueById(data.initData.code[1], data.cList);
 
-      // let cAry = [p, c];
-      // this.userInfo.address.text = cAry.join("，");
+      let cAry = [p, c];
+      this.userInfo.address.text = cAry.join("，");
     },
     showPicker(ref) {
       if (this.$G.isArray(this.$refs[ref])) {
@@ -224,7 +224,7 @@ export default {
           this.$router.push(`/usercenter/s/psd/changelogin`);
           break;
         case "payPSD":
-          this.$router.push(`/usercenter/s/psd/changepay`);
+          this.$router.push(`/usercenter/s/psd/vermobile/changepaypwd`);
           break;
         case "bank":
           this.$router.push(`/usercenter/s/bank/change`);
@@ -282,7 +282,7 @@ export default {
       return isJPG && isLt2M;
     },
     loginout() {
-      this.userAPI.userLogout().then(data => {
+      this.USER.userLogout().then(data => {
         if (data.code === 200) {
           this.$router.push("/");
         }

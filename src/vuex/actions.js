@@ -5,7 +5,7 @@ export default {
   hideKeyBoard: ({ commit }) => {
     commit('hideKeyBoard')
   },
-  addPayPasswore: ({ commit }, num) => {
+  addPayPassword: ({ commit }, num) => {
     commit('pushPayPassword', num)
   },
   delPayPassword: ({ commit }, del) => {

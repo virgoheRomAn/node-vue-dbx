@@ -7,10 +7,10 @@ if (process.env.NODE_ENV === "prod") {
   nativeHost = "http://52car8.com";
 } else if (process.env.NODE_ENV === "test") {
   //测试
-  nativeHost = "http://52car8.com";
+  nativeHost = "http://apitest.dongbaoxian.cn";
 } else {
   //本地
-  nativeHost = "http://52car8.com";
+  nativeHost = "http://apitest.dongbaoxian.cn";
 }
 
 console.log("访问接口服务地址：" + nativeHost);

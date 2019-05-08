@@ -129,6 +129,23 @@ router.get('/usercenter/bankList', function (request, response, next) {
 })
 
 /**
+ * 提现
+ */
+router.post('/usercenter/withdraw', function (request, response, next) {
+  let url = native + port.url.usercenter.withdraw
+  let sessionid = request.session.token;
+  let { money, bankCode, bankCardno, password } = request.body;
+  let params = { sessionid, money, bankCode, bankCardno, password };
+  console.log("用户提现参数：" + JSON.stringify(params));
+  $ajax.post(url, params).then(function (res) {
+    let data = res.data;
+    response.send(data)
+  }).catch(function (err) {
+    console.log(err)
+  })
+})
+
+/**
  * 修改登录密码
  */
 router.post('/usercenter/changeLoginPwd', function (request, response, next) {
@@ -155,25 +172,73 @@ router.post('/usercenter/changeLoginPwd', function (request, response, next) {
 })
 
 /**
- * 设置支付密码
+ * 修改支付密码验证码
  */
-router.post('/userCenter/setPayPassword', function (request, response, next) {
-  let url = native.system.userCenter + port.url.user.setPayPass
-  let userInfo = common.sessionUserInfo(request)
-  let body = request.body
-  let params = {
-    userId: userInfo.id,
-    phoneNum: userInfo.userName,
-    oldPayPwd: body.oldPassword || '',
-    newPayPwd: body.newPassword
-  }
-  console.log("设置支付密码参数：" + JSON.stringify(params))
+router.get('/usercenter/payPwdSmscode', function (request, response, next) {
+  let url = native + port.url.usercenter.payPwdSmscode
+  let sessionid = request.session.token;
+  let params = { sessionid };
   $ajax.post(url, params).then(function (res) {
-    let resData = common.parseResponseData(res, '0')
-    response.send(resData)
+    let data = res.data;
+    if (data.code === 200) {
+      console.log("手机号码：%s，修改支付密码验证码：%s", data.data.mobile, data.data.smscode);
+      request.session.payMobile = data.data.mobile;
+      request.session.paySmscode = data.data.smscode.toString();
+      data.data = {};
+    }
+    response.send(data)
   }).catch(function (err) {
     console.log(err)
-    response.send(common.parseErrorData(err))
+  })
+})
+
+/**
+ * 验证修改支付密码的验证码
+ */
+router.post('/userCenter/verChangePaySmscode', function (request, response, next) {
+  let paySmscode = request.session.paySmscode;
+  let payMobile = request.session.payMobile;
+  let { smscode, mobile } = request.body;
+
+  if (smscode !== paySmscode || mobile !== payMobile) {
+    response.send({
+      code: 201,
+      msg: "验证码错误",
+      data: {}
+    })
+  } else {
+    response.send({
+      code: 200,
+      msg: "验证成功",
+      data: {}
+    })
+  }
+})
+
+/**
+ * 修改支付密码
+ */
+router.post('/userCenter/changePayPwd', function (request, response, next) {
+  let url = native + port.url.usercenter.changePayPwd;
+  let sessionid = request.session.token;
+  let smscode = request.session.paySmscode;
+  let { newPwd, confrimPwd } = request.body;
+  let params = {
+    smscode,
+    sessionid,
+    newPwd,
+    confrimPwd
+  }
+  console.log("修改支付密码参数：" + JSON.stringify(params))
+  $ajax.post(url, params).then(function (res) {
+    let data = res.data;
+    if (data.code === 200) {
+      request.session.payMobile = "";
+      request.session.paySmscode = "";
+    }
+    response.send(data)
+  }).catch(function (err) {
+    console.log(err)
   })
 })
 

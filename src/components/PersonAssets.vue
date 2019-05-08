@@ -85,22 +85,22 @@ export default {
       : true;
   },
   mounted() {
-    let vue = this;
+    // let vue = this;
 
-    let userInfo = this.__G__.getItem([CONST.USERINFO]);
-    if (!userInfo) {
-      this.$jBox.error("获取用户信息错误<br>请重新登陆", {
-        closeFun: () => {
-          vue.$router.push({
-            name: "login",
-            query: { redirect: vue.$route.fullPath }
-          });
-        }
-      });
-      return false;
-    }
+    // let userInfo = this.__G__.getItem([CONST.USERINFO]);
+    // if (!userInfo) {
+    //   this.$jBox.error("获取用户信息错误<br>请重新登陆", {
+    //     closeFun: () => {
+    //       vue.$router.push({
+    //         name: "login",
+    //         query: { redirect: vue.$route.fullPath }
+    //       });
+    //     }
+    //   });
+    //   return false;
+    // }
 
-    this.userName = JSON.parse(userInfo).userName;
+    // this.userName = JSON.parse(userInfo).userName;
 
     if (this.ajax_user_count) {
       //组件内加载数据
