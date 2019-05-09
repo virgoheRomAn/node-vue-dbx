@@ -9,7 +9,7 @@
     "start": "npm run server",
     "server": "node server/main.js",
     "build": "rimraf assets/* && cross-env NODE_ENV=prod webpack -p --progress --config config/webpack.prod.config.js",
-    "test": "rimraf assets/* && cross-env NODE_ENV=test webpack -p --progress --config config/webpack.prod.config.js"
+    "test": "rimraf test/* && cross-env NODE_ENV=test webpack -p --progress --config config/webpack.prod.config.js"
   },
   "dependencies": {
     "animate.css": "^3.7.0",
