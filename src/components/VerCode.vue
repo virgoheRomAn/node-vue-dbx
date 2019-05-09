@@ -68,33 +68,19 @@ export default {
             console.log(err);
           });
       } else {
-        if (!this.bindCard.change) {
-          let params = {
-            realName: this.bindCard.realName,
-            certificateNo: this.bindCard.certificateNo,
-            bankName: this.bindCard.bankName,
-            cardNo: this.bindCard.cardNo,
-            phone: this.mobile
-          };
-
-          this.userAPI.getBindCardSmsCode(params).then(data => {
+        this.API.post({
+          url: `/user/registerSmscode`,
+          params: {
+            mobile: this.mobile
+          }
+        })
+          .then(data => {
             this.cutDown();
-            this.orderData = data.data;
             this.$jBox.alert("验证码已发送!");
+          })
+          .catch(err => {
+            console.log(err);
           });
-        } else {
-          let params = {
-            bankName: this.bindCard.bankName,
-            cardNo: this.bindCard.cardNo,
-            phone: this.mobile
-          };
-
-          this.userAPI.changeCardSmsCode(params).then(data => {
-            this.cutDown();
-            this.orderData = data.data;
-            this.$jBox.alert("验证码已发送!");
-          });
-        }
       }
     }
   }

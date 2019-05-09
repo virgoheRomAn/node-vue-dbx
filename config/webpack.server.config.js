@@ -17,7 +17,8 @@ const webpackDevConfig = Object.assign(webpackBaseConfig, {
   },
   devtool: '#source-map',
   devServer: {
-    clientLogLevel: 'warning',
+    clientLogLevel: 'warning',  
+    disableHostCheck: true,
     historyApiFallback: {
       rewrites: [
         {

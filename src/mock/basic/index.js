@@ -1,7 +1,7 @@
 const banner = [
-  { path: require("../../assets/img/tjs-banner1.png"), url: "http://www.baidu.com" },
-  { path: require("../../assets/img/tjs-banner2.png"), url: "http://www.qq.com" },
-  { path: require("../../assets/img/tjs-banner3.jpg"), url: "https://element.eleme.cn" }
+  // { path: require("../../assets/img/tjs-banner1.png"), url: "http://www.baidu.com" },
+  // { path: require("../../assets/img/tjs-banner2.png"), url: "http://www.qq.com" },
+  // { path: require("../../assets/img/tjs-banner3.jpg"), url: "https://element.eleme.cn" }
 ]
 
 const notice = [

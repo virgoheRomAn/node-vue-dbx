@@ -6,7 +6,9 @@ const URL = {
   },
   user: {
     login: "/front/api/login",
-    logout: "/front/api/logout"
+    logout: "/front/api/logout",
+    register: "/front/api/user/register",
+    registerSmscode: "/front/api/user/smscode_register"
   },
   usercenter: {
     userInfo: "/front/api/user/user_info",

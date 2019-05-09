@@ -24,6 +24,44 @@ router.get('/user/status', function (request, response, next) {
 })
 
 /**
+ * 用户注册
+ */
+router.post('/user/register', function (request, response, next) {
+  let url = native + port.url.user.register;
+  let { topUid, mobile, smscode, password, userName, idCard } = request.body;
+
+  let params = {
+    topUid, mobile, smscode, password, userName, idCard
+  };
+  console.log('用户用户注册参数：' + JSON.stringify(params))
+
+  $ajax.post(url, params).then(function (res) {
+    let data = res.data;
+    response.send(data)
+  }).catch(function (err) {
+    console.log(err)
+  })
+});
+
+/**
+ * 用户注册验证码
+ */
+router.post('/user/registerSmscode', function (request, response, next) {
+  let url = native + port.url.user.registerSmscode;
+  let { mobile } = request.body;
+
+  let params = { mobile };
+  console.log('用户注册验证码参数：' + JSON.stringify(params))
+
+  $ajax.post(url, params).then(function (res) {
+    let data = res.data;
+    response.send(data)
+  }).catch(function (err) {
+    console.log(err)
+  })
+});
+
+/**
  * 用户登录（密码登录）
  * @param {String} username 用户手机号
  * @param {String} password 密码

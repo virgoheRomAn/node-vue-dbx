@@ -27,8 +27,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  // import { BScroll } from "assets/plugins/betterScroll";
-  const PICKER = require("assets/plugins/betterScroll");
+  import BScroll from "assets/plugins/betterScroll";
 
   const STATE_HIDE = 0;
   const STATE_SHOW = 1;
@@ -222,7 +221,7 @@
       },
       _createWheel(wheelWrapper, i) {
         if (!this.wheels[i]) {
-          this.wheels[i] = new PICKER.BScroll(wheelWrapper.children[i], {
+          this.wheels[i] = new BScroll(wheelWrapper.children[i], {
             wheel: {
               selectedIndex: this.pickerSelectedIndex[i],
               wheelWrapperClass: "wheel-scroll",
