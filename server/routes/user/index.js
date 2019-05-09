@@ -24,6 +24,28 @@ router.get('/user/status', function (request, response, next) {
 })
 
 /**
+ * 用户注册验证码
+ */
+router.post('/user/registerSmscode', function (request, response, next) {
+  let url = native + port.url.user.registerSmscode;
+  let { mobile } = request.body;
+
+  let params = { mobile };
+  console.log('用户注册验证码参数：' + JSON.stringify(params))
+
+  $ajax.post(url, params).then(function (res) {
+    let data = res.data;
+    if (data.code === 200) {
+      console.log('用户：%s，验证码：%s', mobile, data.data.smscode);
+      data.data = {};
+    }
+    response.send(data)
+  }).catch(function (err) {
+    console.log(err)
+  })
+});
+
+/**
  * 用户注册
  */
 router.post('/user/register', function (request, response, next) {
@@ -34,24 +56,6 @@ router.post('/user/register', function (request, response, next) {
     topUid, mobile, smscode, password, userName, idCard
   };
   console.log('用户用户注册参数：' + JSON.stringify(params))
-
-  $ajax.post(url, params).then(function (res) {
-    let data = res.data;
-    response.send(data)
-  }).catch(function (err) {
-    console.log(err)
-  })
-});
-
-/**
- * 用户注册验证码
- */
-router.post('/user/registerSmscode', function (request, response, next) {
-  let url = native + port.url.user.registerSmscode;
-  let { mobile } = request.body;
-
-  let params = { mobile };
-  console.log('用户注册验证码参数：' + JSON.stringify(params))
 
   $ajax.post(url, params).then(function (res) {
     let data = res.data;

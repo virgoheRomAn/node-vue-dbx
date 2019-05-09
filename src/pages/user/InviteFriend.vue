@@ -103,9 +103,28 @@ export default {
   methods: {
     showAgreement() {},
     register() {
-      let vue = this;
       if (!this.mobile) {
         this.$jBox.error("请输入手机号");
+        return false;
+      }
+
+      if (!this.$refs.verCode.verCode) {
+        this.$jBox.error("请输入手机验证码");
+        return false;
+      }
+
+      if (!this.password) {
+        this.$jBox.error("请输入密码");
+        return false;
+      }
+
+      if (!this.name) {
+        this.$jBox.error("请输入真实姓名");
+        return false;
+      }
+
+      if (!this.idNo) {
+        this.$jBox.error("请输入身份证号码");
         return false;
       }
 
@@ -114,22 +133,33 @@ export default {
         return false;
       }
 
-      this.userAPI
-        .post(`/user/inviteRegister`, {
+      this.API.post({
+        url: `/user/register`,
+        params: {
+          topUid: this.break.breakId,
           mobile: this.mobile,
-          brokerId: this.break.breakId,
-          verCode: this.$refs.verCode.verCode
-        })
-        .then(data => {
-          this.$jBox.success("注册成功", {
-            closeFun: () => {
-              vue.$router.push({
-                name: "InviteDone",
-                params: { mobile: this.mobile }
-              });
-            }
-          });
+          smscode: this.$refs.verCode.verCode,
+          password: this.password,
+          userName: this.name,
+          idCard: this.idNo
+        }
+      }).then(data => {
+        this.$jBox.success("注册成功", {
+          closeCallback: () => {
+            this.API.post({
+              url: `/user/login`,
+              params: {
+                username: this.mobile,
+                password: this.password
+              }
+            }).then(data => {
+              this.$router.push("/");
+            });
+          }
         });
+      }).catch(err=>{
+        console.log(err);
+      });
     }
   }
 };
