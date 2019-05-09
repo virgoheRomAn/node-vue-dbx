@@ -26,7 +26,7 @@
             <li>
               <div class="content">
                 <span>银行卡号</span>
-                <el-input class="input" type="tel" placeholder="请输入银行卡号" v-model="bankNoStr" clearable></el-input>
+                <el-input class="input" type="tel" placeholder="请输入银行卡号" v-model="bankNo" clearable></el-input>
               </div>
             </li>
           </ul>
@@ -77,6 +77,7 @@ export default {
     return {
       balance: "",
       bankNo: "",
+      bankNoStr: "",
       bankInfo: { code: "", text: "" },
       bankData: [[]],
       password: "",
@@ -86,9 +87,6 @@ export default {
   computed: {
     balanceStr() {
       return this.$G.moneyFormat(this.balance);
-    },
-    bankNoStr() {
-      return this.bankNo && this.$G.formatBankNoData(this.bankNo);
     }
   },
   created() {
@@ -99,6 +97,7 @@ export default {
           if (!!data) {
             this.balance = data.balance;
             this.bankNo = data.bankcardno;
+            this.bankNoStr = this.$G.formatBankNoData(data.bankcardno);
             this.bankInfo = {
               code: data.bankcode,
               text: data.bankname
