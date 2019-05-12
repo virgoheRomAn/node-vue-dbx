@@ -17,10 +17,10 @@ var common = require('../common')
 router.get('/basic/banner', function (request, response, next) {
   let url = native + port.url.basic.banner;
   let sessionid = request.session.token;
-  if (!sessionid) {
-    common.notUserInfo(request, response);
-    return false;
-  }
+  // if (!sessionid) {
+  //   common.notUserInfo(request, response);
+  //   return false;
+  // }
   let param = { sessionid };
   $ajax.post(url, param).then(function (res) {
     let data = res.data;
@@ -36,10 +36,10 @@ router.get('/basic/banner', function (request, response, next) {
 router.get('/basic/notice', function (request, response, next) {
   let url = native + port.url.basic.notice;
   let sessionid = request.session.token;
-  if (!sessionid) {
-    common.notUserInfo(request, response);
-    return false;
-  }
+  // if (!sessionid) {
+  //   common.notUserInfo(request, response);
+  //   return false;
+  // }
   let param = { sessionid };
   $ajax.post(url, param).then(function (res) {
     let data = res.data;
@@ -55,10 +55,10 @@ router.get('/basic/notice', function (request, response, next) {
 router.get('/basic/city', function (request, response, next) {
   let url = native + port.url.basic.city;
   let sessionid = request.session.token;
-  if (!sessionid) {
-    common.notUserInfo(request, response);
-    return false;
-  }
+  // if (!sessionid) {
+  //   common.notUserInfo(request, response);
+  //   return false;
+  // }
   let param = { sessionid };
   $ajax.post(url, param).then(function (res) {
     let data = res.data;

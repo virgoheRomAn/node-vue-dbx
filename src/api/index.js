@@ -1,5 +1,6 @@
 import axios from '@/request/config';
 import jBox from 'assets/plugins/jBox';
+import router from '@/router';
 
 import user from './user';
 import mock from './mock';
@@ -7,12 +8,18 @@ import mock from './mock';
 const handleData = (data, resolve, reject) => {
   if (data.code === 200) {
     resolve(data.data);
+  } else if (data.code === -998) {
+    jBox.closeAll(() => {
+      jBox.error("请先登录！", {
+        closeCallback: () => {
+          router.push("/login");
+        }
+      });
+    })
   } else {
     jBox.error(data.msg, {
       closeCallback: () => {
-        setTimeout(() => {
-          reject(data);
-        }, 2000);
+        reject(data);
       }
     });
   }

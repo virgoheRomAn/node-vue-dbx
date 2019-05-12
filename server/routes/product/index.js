@@ -11,10 +11,10 @@ let common = require('../common')
 router.post('/product/classes', function (request, response, next) {
   let url = native + port.url.product.classes;
   let sessionid = request.session.token;
-  if (!sessionid) {
-    common.notUserInfo(request, response);
-    return false;
-  }
+  // if (!sessionid) {
+  //   common.notUserInfo(request, response);
+  //   return false;
+  // }
   let param = { sessionid };
   console.log("产品类型查询参数：" + JSON.stringify(param));
   $ajax.post(url, param).then(function (res) {
@@ -31,15 +31,16 @@ router.post('/product/classes', function (request, response, next) {
 router.post('/product/list', function (request, response, next) {
   let url = native + port.url.product.list;
   let sessionid = request.session.token;
-  if (!sessionid) {
-    common.notUserInfo(request, response);
-    return false;
-  }
+  // if (!sessionid) {
+  //   common.notUserInfo(request, response);
+  //   return false;
+  // }
   let param = {
     sessionid,
     pageNum: request.body.pageNum,
     pageSize: request.body.pageSize,
-    prodClass: request.body.prodClass
+    prodClass: request.body.prodClass,
+    suid: request.body.suid
   };
   console.log("产品列表查询参数：" + JSON.stringify(param));
   $ajax.post(url, param).then(function (res) {

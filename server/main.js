@@ -78,11 +78,7 @@ if (env === 'native1') {
     if (arr.indexOf('usercenter') > 0 || arr.indexOf('product') > 0) {
       let sessionid = req.session.token;
       if (!sessionid) {
-        res.send({
-          code: 401,
-          message: '请先登录',
-          data: {}
-        })
+        next();
       } else {
         next();
       }

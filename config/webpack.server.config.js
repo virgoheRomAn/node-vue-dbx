@@ -42,7 +42,7 @@ const webpackDevConfig = Object.assign(webpackBaseConfig, {
     publicPath: '/',
     proxy: {
       '/api': {
-        target: 'http://10.55.110.211:3030',
+        target: 'http://192.168.43.147:3030',
         changeOrigin: true,
         secure: false,
         pathRewrite: {'^/api': '/'}

@@ -14,6 +14,9 @@ router.get('/usercenter/userInfo', function (request, response, next) {
   let params = { sessionid };
   $ajax.post(url, params).then(function (res) {
     let data = res.data;
+    if (data.code === 200) {
+      data.data.suid = request.session.suid;
+    }
     response.send(data)
   }).catch(function (err) {
     console.log(err)

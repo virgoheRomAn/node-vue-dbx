@@ -85,9 +85,11 @@ router.post('/user/login', function (request, response, next) {
     if (data.code === 200) {
       request.session.token = data.data.sessionid;
       request.session.username = username;
+      request.session.suid = data.data.suid;
     } else {
       request.session.token = "";
       request.session.username = "";
+      request.session.suid = "";
     }
 
     response.send(res.data)
@@ -108,6 +110,7 @@ router.get('/user/logout', function (request, response, next) {
     if (data.code === 200) {
       request.session.token = "";
       request.session.username = "";
+      request.session.suid = "";
     }
 
     response.send(res.data)

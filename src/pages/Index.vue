@@ -1,7 +1,13 @@
 <template>
   <div class="better-scroll-box">
     <div class="bscroll-container footer">
-      <scroll-item ref="scroll" class="wrapper" :data="productList" :pullUpLoad="pullUpLoadObj" @upload="onPullingUp">
+      <scroll-item
+        ref="scroll"
+        class="wrapper"
+        :data="productList"
+        :pullUpLoad="pullUpLoadObj"
+        @upload="onPullingUp"
+      >
         <div class="banner-bar">
           <div v-if="bannerList.length===0">
             <img src="../assets/img/banner-default.png">
@@ -10,7 +16,11 @@
             <div class="swiper-slide swiper-wrapper">
               <div class="swiper-slide" v-for="(value,key) in bannerList" :key="key">
                 <a :href="value.url">
-                  <img class="swiper-lazy" src="../assets/img/banner-default.png" :data-src="value.path">
+                  <img
+                    class="swiper-lazy"
+                    src="../assets/img/banner-default.png"
+                    :data-src="value.path"
+                  >
                 </a>
               </div>
             </div>
@@ -23,7 +33,7 @@
             <i class="sprite s-icon-notice"></i>
           </label>
           <ul class="list" id="slideBox">
-            <li v-for="item in noticeList">
+            <li v-for="(item,index) in noticeList" :key="index">
               <a :href="item.url">{{item.title}}</a>
             </li>
           </ul>
@@ -33,18 +43,15 @@
         <div class="product-bar pl-20 pr-20">
           <div class="tab-bar">
             <div class="tab-content" name="tab">
-
               <div class="pane-item" :class="{'active':activeName==='all'}">
                 <div class="box-list-lr">
-                  <product-item v-for="(product,key) in productList" :data="product" :key="key">
-                  </product-item>
+                  <product-item v-for="(product,key) in productList" :data="product" :key="key"></product-item>
                 </div>
               </div>
 
               <!-- <div class="pane-item" :class="{'active':activeName==='tenement'}">
                 <div class="data-list-none">暂无数据</div>
-              </div> -->
-
+              </div>-->
             </div>
           </div>
         </div>
@@ -52,7 +59,9 @@
       </scroll-item>
 
       <div class="data-list-none" style="padding-top: 63%;" v-if="productList.length === 0">
-        <label><img src="../assets/img/404.png" /></label>
+        <label>
+          <img src="../assets/img/404.png">
+        </label>
         <span>暂无数据</span>
       </div>
       <fb-footer></fb-footer>
@@ -147,6 +156,7 @@ export default {
       }
     ];
     this.__G__.ajaxParataxisDataStep(this, obj).then(data => {
+      console.log(data);
       let slideBox = this.$G.slideBox("#slideBox");
     });
   },
@@ -191,7 +201,8 @@ export default {
           params: {
             pageNum,
             pageSize,
-            prodClass: ""
+            prodClass: "",
+            suid: this.$route.query.suid
           },
           type: false
         })
@@ -212,6 +223,7 @@ export default {
           bx_daylimit: item.bx_daylimit,
           agelimit: item.agelimit,
           lower_money: item.lower_money,
+          commission_rate: item.commission_rate,
           company: item.company,
           id: item.id,
           class: item.class,

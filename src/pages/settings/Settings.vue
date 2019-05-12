@@ -1,7 +1,7 @@
 <template>
   <div class="settings-bar">
     <div class="box-list-arrow-content">
-      <ul>
+      <ul>        
         <li class="special">
           <div class="content">
             <span>头像</span>
@@ -18,7 +18,9 @@
             <em><i class="sprite s-icon-arrow"></i></em>
           </div>
         </li>
-        <li v-for="(item,key) in personInfo" :key="key" v-if="!item.picker">
+      </ul>
+      <ul v-for="(item,key) in personInfo" :key="key">
+        <li v-if="!item.picker">
           <div class="content" @click="setting(item.type,item.text,key)">
             <span>{{item.title}}</span>
             <label>{{item.text}}</label>
@@ -68,8 +70,8 @@ export default {
       personInfo: [
         { title: "昵称", text: "", type: "name" },
         { title: "手机号", text: "", type: "phone" },
-        { title: "邮箱", text: "", type: "emall" },
-        { title: "省份城市", text: "", type: "city", picker: true },
+        // { title: "邮箱", text: "", type: "emall" },
+        // { title: "省份城市", text: "", type: "city", picker: true },
         { title: "资质认证", text: "" },
         { title: "登陆密码", text: "", type: "password" },
         { title: "提现密码", text: "", type: "payPSD" }
@@ -105,13 +107,13 @@ export default {
         this.personInfo = [
           { title: "昵称", text: data.username, type: "" },
           { title: "手机号", text: data.mobile, type: "" },
-          { title: "邮箱", text: data.email, type: "" },
-          {
-            title: "省份城市",
-            text: "",
-            type: "",
-            picker: true
-          },
+          // { title: "邮箱", text: data.email, type: "" },
+          // {
+          //   title: "省份城市",
+          //   text: "",
+          //   type: "",
+          //   picker: true
+          // },
           { title: "资质认证", text: data.approve === 0 ? "未认证" : "已认证" },
           { title: "登陆密码", text: "", type: "password" },
           { title: "提现密码", text: "", type: "payPSD" }

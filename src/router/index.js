@@ -27,7 +27,7 @@ const routes = [
     component: Index,
     meta: {
       title: '首页',
-      isAuth: true
+      isAuth: false
     }
   },
   {

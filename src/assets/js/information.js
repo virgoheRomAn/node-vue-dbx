@@ -120,9 +120,10 @@ const ajaxParataxisDataStep = async (vue, ary) => {
         ary[i].callback && ary[i].callback.call(this, data);
         reuslt.push(data);
       }
-      resolve(reuslt)
 
-      vue.$jBox.close();
+      vue.$jBox.closeById(loading, () => {
+        resolve(reuslt)
+      });
 
     } catch (err) {
       console.error(err);
