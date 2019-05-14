@@ -179,7 +179,7 @@ export default {
           num: item.number,
           insurance_amount: this.$G.moneyFormat(item.insurance_amount, 2),
           generalize_amount: this.$G.moneyFormat(item.generalize_amount, 2),
-          type: item.source_text === "推广出单" ? "1" : "2"
+          type: item.type.toString()
         });
       });
     },
