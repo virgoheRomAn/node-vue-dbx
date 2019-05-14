@@ -45,7 +45,7 @@ const METHOD = {
         loading = jBox.loading(text);
       }
 
-      axios.get(url, params).then((res) => {
+      axios.get(url, { params: params }).then((res) => {
         let data = res.data;
         if (type) {
           jBox.closeById(loading, () => {

@@ -17,11 +17,12 @@ var common = require('../common')
 router.get('/basic/banner', function (request, response, next) {
   let url = native + port.url.basic.banner;
   let sessionid = request.session.token;
+  let suid = request.query.suid;
   // if (!sessionid) {
   //   common.notUserInfo(request, response);
   //   return false;
   // }
-  let param = { sessionid };
+  let param = { sessionid, suid };
   $ajax.post(url, param).then(function (res) {
     let data = res.data;
     response.send(data)
@@ -36,11 +37,12 @@ router.get('/basic/banner', function (request, response, next) {
 router.get('/basic/notice', function (request, response, next) {
   let url = native + port.url.basic.notice;
   let sessionid = request.session.token;
+  let suid = request.query.suid;
   // if (!sessionid) {
   //   common.notUserInfo(request, response);
   //   return false;
   // }
-  let param = { sessionid };
+  let param = { sessionid, suid };
   $ajax.post(url, param).then(function (res) {
     let data = res.data;
     response.send(data)

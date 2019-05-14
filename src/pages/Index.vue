@@ -153,7 +153,12 @@ export default {
   methods: {
     getNotice() {
       return new Promise((resolve, reject) => {
-        this.API.get({ url: `/basic/notice`, type: false, errorTips: false })
+        this.API.get({
+          url: `/basic/notice`,
+          params: { suid: this.$route.query.suid },
+          type: false,
+          errorTips: false
+        })
           .then(data => {
             resolve(data);
           })
@@ -164,7 +169,12 @@ export default {
     },
     getBanner() {
       return new Promise((resolve, reject) => {
-        this.API.get({ url: `/basic/banner`, type: false, errorTips: false })
+        this.API.get({
+          url: `/basic/banner`,
+          params: { suid: this.$route.query.suid },
+          type: false,
+          errorTips: false
+        })
           .then(data => {
             resolve(data);
           })
@@ -177,6 +187,7 @@ export default {
       return new Promise((resolve, reject) => {
         this.API.post({
           url: `/product/classes`,
+          params: { suid: this.$route.query.suid },
           type: false,
           errorTips: false
         })

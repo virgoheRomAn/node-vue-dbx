@@ -11,11 +11,12 @@ let common = require('../common')
 router.post('/product/classes', function (request, response, next) {
   let url = native + port.url.product.classes;
   let sessionid = request.session.token;
+  let suid = request.body.suid;
   // if (!sessionid) {
   //   common.notUserInfo(request, response);
   //   return false;
   // }
-  let param = { sessionid };
+  let param = { sessionid, suid };
   console.log("产品类型查询参数：" + JSON.stringify(param));
   $ajax.post(url, param).then(function (res) {
     let data = res.data;
