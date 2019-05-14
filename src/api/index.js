@@ -5,23 +5,30 @@ import router from '@/router';
 import user from './user';
 import mock from './mock';
 
-const handleData = (data, resolve, reject) => {
+const handleData = (data, resolve, reject, err) => {
   if (data.code === 200) {
     resolve(data.data);
-  } else if (data.code === -998) {
-    jBox.closeAll(() => {
-      jBox.error("请先登录！", {
+  } else if (data.code === -999) {
+    if (err) {
+      jBox.error(data.msg, {
         closeCallback: () => {
           router.push("/login");
         }
       });
-    })
+    } else {
+      router.push("/login");
+    }
+
   } else {
-    jBox.error(data.msg, {
-      closeCallback: () => {
-        reject(data);
-      }
-    });
+    if (err) {
+      jBox.error(data.msg, {
+        closeCallback: () => {
+          reject(data);
+        }
+      });
+    } else {
+      reject(data);
+    }
   }
 };
 
@@ -29,8 +36,9 @@ const METHOD = {
   /**
    * 通用get
    * @param {Boolean} type 是否显示loading动画
+   * @param {Boolean} errorTips 是否提示错误信息（区分多个异步加载）
    */
-  get: ({ url, params, type = true, text = "加载中..." } = {}) => {
+  get: ({ url, params, type = true, text = "加载中...", errorTips = true } = {}) => {
     return new Promise((resolve, reject) => {
       let loading;
       if (type) {
@@ -41,10 +49,10 @@ const METHOD = {
         let data = res.data;
         if (type) {
           jBox.closeById(loading, () => {
-            handleData(data, resolve, reject);
+            handleData(data, resolve, reject, errorTips);
           });
         } else {
-          handleData(data, resolve, reject);
+          handleData(data, resolve, reject, errorTips);
         }
       }).catch((err) => {
         console.log(err);
@@ -56,8 +64,9 @@ const METHOD = {
   /**
    * 通用post
    * @param {Boolean} type 是否显示loading动画
+   * @param {Boolean} errorTips 是否提示错误信息（区分多个异步加载）
    */
-  post: ({ url, params, config, type = true, text = "加载中..." } = {}) => {
+  post: ({ url, params, config, type = true, text = "加载中...", errorTips = true } = {}) => {
     let loading;
     if (type) {
       loading = jBox.loading(text);
@@ -67,10 +76,10 @@ const METHOD = {
         let data = res.data;
         if (type) {
           jBox.closeById(loading, () => {
-            handleData(data, resolve, reject);
+            handleData(data, resolve, reject, errorTips);
           })
         } else {
-          handleData(data, resolve, reject);
+          handleData(data, resolve, reject, errorTips);
         }
       }).catch((err) => {
         console.log(err);
@@ -83,7 +92,7 @@ const METHOD = {
    * 通用请求分页分页接口
    * @param {String} pageNum 页号
    * @param {String} pageSize 每页显示条数
-   * @param {String} type 是否开启loading
+   * @param {Boolean} type 是否开启loading
    * @param {String} url 请求URL
    */
   getAjaxPaging: ({ pageNum, pageSize, type = true }, url) => {

@@ -26,21 +26,21 @@
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="/usercenter/s/customer">
                 <label><i class="sprite s-icon-capital"></i></label>
                 <span>客户管理</span>
                 <em><i class="sprite s-icon-arrow"></i></em>
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="/usercenter/s/help">
                 <label><i class="sprite s-icon-trade"></i></label>
                 <span>理赔帮助</span>
                 <em><i class="sprite s-icon-arrow"></i></em>
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="/usercenter/s/question">
                 <label><i class="sprite s-icon-appraisal"></i></label>
                 <span>常见问题</span>
                 <em><i class="sprite s-icon-arrow"></i></em>

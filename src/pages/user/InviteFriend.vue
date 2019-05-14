@@ -101,7 +101,9 @@ export default {
     }
   },
   methods: {
-    showAgreement() {},
+    showAgreement() {
+      this.$router.push("/invite/s/agreement");
+    },
     register() {
       if (!this.mobile) {
         this.$jBox.error("请输入手机号");
@@ -143,23 +145,25 @@ export default {
           userName: this.name,
           idCard: this.idNo
         }
-      }).then(data => {
-        this.$jBox.success("注册成功", {
-          closeCallback: () => {
-            this.API.post({
-              url: `/user/login`,
-              params: {
-                username: this.mobile,
-                password: this.password
-              }
-            }).then(data => {
-              this.$router.push("/");
-            });
-          }
+      })
+        .then(data => {
+          this.$jBox.success("注册成功", {
+            closeCallback: () => {
+              this.API.post({
+                url: `/user/login`,
+                params: {
+                  username: this.mobile,
+                  password: this.password
+                }
+              }).then(data => {
+                this.$router.push("/");
+              });
+            }
+          });
+        })
+        .catch(err => {
+          console.log(err);
         });
-      }).catch(err=>{
-        console.log(err);
-      });
     }
   }
 };

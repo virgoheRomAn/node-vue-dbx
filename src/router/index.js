@@ -72,14 +72,6 @@ const routes = [
     }
   },
   {
-    path: '/register',
-    name: 'register',
-    component: User.Register,
-    meta: {
-      title: '注册'
-    }
-  },
-  {
     path: '/login',
     name: 'login',
     component: User.Login,
@@ -99,7 +91,8 @@ const routes = [
       { path: 'index/:user?', name: 'inviteIndex', component: User.InviteIndex, meta: { title: '立即邀请', isAuth: true } },
       { path: 'friend/:user?', name: 'inviteFriend', component: User.InviteFriend, meta: { title: '邀请好友' } },
       { path: 'list/:user?', name: 'inviteList', component: User.InviteList, meta: { title: '我的邀请' } },
-      { path: 'done/:mobile?', name: 'InviteDone', component: User.InviteDone, meta: { title: '结果页面' } }
+      { path: 'done/:mobile?', name: 'InviteDone', component: User.InviteDone, meta: { title: '结果页面' } },
+      { path: 'agreement/:mobile?', name: 'agreement', component: User.InviteAgreement, meta: { title: '用户服务协议' } }
     ]
   },
   {
@@ -121,7 +114,11 @@ const routes = [
     children: [
       { path: 'capital/:mobile?', name: 'capital', component: UserCenter.Capital, meta: { title: '资金管理', isAuth: true } },
       { path: 'income/:mobile?', name: 'income', component: UserCenter.Income, meta: { title: '我的收入', isAuth: true } },
-      { path: 'withdraw/:mobile?', name: 'withdraw', component: UserCenter.Withdraw, meta: { title: '提现', isAuth: true } }
+      { path: 'incomedetails/:type?', name: 'incomeDetails', component: UserCenter.IncomeDetails, meta: { title: '我的收入详情', isAuth: true } },
+      { path: 'customer/:mobile?', name: 'customer', component: UserCenter.Customer, meta: { title: '客户管理', isAuth: true } },
+      { path: 'withdraw/:mobile?', name: 'withdraw', component: UserCenter.Withdraw, meta: { title: '提现', isAuth: true } },
+      { path: 'help/:mobile?', name: 'help', component: UserCenter.Help, meta: { title: '理赔帮助', isAuth: true } },
+      { path: 'question/:mobile?', name: 'question', component: UserCenter.Question, meta: { title: '常见问题', isAuth: true } }
     ]
   },
   {

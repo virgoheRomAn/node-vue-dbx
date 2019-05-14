@@ -27,8 +27,8 @@
                   <div class="box-list-arrow">
                     <ul class="small">
                       <li>
-                        <a :href="'/product/s/details/'+item.code">
-                          <span><b>{{item.type}}</b></span>
+                        <a :href="'/usercenter/s/incomedetails/'+item.type">
+                          <span><b>{{item.name}}</b></span>
                           <em><i class="sprite s-icon-arrow"></i></em>
                         </a>
                       </li>
@@ -175,10 +175,11 @@ export default {
       this.list.splice(0, this.list.length);
       data.map(item => {
         this.list.push({
-          type: item.source_text,
+          name: item.source_text,
           num: item.number,
           insurance_amount: this.$G.moneyFormat(item.insurance_amount, 2),
-          generalize_amount: this.$G.moneyFormat(item.generalize_amount, 2)
+          generalize_amount: this.$G.moneyFormat(item.generalize_amount, 2),
+          type: item.source_text === "推广出单" ? "1" : "2"
         });
       });
     },

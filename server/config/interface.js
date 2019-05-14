@@ -14,6 +14,7 @@ const URL = {
     userInfo: "/front/api/user/user_info",
     withdrawRecord: "/front/api/user/withdraw_list",
     incomeRecord: "/front/api/user/user_profit_total",
+    incomeDetials:"/front/api/user/user_profit_detail",
     profitInfo: "/front/api/user/user_profit",
     changeLoginPwd: "/front/api/user/change_loginpassword",
     income: "/front/api/user/user_income",
@@ -21,7 +22,9 @@ const URL = {
     bankList: "/front/api/user/bank_list",
     withdraw: "/front/api/user/save_withdraw",
     payPwdSmscode: "/front/api/user/smscode_tkpassword",
-    changePayPwd: "/front/api/user/change_tkpassword"
+    checkPayPwdSmscode: "/front/api/user/check_tksmscode",
+    changePayPwd: "/front/api/user/change_tkpassword",
+    customerRecord: "/front/api/user/customer_list"
   },
   product: {
     classes: "/front/api/user/product_classes",

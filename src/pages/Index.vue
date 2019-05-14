@@ -1,13 +1,7 @@
 <template>
   <div class="better-scroll-box">
     <div class="bscroll-container footer">
-      <scroll-item
-        ref="scroll"
-        class="wrapper"
-        :data="productList"
-        :pullUpLoad="pullUpLoadObj"
-        @upload="onPullingUp"
-      >
+      <scroll-item ref="scroll" class="wrapper" :data="productList" :pullUpLoad="pullUpLoadObj" @upload="onPullingUp">
         <div class="banner-bar">
           <div v-if="bannerList.length===0">
             <img src="../assets/img/banner-default.png">
@@ -16,11 +10,7 @@
             <div class="swiper-slide swiper-wrapper">
               <div class="swiper-slide" v-for="(value,key) in bannerList" :key="key">
                 <a :href="value.url">
-                  <img
-                    class="swiper-lazy"
-                    src="../assets/img/banner-default.png"
-                    :data-src="value.path"
-                  >
+                  <img class="swiper-lazy" src="../assets/img/banner-default.png" :data-src="value.path">
                 </a>
               </div>
             </div>
@@ -146,7 +136,7 @@ export default {
           }
 
           setTimeout(() => {
-            this.$refs.scroll.initScroll();
+            this.$refs.scroll && this.$refs.scroll.initScroll();
           }, 20);
 
           if (!!data) {
@@ -163,7 +153,7 @@ export default {
   methods: {
     getNotice() {
       return new Promise((resolve, reject) => {
-        this.API.get({ url: `/basic/notice`, type: false })
+        this.API.get({ url: `/basic/notice`, type: false, errorTips: false })
           .then(data => {
             resolve(data);
           })
@@ -174,7 +164,7 @@ export default {
     },
     getBanner() {
       return new Promise((resolve, reject) => {
-        this.API.get({ url: `/basic/banner`, type: false })
+        this.API.get({ url: `/basic/banner`, type: false, errorTips: false })
           .then(data => {
             resolve(data);
           })
@@ -185,7 +175,11 @@ export default {
     },
     getProductClasses() {
       return new Promise((resolve, reject) => {
-        this.API.post({ url: `/product/classes`, type: false })
+        this.API.post({
+          url: `/product/classes`,
+          type: false,
+          errorTips: false
+        })
           .then(data => {
             resolve(data);
           })
@@ -204,7 +198,8 @@ export default {
             prodClass: "",
             suid: this.$route.query.suid
           },
-          type: false
+          type: false,
+          errorTips: false
         })
           .then(data => {
             resolve(data);
@@ -215,21 +210,23 @@ export default {
       });
     },
     handleData(data) {
-      data.map(item => {
-        this.productList.push({
-          img: item.thumb_img,
-          name: item.name,
-          intro: item.summary,
-          bx_daylimit: item.bx_daylimit,
-          agelimit: item.agelimit,
-          lower_money: item.lower_money,
-          commission_rate: item.commission_rate,
-          company: item.company,
-          id: item.id,
-          class: item.class,
-          link: item.bxh5_url
+      if (data.length > 0) {
+        data.map(item => {
+          this.productList.push({
+            img: item.thumb_img,
+            name: item.name,
+            intro: item.summary,
+            bx_daylimit: item.bx_daylimit,
+            agelimit: item.agelimit,
+            lower_money: item.lower_money,
+            commission_rate: item.commission_rate,
+            company: item.company,
+            id: item.id,
+            class: item.class,
+            link: item.bxh5_url
+          });
         });
-      });
+      }
     },
     scrollTo(x, y, t) {
       this.$refs.scroll.scrollTo(x, y, t, "swipeBounce");

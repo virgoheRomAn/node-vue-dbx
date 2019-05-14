@@ -113,25 +113,28 @@ const ajaxParataxisData = async (vue, ...arg) => {
 const ajaxParataxisDataStep = async (vue, ary) => {
   return new Promise(async (resolve, reject) => {
     let loading = vue.$jBox.loading("获取中...");
-    try {
-      let reuslt = [];
-      for (let i = 0, len = ary.length; i < len; i++) {
+
+    let reuslt = [];
+    let hasError = false;
+    for (let i = 0, len = ary.length; i < len; i++) {
+      try {
         let data = await ary[i].fun;
         ary[i].callback && ary[i].callback.call(this, data);
         reuslt.push(data);
+      } catch (err) {
+        console.error(err);
+        if (!hasError) {
+          hasError = true;
+          vue.$jBox.closeById(loading, () => {
+            vue.$jBox.error("网络服务异常");
+          });
+        }
       }
-
-      vue.$jBox.closeById(loading, () => {
-        resolve(reuslt)
-      });
-
-    } catch (err) {
-      console.error(err);
-      vue.$jBox.closeById(loading, () => {
-        vue.$jBox.error("网络服务异常");
-        reject(err)
-      });
     }
+
+    vue.$jBox.closeById(loading, () => {
+      resolve(reuslt)
+    });
   });
 }
 
