@@ -270,6 +270,27 @@ router.post('/usercenter/changePayPwd', function (request, response, next) {
 })
 
 /**
+ * 设置支付密码
+ */
+router.post('/usercenter/setPayPwd', function (request, response, next) {
+  let url = native + port.url.usercenter.changePayPwd;
+  let sessionid = request.session.token;
+  let { newPwd, confrimPwd } = request.body;
+  let params = {
+    sessionid,
+    newPwd,
+    confrimPwd
+  }
+  console.log("设置支付密码参数：" + JSON.stringify(params))
+  $ajax.post(url, params).then(function (res) {
+    let data = res.data;
+    response.send(data)
+  }).catch(function (err) {
+    console.log(err)
+  })
+})
+
+/**
  * 获取客户信息
  */
 router.post('/usercenter/customer', function (request, response, next) {

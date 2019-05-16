@@ -103,6 +103,23 @@ export default {
             this.confrimPwd = "";
             console.log(err);
           });
+      } else {
+        this.API.post({
+          url: `/userCenter/setPayPwd`,
+          params: {
+            newPwd: this.pwd,
+            confrimPwd: this.confrimPwd
+          }
+        })
+          .then(data => {
+            this.$router.push("/usercenter");
+          })
+          .catch(err => {
+            this.next = false;
+            this.pwd = "";
+            this.confrimPwd = "";
+            console.log(err);
+          });
       }
     }
   }
