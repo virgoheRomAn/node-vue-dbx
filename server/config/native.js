@@ -1,10 +1,10 @@
 console.log("当前服务环境：" + process.env.NODE_ENV);
 
-var nativeHost = "";
+let nativeHost = "";
 
 if (process.env.NODE_ENV === "prod") {
   //正式
-  nativeHost = "http://52car8.com";
+  nativeHost = "http://www.dongbaoxian.cn";
 } else if (process.env.NODE_ENV === "test") {
   //测试
   nativeHost = "http://apitest.dongbaoxian.cn";

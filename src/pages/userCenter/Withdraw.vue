@@ -40,9 +40,10 @@
     </div>
 
     <div class="warning-box">
-      <label>温情提示：</label>
-      <span>1、收款账号实名信息需与鹿鸣保注册实名信息一致， 否则无法提现。</span>
-      <span>2、每月20日-30日可提现上月及之前已生效推广费，提现额度50元起</span>
+      <label>提现说明：</label>
+      <span>1、收款账号实名信息需与懂保宝注册的实名信息一致，否则提现失败；</span>
+      <span>2、每天只能申请一次提现，提现最少50元，最多2000元；</span>
+      <span>3、提现成功会，会在3-10个工作日到账，请注意查收。</span>
     </div>
 
     <popup-box id="popupBox" ref="popupBox" :isTitle="false">
@@ -64,6 +65,7 @@ import PayInput from "components/password/Input";
 import KeyBoard from "components/password/Keyboard";
 import PopupBox from "components/PopupBox";
 import MoneyInput from "components/MoneyInput";
+
 export default {
   name: "withdraw",
   components: {
@@ -77,7 +79,6 @@ export default {
     return {
       balance: "",
       bankNo: "",
-      bankNoStr: "",
       bankInfo: { code: "", text: "" },
       bankData: [[]],
       password: "",
@@ -97,7 +98,6 @@ export default {
           if (!!data) {
             this.balance = data.balance;
             this.bankNo = data.bankcardno;
-            this.bankNoStr = this.$G.formatBankNoData(data.bankcardno);
             this.bankInfo = {
               code: data.bankcode,
               text: data.bankname
@@ -178,7 +178,7 @@ export default {
       }
 
       if (this.payPwd !== 1) {
-        this.$jBox.warn("您还没有设置支付密码<br>去设置支付密码", {
+        this.$jBox.warn("您还没有设置支付密码<br>去设置支付密码？", {
           confirm: () => {
             this.$router.push("/usercenter/s/psd/settingpay");
           }

@@ -40,9 +40,9 @@ export default {
       .then(data => {
         this.breakName = data.mobile;
         this.breakId = data.userID;
-        this.share_url = `${share_host}/invite/s/friend?breakName=${
-          this.breakName
-        }&breakId=${this.breakId}`;
+        this.share_url = `http://${
+          window.location.host
+        }/invite/s/friend?breakName=${this.breakName}&breakId=${this.breakId}`;
 
         let opts = {
           errorCorrectionLevel: "H",
@@ -65,6 +65,7 @@ export default {
   },
   methods: {
     share() {
+      console.log(this.share_url);
       window.location.href = this.share_url;
       // if (!!this.$G.isWeiXin()) {
       //   //微信分享

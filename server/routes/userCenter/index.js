@@ -218,23 +218,13 @@ router.get('/usercenter/payPwdSmscode', function (request, response, next) {
  */
 router.post('/usercenter/verChangePaySmscode', function (request, response, next) {
   let url = native + port.url.usercenter.checkPayPwdSmscode;
+
   let paySmscode = request.session.paySmscode;
   let payMobile = request.session.payMobile;
+  let sessionid = request.session.token;
+
   let { smscode, mobile } = request.body;
-
-  // let sessionid = request.session.token;
-  // let params = { sessionid };
-
-  // $ajax.post(url, params).then(function (res) {
-  //   let data = res.data;
-  //   if (data.code === 200) {
-  //     request.session.payMobile = "";
-  //     request.session.paySmscode = "";
-  //   }
-  //   response.send(data)
-  // }).catch(function (err) {
-  //   console.log(err)
-  // })
+  let params = { sessionid, smscode, mobile, codetype: "2" };
 
   if (smscode !== paySmscode || mobile !== payMobile) {
     response.send({
@@ -243,10 +233,11 @@ router.post('/usercenter/verChangePaySmscode', function (request, response, next
       data: {}
     })
   } else {
-    response.send({
-      code: 200,
-      msg: "验证成功",
-      data: {}
+    $ajax.post(url, params).then(function (res) {
+      let data = res.data;
+      response.send(data)
+    }).catch(function (err) {
+      console.log(err)
     })
   }
 })
