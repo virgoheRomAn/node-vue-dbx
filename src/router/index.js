@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import API from '@/api'
 import jBox from 'assets/plugins/jBox'
 import Index from '@/pages/Index'
+import Success from '@/pages/Success'
 import ErrorPage from '@/pages/404'
 import TimeoutPage from '@/pages/401'
 import NetWorkError from '@/pages/502'
@@ -27,6 +28,15 @@ const routes = [
     component: Index,
     meta: {
       title: '首页',
+      isAuth: false
+    }
+  },
+  {
+    path: '/success',
+    name: 'success',
+    component: Success,
+    meta: {
+      title: '成功页面',
       isAuth: false
     }
   },

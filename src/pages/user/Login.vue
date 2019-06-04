@@ -44,8 +44,8 @@ export default {
   name: "login",
   data() {
     return {
-      mobile: "cs1",
-      password: "123456"
+      mobile: "",
+      password: ""
     };
   },
   methods: {
