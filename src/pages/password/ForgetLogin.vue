@@ -10,7 +10,7 @@
         </div>
       </div>
 
-      <ver-code ref="verCode" :mobile="userMobile"></ver-code>
+      <ver-code ref="verCode" :mobile="userMobile" :forget="true"></ver-code>
 
       <div class="item">
         <span>新密码：</span>
@@ -36,50 +36,54 @@
 </template>
 
 <script>
-  import verCode from "components/VerCode";
-  export default {
-    name: "forget-login",
-    components: {
-      verCode
-    },
-    data() {
-      return {
-        userMobile: "",
-        newPsd: "",
-        newAgainPsd: ""
-      };
-    },
-    created() {
-      this.userMobile = this.$route.params.mobile || "";
-    },
-    methods: {
-      sure() {
-        if (!this.userMobile) {
-          this.$jBox.error("请输入手机号");
-          return false;
-        }
-        let verPsd = this.$G.verifyPassword(this.newPsd, {});
-        if (verPsd.type !== 2) {
-          this.$jBox.error(verPsd.text);
-          return false;
-        }
-
-        this.userAPI
-          .forgotPassword({
-            mobile: this.userMobile,
-            password: this.newPsd,
-            again: this.newAgainPsd,
-            verCode: this.$refs.verCode.verCode
-          })
-          .then(data => {
-            //登陆页面
-            this.$router.push({
-              name: "login"
-            });
-          });
+import verCode from "components/VerCode";
+export default {
+  name: "forget-login",
+  components: {
+    verCode
+  },
+  data() {
+    return {
+      userMobile: "",
+      newPsd: "",
+      newAgainPsd: ""
+    };
+  },
+  created() {
+    this.userMobile = this.$route.params.mobile || "";
+  },
+  methods: {
+    sure() {
+      if (!this.userMobile) {
+        this.$jBox.error("请输入手机号");
+        return false;
       }
+
+      this.API.post({
+        url: `/usercenter/changeForgetPwd`,
+        params: {
+          mobile: this.userMobile,
+          smscode: this.$refs.verCode.verCode,
+          newPwd: this.newPsd,
+          confrimPwd: this.newAgainPsd
+        }
+      })
+        .then(data => {
+          this.$jBox.success("修改成功", {
+            closeCallback: () => {
+              //登陆页面
+              this.$router.push({
+                name: "login"
+              });
+            }
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
-  };
+  }
+};
 </script>
 
 

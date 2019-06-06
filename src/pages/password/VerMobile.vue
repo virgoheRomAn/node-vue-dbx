@@ -10,7 +10,7 @@
         </div>
       </div>
 
-      <ver-code ref="verCode" :mobile="userMobile"></ver-code>
+      <ver-code ref="verCode" :mobile="userMobile" :payPwd="true"></ver-code>
 
     </div>
     <div class="user-handle">
@@ -53,13 +53,14 @@ export default {
         url: `/userCenter/verChangePaySmscode`,
         params: {
           mobile: this.userMobile,
-          smscode: this.$refs.verCode.verCode
+          smscode: this.$refs.verCode.verCode,
+          codetype: "2"
         }
       })
         .then(data => {
           this.$jBox.success("验证成功", {
             closeCallback: () => {
-              this.$router.push("/usercenter/s/psd/settingpay")
+              this.$router.push("/usercenter/s/psd/settingpay");
             }
           });
         })

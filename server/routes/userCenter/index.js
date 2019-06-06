@@ -223,8 +223,8 @@ router.post('/usercenter/verChangePaySmscode', function (request, response, next
   let payMobile = request.session.payMobile;
   let sessionid = request.session.token;
 
-  let { smscode, mobile } = request.body;
-  let params = { sessionid, smscode, mobile, codetype: "2" };
+  let { smscode, mobile, codetype } = request.body;
+  let params = { sessionid, smscode, mobile, codetype };
 
   if (smscode !== paySmscode || mobile !== payMobile) {
     response.send({
@@ -311,5 +311,40 @@ router.post('/usercenter/customer', function (request, response, next) {
   })
 })
 
+/**
+ * 忘记登陆密码验证码
+ */
+router.post('/usercenter/forgerPwdSmscode', function (request, response, next) {
+  let url = native + port.url.usercenter.forgerPwdSmscode;
+  let params = request.body;
+
+  console.log("忘记登陆密码验证码参数：" + JSON.stringify(params))
+  $ajax.post(url, params).then(function (res) {
+    let data = res.data;
+    if (data.code === 200) {
+      console.log("手机号码：%s，忘记登陆密码验证码：%s", data.data.mobile, data.data.smscode);
+      data.data = {};
+    }
+    response.send(data)
+  }).catch(function (err) {
+    console.log(err)
+  })
+})
+
+/**
+ * 忘记登陆密码
+ */
+router.post('/usercenter/changeForgetPwd', function (request, response, next) {
+  let url = native + port.url.usercenter.changeForgetPwd;
+  let params = request.body;
+
+  console.log("忘记登陆密码参数：" + JSON.stringify(params))
+  $ajax.post(url, params).then(function (res) {
+    let data = res.data;
+    response.send(data)
+  }).catch(function (err) {
+    console.log(err)
+  })
+})
 
 module.exports = router

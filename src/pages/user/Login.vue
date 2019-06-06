@@ -19,14 +19,8 @@
           <i class="sprite s-icon-psd"></i>
         </span>
         <div class="input">
-          <el-input
-            type="password"
-            placeholder="输入6-20位数字和字母组合的密码"
-            v-model="password"
-            minlength="6"
-            maxlength="20"
-            clearable
-          ></el-input>
+          <el-input type="password" placeholder="输入6-20位数字和字母组合的密码" v-model="password" minlength="6" maxlength="20"
+            clearable></el-input>
         </div>
       </div>
     </div>
@@ -35,6 +29,7 @@
       <label class="btn">
         <el-button class="user-btn radius" @click="login()">登录</el-button>
       </label>
+      <label class="tips"><a href="javascript:;" @click="forget()">忘记密码</a></label>
     </div>
   </div>
 </template>
@@ -68,6 +63,11 @@ export default {
       }).then(data => {
         let path = "/index?suid=" + data.suid;
         this.$router.push(path);
+      });
+    },
+    forget() {
+      this.$router.push({
+        path: "/usercenter/s/psd/forgetlogin/" + this.mobile || ""
       });
     }
   }

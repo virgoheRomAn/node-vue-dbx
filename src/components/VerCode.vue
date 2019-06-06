@@ -19,7 +19,11 @@ export default {
     },
     payPwd: {
       type: null,
-      default: true
+      default: false
+    },
+    forget: {
+      type: null,
+      default: false
     }
   },
   data() {
@@ -60,6 +64,18 @@ export default {
 
       if (this.payPwd) {
         this.API.get({ url: `/usercenter/payPwdSmscode` })
+          .then(data => {
+            this.cutDown();
+            this.$jBox.alert("验证码已发送!");
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else if (this.forget) {
+        this.API.post({
+          url: `/usercenter/forgerPwdSmscode`,
+          params: { mobile: this.mobile }
+        })
           .then(data => {
             this.cutDown();
             this.$jBox.alert("验证码已发送!");
