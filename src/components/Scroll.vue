@@ -12,7 +12,7 @@
             <loading>{{pullUpLoadingTxt}}</loading>
           </div>
         </div>
-        <div class="pullup-wrapper" v-else></div>
+        <div class="h-15" v-else></div>
       </slot>
     </div>
 

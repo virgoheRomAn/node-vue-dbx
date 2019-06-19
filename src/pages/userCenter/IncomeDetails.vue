@@ -3,10 +3,10 @@
     <div class="bscroll-container" id="container">
 
       <scroll-item ref="scroll" class="wrapper" :data="list" :pullUpLoad="pullUpLoadObj" @pullingUp="onPullingUp">
-        <div class="trades-bar user-center-bar pt-0">
+        <div class="trades-bar user-center-bar pb-0">
 
           <div class="person-trades">
-            <div class="box-list-information">
+            <div class="box-list-information mt-0">
               <ul>
                 <li v-for="(item,key) in list" :key="key">
                   <div class="box-list-arrow">
@@ -16,7 +16,7 @@
                       </li>
                     </ul>
                   </div>
-                  <div class="content">
+                  <div class="content row">
                     <div class="item row2">
                       <span>投保人：</span>
                       <label>{{item.holderName}}元</label>
