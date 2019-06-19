@@ -55,8 +55,8 @@
                       </div>
                       <div class="item">
                         <div class="handle">
-                          <a href="javascript:;" @click.stop="deleteItem(item.id)">删除保单</a>
-                          <a href="javascript:;" @click.stop="copyItem(item.no,item.down)">复制保单</a>
+                          <a href="javascript:;" @click.stop="deleteItem(item.id,index)">删除保单</a>
+                          <a href="javascript:;" @click.stop="copyItem(item.no,item.beneficiary,item.down)">复制保单</a>
                         </div>
                       </div>
                     </div>
@@ -99,24 +99,6 @@
                         <span>购买日期：</span>
                         <label>{{item.time}}</label>
                       </div>
-                      <div class="item">
-                        <span>保单号：</span>
-                        <label>{{item.no}}</label>
-                      </div>
-                      <div class="item">
-                        <span>保单地址：</span>
-                        <a :href="item.down">{{item.down}}</a>
-                      </div>
-                      <div class="item">
-                        <div class="handle">
-                          <a href="javascript:;" @click.stop="deleteItem(item.id)">删除保单</a>
-                          <a href="javascript:;" @click.stop="copyItem(item.no,item.down)">复制保单</a>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="checkbox-box" @click.stop="checkItem(index)" v-show="isManagement">
-                      <el-checkbox class="checked" v-model="item.checkedItem"></el-checkbox>
                     </div>
                   </div>
                 </li>
@@ -163,8 +145,8 @@
                       </div>
                       <div class="item">
                         <div class="handle">
-                          <a href="javascript:;" @click.stop="deleteItem(item.id)">删除保单</a>
-                          <a href="javascript:;" @click.stop="copyItem(item.no,item.down)">复制保单</a>
+                          <a href="javascript:;" @click.stop="deleteItem(item.id,index)">删除保单</a>
+                          <a href="javascript:;" @click.stop="copyItem(item.no,item.beneficiary,item.down)">复制保单</a>
                         </div>
                       </div>
                     </div>
@@ -217,8 +199,7 @@
                       </div>
                       <div class="item">
                         <div class="handle">
-                          <a href="javascript:;" @click.stop="deleteItem(item.id)">删除保单</a>
-                          <a href="javascript:;" @click.stop="copyItem(item.no,item.down)">复制保单</a>
+                          <a :href="item.bxh5_url">再次购买</a>
                         </div>
                       </div>
                     </div>
@@ -234,7 +215,7 @@
         </div>
       </scroll-item>
 
-      <div class="bscroll-footer" v-if="isManagement">
+      <div class="bscroll-footer" v-if="isManagement && activeName!=='Unpaid'">
         <label>
           <el-checkbox v-model="checkAll" @change="checkAllBtn">全选</el-checkbox>
         </label>
@@ -250,7 +231,7 @@
       </div>
     </div>
 
-    <div class="management-fixed">
+    <div class="management-fixed" v-if="!!somethingData">
       <a v-if="!isManagement" href="javascript:;" @click="()=>{this.isManagement=true}">保单<br>管理</a>
       <a v-else href="javascript:;" @click="()=>{this.isManagement=false}">管理<br>完成</a>
     </div>
@@ -350,8 +331,8 @@ export default {
       }
       this.isError();
     },
-    deleteItem(id) {
-      this.$jBox.warn("是否确认删除该保单？", {
+    deleteItem(id, index) {
+      this.$jBox.confirm("是否确认删除该保单？", {
         title: "删除确认",
         content: { text_dir: "center" },
         confirm: () => {
@@ -361,7 +342,8 @@ export default {
             text: "删除中..."
           })
             .then(data => {
-              console.log(data);
+              this[`order${this.activeName}List`].splice(index, 1);
+              this.isError();
             })
             .catch(err => {
               console.log(err);
@@ -369,8 +351,8 @@ export default {
         }
       });
     },
-    copyItem(no, url) {
-      let copyText = `保单号：${no}\n下载地址：${url}`;
+    copyItem(no, user, url) {
+      let copyText = `被保人：${user}\n保单号：${no}\n下载地址：${url}`;
       this.$copyText(copyText).then(
         e => {
           this.$jBox.success("复制成功");
@@ -390,7 +372,7 @@ export default {
         return false;
       }
 
-      orderList.map(item => {
+      orderList.map((item, index) => {
         if (item.checkedItem) {
           orderId += item.id + ",";
         }
@@ -398,7 +380,7 @@ export default {
 
       orderId = orderId.substring(0, orderId.length - 1);
 
-      this.$jBox.warn("是否删除选中保单？", {
+      this.$jBox.confirm("是否删除选中保单？", {
         title: "删除确认",
         content: { text_dir: "center" },
         confirm: () => {
@@ -408,7 +390,18 @@ export default {
             text: "删除中..."
           })
             .then(data => {
-              console.log(data);
+              orderList.map((item, index) => {
+                if (item.checkedItem) {
+                  orderList.splice(index, 1, "");
+                }
+              });
+
+              let filterList = orderList.filter(item => item);
+              orderList.splice(0, orderList.length);
+              filterList.map(item => {
+                orderList.push(item);
+              });
+              this.isError();
             })
             .catch(err => {
               console.log(err);
@@ -428,7 +421,9 @@ export default {
 
       orderList.map(item => {
         if (item.checkedItem) {
-          copyText += `保单号：${item.no}\n下载地址：${item.down}\n`;
+          copyText += `被保人：${item.beneficiary}\n保单号：${
+            item.no
+          }\n下载地址：${item.down}\n`;
         }
       });
 
@@ -510,10 +505,11 @@ export default {
           beneficiary: item.beibaoren,
           money: item.money,
           time: item.buy_time,
-          no: item.pol_order_id,
+          no: item.policy_no,
           down: item.file_url,
           id: item.id,
-          checkedItem: false
+          checkedItem: false,
+          bxh5_url: item.bxh5_url
         });
       });
     },
