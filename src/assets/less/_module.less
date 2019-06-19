@@ -42,11 +42,13 @@
     .tab-line {
       position: absolute;
       bottom: -2px;
-      left: 20px;
+      left: 25px;
       z-index: 999;
-      width: 100px;
+      width: 50px;
       background: @btn;
       height: 3px;
+
+      transform-origin: left top;
     }
   }
 
@@ -108,6 +110,57 @@
         height: 100%;
       }
     }
+
+    .bscroll-footer {
+      display: flex;
+      height: @footer;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      border-top: 1px solid @bd;
+
+      label {
+        display: flex;
+        width: 60px;
+        height: 100%;
+        align-items: center;
+        color: @btn;
+      }
+
+      .handle {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+
+        a {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: @white;
+          border-radius: 30px;
+          height: 26px;
+          font-size: @fs-12;
+          padding: 0 15px;
+          background: @green;
+          margin-left: 15px;
+
+          &:first-child {
+            background: @g-ccc;
+            color: @g-333;
+          }
+        }
+      }
+
+      .user-btn {
+        border-radius: 0;
+        font-size: @fs-16;
+      }
+
+      .el-checkbox__input.is-checked+.el-checkbox__label {
+        color: @btn;
+      }
+    }
   }
 }
 
@@ -141,9 +194,16 @@
     display: block;
     width: 100%;
 
-    &.small{
-      li{
+    &.small {
+      li {
         height: 40px;
+      }
+    }
+
+    &.auto {
+      li {
+        height: auto;
+        padding: 15px;
       }
     }
 
@@ -187,15 +247,36 @@
         color: @main;
         font-size: @fs-14;
         flex: 1;
+        width: 0;
         display: flex;
-        line-height: 20px;
-        overflow: hidden;
+        align-items: center;
 
         b {
-          display: block;
-          width: 100%;
+          display: inline-block;
           .ft-ellipsis();
           font-weight: normal;
+        }
+
+        i {
+          font-size: @fs-8;
+          margin-left: 10px;
+          padding: 2px 5px;
+          border-radius: 3px;
+          color: @white;
+          min-width: 37px;
+          text-align: center;
+
+          &.lost {
+            background: @g-ccc;
+          }
+
+          &.unpaid {
+            background: @green;
+          }
+
+          &.guarantee {
+            background: @btn;
+          }
         }
       }
 
@@ -823,7 +904,8 @@
           text-align: right;
           font-size: @fs-15;
           font-weight: 700;
-          &.right{
+
+          &.right {
             width: 0;
             flex: 1;
           }
@@ -909,11 +991,53 @@
 .box-list-information {
   position: relative;
 
-  li {
+  >ul.management {
+    >li {
+      a {
+        pointer-events: none;
+      }
+    }
+  }
+
+  >ul>li {
     border: 1px solid @bd;
     border-radius: 5px;
     margin-bottom: 15px;
     padding: 15px 15px 0;
+
+    .container {
+      position: relative;
+      transition: all 0.3s;
+      display: block;
+      width: 100%;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      padding-bottom: 5px;
+
+      .checkbox-box {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 99;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, .0);
+        display: block;
+        padding: 8px 10px;
+        border-radius: 5px;
+
+        .el-checkbox__inner {
+          width: 16px;
+          height: 16px;
+          border: 1px solid @btn;
+
+          &::after {
+            width: 4px;
+            height: 8px;
+          }
+        }
+      }
+    }
 
     &:last-child {
       margin-bottom: 0;
@@ -921,8 +1045,15 @@
 
     .content {
       display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
+
+      &.row {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      &.column {
+        flex-direction: column;
+      }
 
       .item {
         display: flex;
@@ -937,17 +1068,46 @@
           width: 50%;
         }
 
-        span {
+        >span {
           display: block;
           font-size: @fs-12;
           color: @g-999;
           width: 65px;
         }
 
-        label {
+        >label,
+        >a {
+          word-break: break-all;
+          width: 0;
           flex: 1;
           color: @g-333;
           font-size: @fs-12;
+        }
+
+        a {
+          color: @link;
+        }
+
+        .handle {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+          align-items: center;
+          flex: 1;
+          width: 0;
+          margin-top: 10px;
+
+          a {
+            display: block;
+            width: 86px;
+            .text-mid-line-bor(30px, 2px);
+            border: 1px solid @bd;
+            border-radius: 20px;
+            text-align: center;
+            margin-left: 15px;
+            font-size: @fs-12;
+            color: @g-333;
+          }
         }
       }
     }
@@ -1287,6 +1447,11 @@
     background: @btn;
     border: 1px solid @btn;
   }
+
+  &.green {
+    background: @green;
+    border: 1px solid @green;
+  }
 }
 
 //忘记密码
@@ -1608,29 +1773,29 @@
   color: @red  !important;
 }
 
-/*左侧进入*/
+.animate-transtion {
+  transition: all 0.3s;
+}
 
+/*左侧进入*/
 .animated-left {
   .fn-set-transform(translate3d(100%, 0, 0));
   .fn-set-transition(transform 0.5s 0s);
 }
 
 /*右侧进入*/
-
 .animated-right {
   .fn-set-transform(translate3d(-100%, 0, 0));
   .fn-set-transition(transform 0.5s 0s);
 }
 
 /*上方进入*/
-
 .animated-top {
   .fn-set-transform(translate3d(0, -100%, 0));
   .fn-set-transition(transform 0.5s 0s);
 }
 
 /*下方进入*/
-
 .animated-bottom {
   .fn-set-transform(translate3d(0, 100%, 0));
   .fn-set-transition(transform 0.5s 0s);

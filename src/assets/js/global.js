@@ -509,7 +509,7 @@ FB.getArrayIndexByVal = (value, arr, fields = 'id') => {
 FB.getArrayValueById = (id, arr, fields = 'code', rFields = 'text') => {
   for (let i = 0; i < arr.length; i++) {
     let item = arr[i];
-    if (!!item[fields]) {
+    if (item[fields] !== null || item[fields] !== undefined) {
       if (item[fields] === id) {
         return item[rFields];
       }

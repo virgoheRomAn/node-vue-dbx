@@ -347,4 +347,40 @@ router.post('/usercenter/changeForgetPwd', function (request, response, next) {
   })
 })
 
+/**
+ * 获取保单列表
+ */
+router.post('/usercenter/order', function (request, response, next) {
+  let url = native + port.url.usercenter.orderList;
+  let sessionid = request.session.token;
+  let params = request.body;
+  params.sessionid = sessionid;
+
+  console.log("获取保单列表参数：" + JSON.stringify(params))
+  $ajax.post(url, params).then(function (res) {
+    let data = res.data;
+    response.send(data)
+  }).catch(function (err) {
+    console.log(err)
+  })
+})
+
+/**
+ * 删除保单
+ */
+router.post('/usercenter/orderDel', function (request, response, next) {
+  let url = native + port.url.usercenter.orderDelete;
+  let sessionid = request.session.token;
+  let params = request.body;
+  params.sessionid = sessionid;
+
+  console.log("删除保单参数：" + JSON.stringify(params))
+  $ajax.post(url, params).then(function (res) {
+    let data = res.data;
+    response.send(data)
+  }).catch(function (err) {
+    console.log(err)
+  })
+})
+
 module.exports = router

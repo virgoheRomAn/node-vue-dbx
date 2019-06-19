@@ -34,7 +34,12 @@ Vue.prototype.USER = api.user;
 Vue.prototype.__G__ = __G__;
 Vue.prototype.CONST = CONST;
 
-Vue.config.productionTip = false;
+const isDebug_mode = process.env.NODE_ENV !== 'prod';
+
+Vue.config.debug = isDebug_mode;
+Vue.config.devtools = isDebug_mode;
+Vue.config.productionTip = isDebug_mode;
+
 VueClipboard.config.autoSetContainer = true;
 Vue.use(Vuex);
 Vue.use(ElementUI);

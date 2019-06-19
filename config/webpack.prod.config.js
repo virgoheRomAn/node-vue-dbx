@@ -15,7 +15,7 @@ console.log("当前环境：" + process.env.NODE_ENV)
 const isProd = process.env.NODE_ENV === "prod";
 
 const webpackConfig = merge(baseWebpackConfig, {
-  devtool: '#source-map',
+  devtool: isProd ? false : "#source-map",
   output: {
     path: isProd ? path.resolve(__dirname, '../assets') : path.resolve(__dirname, '../test'),
     filename: utils.assetsPath('js/[name].[chunkhash:7].js'),

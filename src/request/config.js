@@ -58,7 +58,7 @@ instance.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
   console.log(error);
-  jBox.close("", null, () => {
+  jBox.close(() => {
     jBox.error("获取超时")
   })
   return Promise.reject(error);

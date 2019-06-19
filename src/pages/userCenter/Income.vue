@@ -34,16 +34,16 @@
                       </li>
                     </ul>
                   </div>
-                  <div class="content">
-                    <div class="item row1">
+                  <div class="content column">
+                    <div class="item">
                       <span>保费：</span>
                       <label>{{item.insurance_amount}}元</label>
                     </div>
-                    <div class="item row1">
+                    <div class="item">
                       <span>推广费：</span>
                       <label>{{item.generalize_amount}}元</label>
                     </div>
-                    <div class="item row1">
+                    <div class="item">
                       <span>数量：</span>
                       <label>{{item.num}}</label>
                     </div>

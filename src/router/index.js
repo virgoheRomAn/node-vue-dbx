@@ -125,6 +125,7 @@ const routes = [
       { path: 'capital/:mobile?', name: 'capital', component: UserCenter.Capital, meta: { title: '资金管理', isAuth: true } },
       { path: 'income/:mobile?', name: 'income', component: UserCenter.Income, meta: { title: '我的收入', isAuth: true } },
       { path: 'incomedetails/:type?', name: 'incomeDetails', component: UserCenter.IncomeDetails, meta: { title: '我的收入详情', isAuth: true } },
+      { path: 'order/:mobile?', name: 'order', component: UserCenter.Order, meta: { title: '我的保单', isAuth: true } },
       { path: 'customer/:mobile?', name: 'customer', component: UserCenter.Customer, meta: { title: '客户管理', isAuth: true } },
       { path: 'withdraw/:mobile?', name: 'withdraw', component: UserCenter.Withdraw, meta: { title: '提现', isAuth: true } },
       { path: 'help/:mobile?', name: 'help', component: UserCenter.Help, meta: { title: '理赔帮助', isAuth: true } },

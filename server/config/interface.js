@@ -26,7 +26,9 @@ const URL = {
     changePayPwd: "/front/api/user/change_tkpassword",
     customerRecord: "/front/api/user/customer_list",
     forgerPwdSmscode: "/front/api/user/smscode_password",
-    changeForgetPwd:"/front/api/user/change_password"
+    changeForgetPwd: "/front/api/user/change_password",
+    orderList: "/front/api/user/bxorder_list",
+    orderDelete: "/front/api/user/bxorder_delete"
   },
   product: {
     classes: "/front/api/user/product_classes",

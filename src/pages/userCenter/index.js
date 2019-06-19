@@ -6,6 +6,7 @@ import Done from "./Done";
 import Help from "./Help";
 import Question from "./Question";
 import Customer from "./Customer";
+import Order from "./Order";
 
 export default {
   Capital,
@@ -15,5 +16,6 @@ export default {
   Done,
   Help,
   Question,
-  Customer
+  Customer,
+  Order
 }

@@ -19,7 +19,7 @@
         <div class="box-list-arrow">
           <ul>
             <li>
-              <a href="#">
+              <a href="/usercenter/s/order">
                 <label><i class="sprite s-icon-bank"></i></label>
                 <span>我的保单</span>
                 <em><i class="sprite s-icon-arrow"></i></em>
