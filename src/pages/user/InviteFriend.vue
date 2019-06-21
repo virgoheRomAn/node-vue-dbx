@@ -40,7 +40,7 @@
         <div class="item">
           <span>身份证号：</span>
           <div class="input">
-            <el-input type="tel" placeholder="请输入身份证号" v-model="idNo" clearable>
+            <el-input type="text" placeholder="请输入身份证号" v-model="idNo" clearable>
             </el-input>
           </div>
         </div>
