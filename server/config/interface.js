@@ -8,6 +8,7 @@ const URL = {
     login: "/front/api/login",
     logout: "/front/api/logout",
     register: "/front/api/user/register",
+    myInvite: "/front/api/user/myinvite",
     registerSmscode: "/front/api/user/smscode_register"
   },
   usercenter: {

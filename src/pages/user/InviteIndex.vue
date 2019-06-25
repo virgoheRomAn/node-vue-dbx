@@ -10,9 +10,9 @@
         <a href="javascript:;" @click="share()">立即注册</a>
       </div>
       <div class="invite-nav">
-        <a>我的邀请</a>
+        <a href="javascript:;" @click="inviteList()">我的邀请</a>
         <span>|</span>
-        <a>邀请说明</a>
+        <a href="javascript:;" @click="inviteExplain()">邀请说明</a>
       </div>
     </div>
 
@@ -85,11 +85,10 @@ export default {
     close() {
       this.showTips = false;
     },
-    myInvite() {
-      this.$router.push({
-        name: "inviteList"
-      });
-    }
+    inviteList() {
+      this.$router.push({ name: "inviteList" });
+    },
+    inviteExplain() {}
   }
 };
 </script>

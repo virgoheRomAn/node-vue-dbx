@@ -146,7 +146,7 @@ export default {
       }
     ];
     this.__G__.ajaxParataxisDataStep(this, obj).then(data => {
-      console.log(data);
+      // console.log(data);
       let slideBox = this.$G.slideBox("#slideBox");
     });
   },

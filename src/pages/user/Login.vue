@@ -60,10 +60,14 @@ export default {
           username: this.mobile,
           password: this.password
         }
-      }).then(data => {
-        let path = "/index?suid=" + data.suid;
-        this.$router.push(path);
-      });
+      })
+        .then(data => {
+          let path = "/index?suid=" + data.suid;
+          this.$router.push(path);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     forget() {
       this.$router.push({

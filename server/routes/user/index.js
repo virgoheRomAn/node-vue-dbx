@@ -119,4 +119,24 @@ router.get('/user/logout', function (request, response, next) {
   })
 });
 
+/**
+ * 获取邀请人列表
+ * @param {String} username 用户手机号
+ */
+router.get('/user/myInvite', function (request, response, next) {
+  let url = native + port.url.user.myInvite;
+  let username = request.query.username;
+  let sessionid = request.session.token;
+
+  let params = { k: username, sessionid };
+  console.log('获取邀请人列表参数：' + JSON.stringify(params))
+
+  $ajax.post(url, params).then(function (res) {
+    let data = res.data;
+    response.send(data);
+  }).catch(function (err) {
+    console.log(err)
+  })
+});
+
 module.exports = router
