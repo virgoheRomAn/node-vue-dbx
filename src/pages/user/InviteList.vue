@@ -1,38 +1,40 @@
 <template>
-  <div class="invite-list">
-    <div class="search-box">
-      <el-input placeholder="搜索：姓名或者手机号" v-model="searchName">
-        <i @click="search()" slot="suffix" class="el-input__icon el-icon-search"></i>
-      </el-input>
-    </div>
+  <div class="invite-container">
+    <div class="invite-list">
+      <div class="search-box">
+        <el-input placeholder="搜索：姓名或者手机号" v-model="searchName">
+          <i @click="search()" slot="suffix" class="el-input__icon el-icon-search"></i>
+        </el-input>
+      </div>
 
-    <div class="invite-title">
-      <label>直接邀请用户合计<em>{{inviteCount}}</em>人</label>
-    </div>
+      <div class="invite-title">
+        <label>下级用户总数<em>{{inviteLowerCount}}</em>，直接邀请用户合计<em>{{inviteCount}}</em>人</label>
+      </div>
 
-    <div class="box-list-information mt-15">
-      <ul>
-        <li v-for="(item,key) in inviteList" :key="key">
-          <div class="content row">
-            <div class="item row2">
-              <span>姓名：</span>
-              <label>{{item.userName}}</label>
+      <div class="box-list-information mt-15">
+        <ul>
+          <li v-for="(item,key) in inviteList" :key="key">
+            <div class="content row">
+              <div class="item row2">
+                <span>姓名：</span>
+                <label>{{item.userName}}</label>
+              </div>
+              <div class="item row2">
+                <span>手机号：</span>
+                <label>{{item.userMobile}}</label>
+              </div>
+              <div class="item row2">
+                <span>是否认证：</span>
+                <label class="tc-red">{{item.approve}}</label>
+              </div>
+              <div class="item row1">
+                <span>注册时间：</span>
+                <label>{{item.time}}</label>
+              </div>
             </div>
-            <div class="item row2">
-              <span>手机号：</span>
-              <label>{{item.userMobile}}</label>
-            </div>
-            <div class="item row2">
-              <span>是否认证：</span>
-              <label class="tc-red">{{item.approve}}</label>
-            </div>
-            <div class="item row1">
-              <span>注册时间：</span>
-              <label>{{item.time}}</label>
-            </div>
-          </div>
-        </li>
-      </ul>
+          </li>
+        </ul>
+      </div>
     </div>
 
     <div class="data-list-none pt-40" v-if="inviteList.length === 0">
@@ -49,6 +51,7 @@ export default {
     return {
       searchName: "",
       inviteCount: "",
+      inviteLowerCount: "",
       inviteList: []
     };
   },
@@ -65,6 +68,7 @@ export default {
           this.inviteList.splice(0, this.inviteList.length);
 
           this.inviteCount = data.count;
+          this.inviteLowerCount = data.countall;
           if (data.list.length !== 0) {
             data.list.map(item => {
               this.inviteList.push({
@@ -86,6 +90,7 @@ export default {
 @import url("../../assets/less/_variable.less");
 .invite-list {
   position: relative;
+  z-index: 1000;
   padding: 15px;
   .search-box {
     margin-bottom: 15px;
