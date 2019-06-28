@@ -73,6 +73,7 @@
 .better-scroll-box {
   @heaader: 46px;
   @footer: 51px;
+  @big-header: 127px;
   position: fixed;
   top: 0;
   left: 0;
@@ -91,6 +92,14 @@
 
     &.header {
       padding-top: @heaader;
+
+      &.big {
+        padding-top: @big-header;
+
+        .bscroll-header {
+          height: @big-header;
+        }
+      }
     }
 
     &.footer {

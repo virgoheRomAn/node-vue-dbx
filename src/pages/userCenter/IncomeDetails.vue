@@ -19,7 +19,7 @@
                   <div class="content row">
                     <div class="item row2">
                       <span>投保人：</span>
-                      <label>{{item.holderName}}元</label>
+                      <label>{{item.holderName}}</label>
                     </div>
                     <div class="item row2">
                       <span>保费：</span>
@@ -31,7 +31,7 @@
                     </div>
                     <div class="item row2">
                       <span>推广费：</span>
-                      <label>{{item.profit}}</label>
+                      <label>{{item.profit}}元</label>
                     </div>
                     <div class="item row1">
                       <span>状态：</span>

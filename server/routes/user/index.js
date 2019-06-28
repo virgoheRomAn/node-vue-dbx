@@ -126,9 +126,11 @@ router.get('/user/logout', function (request, response, next) {
 router.get('/user/myInvite', function (request, response, next) {
   let url = native + port.url.user.myInvite;
   let username = request.query.username;
+  let pageNum = request.query.pageNum;
+  let pageSize = request.query.pageSize;
   let sessionid = request.session.token;
 
-  let params = { k: username, sessionid };
+  let params = { k: username, sessionid, pageNum, pageSize };
   console.log('获取邀请人列表参数：' + JSON.stringify(params))
 
   $ajax.post(url, params).then(function (res) {
