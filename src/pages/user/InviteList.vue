@@ -60,7 +60,7 @@ export default {
   data() {
     return {
       pageNum: 1,
-      pageSize: 5,
+      pageSize: 30,
       pullUpLoadObj: false,
       searchName: "",
       inviteCount: "",
