@@ -88,7 +88,9 @@ export default {
     inviteList() {
       this.$router.push({ name: "inviteList" });
     },
-    inviteExplain() {}
+    inviteExplain() {
+      this.$router.push({ name: "inviteInfor" });
+    }
   }
 };
 </script>

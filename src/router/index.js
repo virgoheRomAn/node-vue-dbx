@@ -101,6 +101,7 @@ const routes = [
       { path: 'index/:user?', name: 'inviteIndex', component: User.InviteIndex, meta: { title: '立即邀请', isAuth: true } },
       { path: 'friend/:user?', name: 'inviteFriend', component: User.InviteFriend, meta: { title: '邀请好友' } },
       { path: 'list/:user?', name: 'inviteList', component: User.InviteList, meta: { title: '我的邀请' } },
+      { path: 'infor/:user?', name: 'inviteInfor', component: User.InviteInfor, meta: { title: '邀请说明' } },
       { path: 'done/:mobile?', name: 'InviteDone', component: User.InviteDone, meta: { title: '结果页面' } },
       { path: 'agreement/:mobile?', name: 'agreement', component: User.InviteAgreement, meta: { title: '用户服务协议' } }
     ]

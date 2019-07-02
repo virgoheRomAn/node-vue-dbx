@@ -5,6 +5,7 @@ import InviteIndex from "./InviteIndex";
 import InviteDone from "./InviteDone";
 import InviteList from "./InviteList";
 import InviteAgreement from "./InviteAgreement";
+import InviteInfor from "./InviteInfor";
 
 export default {
     Login,
@@ -13,5 +14,6 @@ export default {
     InviteIndex,
     InviteDone,
     InviteList,
-    InviteAgreement
+    InviteAgreement,
+    InviteInfor
 }
