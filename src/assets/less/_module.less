@@ -690,13 +690,15 @@
             >span {
               display: block;
               width: 100%;
-              .ft-ellipsis();
+              //.ft-ellipsis();
 
               &:first-child {
                 .ft-ellipsis();
+                font-size: @fs-14;
               }
 
               &.info {
+                .ft-clamp();
                 color: @g-666;
                 font-size: @fs-10;
                 margin-top: 5px;
@@ -708,6 +710,9 @@
             color: @g-666;
             font-size: @fs-12;
             margin-top: 5px;
+            span{
+              display: block;
+            }
           }
 
           .price {
