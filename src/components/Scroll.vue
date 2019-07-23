@@ -16,8 +16,8 @@
       </slot>
     </div>
 
-    <slot name="pulldown" :pullDownRefresh="pullDownRefresh" :pullDownStyle="pullDownStyle" :beforePullDown="beforePullDown"
-      :isPullingDown="isPullingDown" :bubbleY="bubbleY">
+    <slot name="pulldown" :pullDownRefresh="pullDownRefresh" :pullDownStyle="pullDownStyle"
+      :beforePullDown="beforePullDown" :isPullingDown="isPullingDown" :bubbleY="bubbleY">
       <div ref="pulldown" class="pulldown-wrapper" :style="pullDownStyle" v-if="pullDownRefresh">
 
         <div class="before-trigger" v-if="beforePullDown">
@@ -205,7 +205,11 @@ export default {
       if (this.listenScroll) {
         this.scroll.on("scroll", pos => {
           this.pullUpDirty = true;
-          if (pos.y < this.scroll.maxScrollY - 30) {
+          if (
+            !this.clocked &&
+            this.pullUpLoad &&
+            pos.y < this.scroll.maxScrollY - 30
+          ) {
             this.pullUploadText = "释放加载";
             this.allowableLoad = true;
           } else {
@@ -218,6 +222,7 @@ export default {
       if (this.listenScrollEnd) {
         this.scroll.on("scrollEnd", pos => {
           if (this.allowableLoad) {
+            this.clocked = true;
             this.allowableLoad = false;
             this.isPullUpLoad = true;
             this.pullUploadText = "加载中...";
@@ -312,6 +317,7 @@ export default {
     },
     _initPullUpLoad() {
       this.scroll.on("pullingUp", () => {
+        this.clocked = false;
         this.isPullUpLoad = false;
         // this.$emit("pullingUp");
       });

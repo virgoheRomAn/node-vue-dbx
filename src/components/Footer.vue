@@ -3,7 +3,7 @@
     <div class="footer">
       <ul>
         <li>
-          <router-link to="/index" exact>
+          <router-link to="/index">
             <i class="sprite s-icon-index"></i>
             <span>首页</span>
           </router-link>

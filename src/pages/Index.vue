@@ -45,7 +45,7 @@
             </div>
           </div>
         </div>
-        <div class="h-15" v-if="!pullUpLoadObj"></div>
+        <!-- <div class="h-15" v-if="!pullUpLoadObj"></div> -->
       </scroll-item>
 
       <div class="data-list-none" style="padding-top: 63%;" v-if="productList.length === 0">
