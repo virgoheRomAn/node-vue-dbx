@@ -59,7 +59,7 @@ export default {
           }
 
           setTimeout(() => {
-            this.$refs.scroll.initScroll();
+            this.$refs.scroll && this.$refs.scroll.initScroll();
           }, 20);
 
           if (!!data) {

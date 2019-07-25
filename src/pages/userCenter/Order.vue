@@ -59,7 +59,7 @@
                         <div class="handle" v-if="item.tag===0">
                           <a :href="item.payurl">去支付</a>
                         </div>
-                        <div class="handle" v-else>                          
+                        <div class="handle" v-else>
                           <a href="javascript:;" @click.stop="deleteItem(item.id,index)">删除保单</a>
                           <a href="javascript:;" @click.stop="copyItem(item.no,item.beneficiary,item.down)">复制保单</a>
                         </div>
@@ -336,6 +336,10 @@ export default {
         this.pullUpLoadObj = false;
       }
 
+      setTimeout(() => {
+        this.$refs.scroll && this.$refs.scroll.initScroll();
+      }, 20);
+      
       if (!!data) {
         this.handleData(data);
       }

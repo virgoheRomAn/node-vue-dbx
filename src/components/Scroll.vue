@@ -171,7 +171,7 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      this.initScroll();
+      // this.initScroll();
     }, 20);
   },
   destroyed() {
@@ -214,6 +214,7 @@ export default {
             this.allowableLoad = true;
           } else {
             // this.pullUploadText = "上拉加载更多";
+            // this.allowableLoad = false;
           }
           this.$emit("scroll", pos);
         });
@@ -282,6 +283,7 @@ export default {
         this.isPullUpLoad = false;
         this.pullUploadText = "上拉加载更多";
         this.refresh();
+        this.clocked = false;
       } else {
         this.refresh();
       }

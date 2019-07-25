@@ -86,6 +86,10 @@ export default {
           } else {
             this.pullUpLoadObj = false;
           }
+          
+          setTimeout(() => {
+            this.$refs.scroll && this.$refs.scroll.initScroll();
+          }, 20);
 
           this.handleData(data);
         }

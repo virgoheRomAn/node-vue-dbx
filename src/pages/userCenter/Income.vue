@@ -5,8 +5,9 @@
       <scroll-item ref="scroll" class="wrapper" :data="list" :pullUpLoad="pullUpLoadObj" @pullingUp="onPullingUp">
         <div class="trades-bar user-center-bar">
 
-          <person-assets class="bg mt-0" :userHandle="false" :see_total_assets="false" :user_assets_field="user_assets_field"
-            :total_assets_type="true" :ajax_user_count="false" :ajax_count_data="user_count_data"></person-assets>
+          <person-assets class="bg mt-0" :userHandle="false" :see_total_assets="false"
+            :user_assets_field="user_assets_field" :total_assets_type="true" :ajax_user_count="false"
+            :ajax_count_data="user_count_data"></person-assets>
 
           <div class="box-list-arrow-content mt-5 mb-25">
             <ul>
@@ -64,8 +65,8 @@
     <popup-box id="popupBox" ref="popupBox" titleCls="center border mb-20">
       <span slot="title">选择查询时间范围</span>
       <template slot="cont">
-        <calendar-item ref="calendar" :range="true" :events="calendar.events" :value="calendar.value" :begin="calendar.begin"
-          :end="calendar.end" @select="calendarSelect"></calendar-item>
+        <calendar-item ref="calendar" :range="true" :events="calendar.events" :value="calendar.value"
+          :begin="calendar.begin" :end="calendar.end" @select="calendarSelect"></calendar-item>
       </template>
     </popup-box>
   </div>
@@ -124,7 +125,7 @@ export default {
           }
 
           setTimeout(() => {
-            this.$refs.scroll.initScroll();
+            this.$refs.scroll && this.$refs.scroll.initScroll();
           }, 20);
 
           if (!!data) {

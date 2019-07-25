@@ -5,7 +5,8 @@
         <div class="tab-bar">
           <div class="tab-nav" name="tab">
             <div class="item" name="all" :class="{'active':activeName==='all'}"><label>全部产品</label></div>
-            <div class="item disabled" name="tenement" :class="{'active':activeName==='tenement'}"><label>物业宝</label></div>
+            <div class="item disabled" name="tenement" :class="{'active':activeName==='tenement'}"><label>物业宝</label>
+            </div>
             <label class="tab-line"></label>
           </div>
         </div>
@@ -19,7 +20,8 @@
                 <div class="product-list">
                   <div class="box-list-title">
                     <div class="container">
-                      <item v-for="(product,key) in productList" :data="product" :key="key" :class="{'sale-out':product.status==='sellout'}">
+                      <item v-for="(product,key) in productList" :data="product" :key="key"
+                        :class="{'sale-out':product.status==='sellout'}">
                       </item>
                     </div>
                   </div>
@@ -80,7 +82,7 @@ export default {
       }
 
       setTimeout(() => {
-        this.$refs.scroll.initScroll();
+        this.$refs.scroll && this.$refs.scroll.initScroll();
       }, 20);
       this.handleData(data);
     });
