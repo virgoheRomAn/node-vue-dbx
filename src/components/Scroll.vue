@@ -171,7 +171,7 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      // this.initScroll();
+      this.initScroll();
     }, 20);
   },
   destroyed() {
