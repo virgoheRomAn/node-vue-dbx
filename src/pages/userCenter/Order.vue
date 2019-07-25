@@ -6,8 +6,10 @@
         <div class="tab-bar">
           <div class="tab-nav">
             <div class="item" :class="{'active':activeName==='All'}" @click="check('All')"><label>全部</label></div>
-            <div class="item" :class="{'active':activeName==='Unpaid'}" @click="check('Unpaid')"><label>待支付</label></div>
-            <div class="item" :class="{'active':activeName==='Guarantee'}" @click="check('Guarantee')"><label>保障中</label></div>
+            <div class="item" :class="{'active':activeName==='Unpaid'}" @click="check('Unpaid')"><label>待支付</label>
+            </div>
+            <div class="item" :class="{'active':activeName==='Guarantee'}" @click="check('Guarantee')">
+              <label>保障中</label></div>
             <div class="item" :class="{'active':activeName==='Lost'}" @click="check('Lost')"><label>已失效</label></div>
             <label class="tab-line animate-transtion" :style="lineStyle"></label>
           </div>
@@ -54,7 +56,10 @@
                         <a :href="item.down">{{item.down}}</a>
                       </div>
                       <div class="item">
-                        <div class="handle">
+                        <div class="handle" v-if="item.tag===0">
+                          <a :href="item.payurl">去支付</a>
+                        </div>
+                        <div class="handle" v-else>                          
                           <a href="javascript:;" @click.stop="deleteItem(item.id,index)">删除保单</a>
                           <a href="javascript:;" @click.stop="copyItem(item.no,item.beneficiary,item.down)">复制保单</a>
                         </div>
@@ -98,6 +103,11 @@
                       <div class="item">
                         <span>购买日期：</span>
                         <label>{{item.time}}</label>
+                      </div>
+                      <div class="item">
+                        <div class="handle">
+                          <a :href="item.payurl">去支付</a>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -421,9 +431,7 @@ export default {
 
       orderList.map(item => {
         if (item.checkedItem) {
-          copyText += `被保人：${item.beneficiary}\n保单号：${
-            item.no
-          }\n下载地址：${item.down}\n`;
+          copyText += `被保人：${item.beneficiary}\n保单号：${item.no}\n下载地址：${item.down}\n`;
         }
       });
 
@@ -493,6 +501,7 @@ export default {
 
       data.map(item => {
         array.push({
+          tag: item.tag,
           cls: this.$G.getArrayValueById(
             item.tag,
             this.CONST.ORDERSTATUS,
@@ -509,7 +518,8 @@ export default {
           down: item.file_url,
           id: item.id,
           checkedItem: false,
-          bxh5_url: item.bxh5_url
+          bxh5_url: item.bxh5_url,
+          payurl: item.payurl
         });
       });
     },
