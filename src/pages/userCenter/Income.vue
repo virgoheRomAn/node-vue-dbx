@@ -35,7 +35,7 @@
                       </li>
                     </ul>
                   </div>
-                  <div class="content column">
+                  <div class="content column" v-if="item.type!=='3'">
                     <div class="item">
                       <span>保费：</span>
                       <label>{{item.insurance_amount}}元</label>
@@ -47,6 +47,17 @@
                     <div class="item">
                       <span>数量：</span>
                       <label>{{item.num}}</label>
+                    </div>
+                  </div>
+
+                  <div class="content column" v-else>
+                    <div class="item">
+                      <span>合计奖励：</span>
+                      <label>{{item.generalize_amount}}元</label>
+                    </div>
+                    <div class="item">
+                      <span>奖励笔数：</span>
+                      <label>{{item.num}}笔</label>
                     </div>
                   </div>
                 </li>
