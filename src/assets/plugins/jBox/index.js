@@ -877,7 +877,7 @@ $.jBox = function () {
   function __jBox_animate(box, callback) {
     var animate_env = __browser_animate_name(box[0]);
 
-    box.one(animate_env, function () {
+    box.one(animate_env + " animationend", function () {
       callback && callback.call(this);
     });
   }
@@ -889,11 +889,10 @@ $.jBox = function () {
    */
   function __browser_animate_name(el) {
     var animations = {
-      "OAnimation": "oAnimationEnd",
+      "OAnimation": "oanimationend",
       "MSAnimation": "MSAnimationEnd",
       "MozAnimation": "mozAnimationEnd",
-      "WebkitAnimation": "webkitAnimationEnd",
-      "animation": "animationEnd"
+      "WebkitAnimation": "webkitAnimationEnd"
     }
 
     for (var t in animations) {
