@@ -27,7 +27,7 @@
 
     <div class="user-handle">
       <label class="btn">
-        <a class="user-btn radius" @click="login()">登录</a>
+        <a class="user-btn radius" href="javascript:;" @click="login()">登录</a>
       </label>
       <label class="tips"><a href="javascript:;" @click="forget()">忘记密码</a></label>
     </div>
