@@ -1631,7 +1631,7 @@
 
 //设置三角函数
 .fn-arrow-dir(@width: 8px,
-@color) {
+  @color) {
   .d-in-block;
   width: 0;
   height: 0;
@@ -1641,7 +1641,7 @@
 
 //设置文字渐变
 .fn-text-gradient(@s: #03d6ff,
-@e: #038aff) {
+  @e: #038aff) {
   background-image: -webkit-gradient(linear, 0 0, 0 bottom, from(@s), to(@e));
 }
 
@@ -1696,9 +1696,9 @@
 
 //设置透明背景
 .fn-set-opacity(@r,
-@g,
-@b,
-@a) {
+  @g,
+  @b,
+  @a) {
   background: @c;
 }
 
@@ -1709,24 +1709,24 @@
 
 //设置字体大小
 .font-size(@n,
-@i: 8) when (@i =< @n) {
+  @i: 8) when (@i =< @n) {
   .fs-@{i} {
     font-size: unit(@i, px) !important;
   }
 
   .font-size(@n,
-  (@i+1));
+    (@i+1));
 }
 
 //设置z-index
 .fn-set-index-list(@n: 100,
-@i: 11) when (@i =< @n) {
+  @i: 11) when (@i =< @n) {
   .z-index-@{i} {
     z-index: @i  !important;
   }
 
   .fn-set-index-list(@n,
-  (@i+1));
+    (@i+1));
 }
 
 .fn-set-index-list();
@@ -1770,7 +1770,7 @@
 }
 
 .fs-number(@size: 12,
-@unit: px) {
+  @unit: px) {
   font-size: unit(@size, @unit) !important;
 }
 
@@ -1784,7 +1784,7 @@
 }
 
 .text-mid-line-bor(@h,
-@b: 2) {
+  @b: 2) {
   height: @h;
   line-height: @h - @b;
 }

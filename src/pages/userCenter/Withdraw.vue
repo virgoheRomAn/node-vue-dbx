@@ -15,8 +15,8 @@
         <h2 class="title mt-40">银行信息</h2>
         <div class="box-list-arrow-content left pl-5 pr-5">
           <ul>
-            <mobile-select ref="bankPicker" title="请选择银行" resultField="bankInfo" :pickerData="bankData" :initData="bankInfo"
-              @select="selectResult">
+            <mobile-select ref="bankPicker" title="请选择银行" resultField="bankInfo" :pickerData="bankData"
+              :initData="bankInfo" @select="selectResult">
               <template slot="text">
                 <span>银行名称</span>
                 <label @click="showPicker('bankPicker')" :class="{'disable':!bankInfo.text}">{{bankInfo.text ||
@@ -35,6 +35,13 @@
     </div>
 
     <div class="handle-box">
+      <div class="agreement-box-bar">
+        <el-checkbox v-model="agreement" class="agreement">
+          <span class="text">我已同意并阅读</span>
+          <a class="link" href="javascript:;" @click="showAgreement">《提现协议》</a>
+        </el-checkbox>
+      </div>
+
       <el-button class="user-btn" @click="withdraw()">确认提现</el-button>
       <a class="link" href="/usercenter/s/capital">提现记录</a>
     </div>
@@ -77,6 +84,7 @@ export default {
   },
   data() {
     return {
+      agreement: false,
       balance: "",
       bankNo: "",
       bankInfo: { code: "", text: "" },
@@ -121,6 +129,7 @@ export default {
     this.__G__.ajaxParataxisDataStep(this, obj);
   },
   methods: {
+    showAgreement() {},
     getWidthdrawInfo() {
       return new Promise((resolve, reject) => {
         this.API.get({ url: `/usercenter/withdrawInfo`, type: false })
@@ -156,6 +165,11 @@ export default {
     withdraw() {
       let m = this.$refs.moneyInput;
       let realMoney = m.moneyNumber;
+
+      if(!this.agreement){
+        this.$jBox.error("请同意并阅读《提现协议》");
+        return false;
+      }
 
       if (isNaN(realMoney)) {
         this.$jBox.error("请输入数字金额");
@@ -220,4 +234,10 @@ export default {
 </script>
 
 <style lange="less">
+.agreement-box-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
 </style>
