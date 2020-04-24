@@ -38,12 +38,12 @@
       <div class="agreement-box-bar">
         <el-checkbox v-model="agreement" class="agreement">
           <span class="text">我已同意并阅读</span>
-          <a class="link" href="javascript:;" @click="showAgreement">《提现协议》</a>
+          <a class="link"  href="http://succ.dongbaoxian.cn/agreement/tx.pdf" @click="showAgreement">《提现协议》</a>
         </el-checkbox>
       </div>
 
       <el-button class="user-btn" @click="withdraw()">确认提现</el-button>
-      <a class="link" href="/usercenter/s/capital">提现记录</a>
+      <a class="link" target="_blank" href="/usercenter/s/capital">提现记录</a>
     </div>
 
     <div class="warning-box">

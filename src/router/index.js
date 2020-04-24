@@ -161,6 +161,7 @@ const router = new Router({
   mode: 'history',
   routes: routes,
   linkExactActiveClass: "active",
+  linkActiveClass: "active",
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition;

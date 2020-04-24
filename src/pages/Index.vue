@@ -1,7 +1,7 @@
 <template>
   <div class="better-scroll-box">
     <div class="bscroll-container footer">
-      <scroll-item ref="scroll" class="wrapper" :data="productList" :pullUpLoad="pullUpLoadObj" @upload="onPullingUp">
+      <scroll-item ref="scroll" class="wrapper" :data="productList" :pullUpLoad="pullUpLoadObj" @scroll="scroll" @upload="onPullingUp">
         <div class="banner-bar">
           <div v-if="bannerList.length===0">
             <img src="../assets/img/banner-default.png">
@@ -27,28 +27,27 @@
               <a :href="item.url">{{item.title}}</a>
             </li>
           </ul>
-          <!-- <a class="more" href="javascript:;" @click="moreNotice()">更多</a> -->
         </div>
 
         <div class="product-bar pl-20 pr-20">
           <div class="tab-bar">
+            <div class="tab-nav sticky" ref="tabNav">
+              <a class="item" :class="{'active':activeName===item.id}" href="javascript:;" @click="checkProductClass(item.id)"
+                v-for="(item, key) in productClasses" :key="key">{{item.name}}</a>
+            </div>
+
             <div class="tab-content" name="tab">
-              <div class="pane-item" :class="{'active':activeName==='all'}">
+              <div class="pane-item active">
                 <div class="box-list-lr">
                   <product-item v-for="(product,key) in productList" :data="product" :key="key"></product-item>
                 </div>
               </div>
-
-              <!-- <div class="pane-item" :class="{'active':activeName==='tenement'}">
-                <div class="data-list-none">暂无数据</div>
-              </div>-->
             </div>
           </div>
         </div>
-        <!-- <div class="h-15" v-if="!pullUpLoadObj"></div> -->
       </scroll-item>
 
-      <div class="data-list-none" style="padding-top: 63%;" v-if="productList.length === 0">
+      <div class="data-list-none" style="padding-top: 20%;" v-if="productList.length === 0">
         <label>
           <img src="../assets/img/404.png">
         </label>
@@ -70,7 +69,8 @@ export default {
       noticeList: [],
       bannerList: [],
 
-      activeName: "all",
+      activeName: "",
+      productClasses: [],
       productList: [],
       pullUpLoadObj: false
     };
@@ -120,34 +120,16 @@ export default {
       {
         fun: this.getProductClasses(),
         callback: data => {
-          // console.log(data);
-        }
-      },
-      {
-        fun: this.ajaxListData(this.pageNum, this.pageSize),
-        callback: data => {
-          if (data.length === this.pageSize) {
-            this.pageNum++;
-            this.pullUpLoadObj = {
-              threshold: 20
-            };
-          } else {
-            this.pullUpLoadObj = false;
-          }
-
-          setTimeout(() => {
-            this.$refs.scroll && this.$refs.scroll.initScroll();
-          }, 20);
-
-          if (!!data) {
-            this.handleData(data);
-          }
+          data.map(item => {
+            this.productClasses.push(item);
+            this.activeName = this.productClasses[0].id;
+          });
         }
       }
     ];
     this.__G__.ajaxParataxisDataStep(this, obj).then(data => {
-      // console.log(data);
       let slideBox = this.$G.slideBox("#slideBox");
+      this.init(this.pageNum, this.pageSize, this.productClasses[0].id, true);
     });
   },
   methods: {
@@ -199,17 +181,43 @@ export default {
           });
       });
     },
-    ajaxListData(pageNum, pageSize) {
+    checkProductClass(id) {
+      this.pageNum = 0;
+      this.activeName = id;
+      this.init(this.pageNum, this.pageSize, id, true);
+    },
+    init(pageNum, pageSize, prodClass, type) {
+      this.productList.splice(0, this.productList.length);
+      this.ajaxListData(pageNum, pageSize, prodClass, type)
+        .then(data => {
+          if (data.length === this.pageSize) {
+            this.pageNum++;
+            this.pullUpLoadObj = {
+              threshold: 20
+            };
+          } else {
+            this.pullUpLoadObj = false;
+          }
+
+          if (!!data) {
+            this.handleData(data);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    ajaxListData(pageNum, pageSize, prodClass, type = false) {
       return new Promise((resolve, reject) => {
         this.API.post({
           url: `/product/list`,
           params: {
             pageNum,
             pageSize,
-            prodClass: "",
+            prodClass,
             suid: this.$route.query.suid
           },
-          type: false,
+          type,
           errorTips: false
         })
           .then(data => {
@@ -239,11 +247,19 @@ export default {
         });
       }
     },
+    scroll(pos) {
+      // let t = this.$refs.tabNav.offsetTop;
+      // if (Math.abs(pos.y) >= t) {
+      //   this.$refs.tabNav.className = "tab-nav sticky fixed";
+      // } else {
+      //   this.$refs.tabNav.className = "tab-nav sticky";
+      // }
+    },
     scrollTo(x, y, t) {
       this.$refs.scroll.scrollTo(x, y, t, "swipeBounce");
     },
     onPullingUp() {
-      this.ajaxListData(this.pageNum, this.pageSize, false).then(data => {
+      this.ajaxListData(this.pageNum, this.pageSize, this.activeName, false).then(data => {
         setTimeout(() => {
           if (data.length !== 0) {
             this.pageNum++;
