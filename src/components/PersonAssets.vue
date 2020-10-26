@@ -31,7 +31,7 @@
     </div>
     <div class="handle" v-if="userHandle">
       <a :href="'/usercenter/s/income/' + userName">查看收入</a>
-      <a :href="'/usercenter/s/withdraw/' + userName">余额提现</a>
+      <a :href="'/usercenter/s/sign/' + userName">余额提现</a>
     </div>
   </div>
 </template>

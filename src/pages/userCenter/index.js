@@ -1,6 +1,7 @@
 import Capital from "./Capital";
 import Income from "./Income";
 import IncomeDetails from "./IncomeDetails";
+import Sign from "./Sign";
 import Withdraw from "./Withdraw";
 import Done from "./Done";
 import Help from "./Help";
@@ -12,6 +13,7 @@ export default {
   Capital,
   Income,
   IncomeDetails,
+  Sign,
   Withdraw,
   Done,
   Help,

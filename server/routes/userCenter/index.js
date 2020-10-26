@@ -167,6 +167,22 @@ router.post('/usercenter/withdraw', function (request, response, next) {
 })
 
 /**
+ * 提现签约
+ */
+router.post('/usercenter/withdrawSign', function (request, response, next) {
+  let url = native + port.url.usercenter.withdrawSign
+  let sessionid = request.session.token;
+  let params = { sessionid, ...request.body };
+  console.log("提现签约：" + JSON.stringify(params));
+  $ajax.post(url, params).then(function (res) {
+    let data = res.data;
+    response.send(data)
+  }).catch(function (err) {
+    console.log(err)
+  })
+})
+
+/**
  * 修改登录密码
  */
 router.post('/usercenter/changeLoginPwd', function (request, response, next) {

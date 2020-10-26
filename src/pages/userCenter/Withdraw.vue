@@ -12,11 +12,10 @@
           </money-input>
         </div>
 
-        <h2 class="title mt-40">银行信息</h2>
+        <!-- <h2 class="title mt-40">银行信息</h2>
         <div class="box-list-arrow-content left pl-5 pr-5">
           <ul>
-            <mobile-select ref="bankPicker" title="请选择银行" resultField="bankInfo" :pickerData="bankData"
-              :initData="bankInfo" @select="selectResult">
+            <mobile-select ref="bankPicker" title="请选择银行" resultField="bankInfo" :pickerData="bankData" :initData="bankInfo" @select="selectResult">
               <template slot="text">
                 <span>银行名称</span>
                 <label @click="showPicker('bankPicker')" :class="{'disable':!bankInfo.text}">{{bankInfo.text ||
@@ -30,7 +29,7 @@
               </div>
             </li>
           </ul>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -38,12 +37,12 @@
       <div class="agreement-box-bar">
         <el-checkbox v-model="agreement" class="agreement">
           <span class="text">我已同意并阅读</span>
-          <a class="link"  href="http://succ.dongbaoxian.cn/agreement/tx.pdf" @click="showAgreement">《提现协议》</a>
+          <a class="link" href="http://succ.dongbaoxian.cn/agreement/tx.pdf" @click="showAgreement">《提现协议》</a>
         </el-checkbox>
       </div>
 
       <el-button class="user-btn" @click="withdraw()">确认提现</el-button>
-      <a class="link" target="_blank" href="/usercenter/s/capital">提现记录</a>
+      <!-- <a class="link" target="_blank" href="/usercenter/s/capital">提现记录</a> -->
     </div>
 
     <div class="warning-box">
@@ -80,7 +79,7 @@ export default {
     MoneyInput,
     PopupBox,
     PayInput,
-    KeyBoard
+    KeyBoard,
   },
   data() {
     return {
@@ -90,41 +89,43 @@ export default {
       bankInfo: { code: "", text: "" },
       bankData: [[]],
       password: "",
-      payPwd: false
+      payPwd: false,
+      signstatus: "0",
     };
   },
   computed: {
     balanceStr() {
       return this.$G.moneyFormat(this.balance);
-    }
+    },
   },
   created() {
     let obj = [
       {
         fun: this.getWidthdrawInfo(),
-        callback: data => {
+        callback: (data) => {
           if (!!data) {
             this.balance = data.balance;
             this.bankNo = data.bankcardno;
             this.bankInfo = {
               code: data.bankcode,
-              text: data.bankname
+              text: data.bankname,
             };
             this.payPwd = data.payPwd;
+            this.signstatus = data.signstatus;
           }
-        }
+        },
       },
       {
         fun: this.getBankList(),
-        callback: data => {
-          data.map(item => {
+        callback: (data) => {
+          data.map((item) => {
             this.bankData[0].push({
               code: item.bankcode,
-              text: item.bankname
+              text: item.bankname,
             });
           });
-        }
-      }
+        },
+      },
     ];
     this.__G__.ajaxParataxisDataStep(this, obj);
   },
@@ -133,10 +134,10 @@ export default {
     getWidthdrawInfo() {
       return new Promise((resolve, reject) => {
         this.API.get({ url: `/usercenter/withdrawInfo`, type: false })
-          .then(data => {
+          .then((data) => {
             resolve(data);
           })
-          .catch(err => {
+          .catch((err) => {
             reject(err);
           });
       });
@@ -144,10 +145,10 @@ export default {
     getBankList() {
       return new Promise((resolve, reject) => {
         this.API.get({ url: `/usercenter/bankList`, type: false })
-          .then(data => {
+          .then((data) => {
             resolve(data);
           })
-          .catch(err => {
+          .catch((err) => {
             reject(err);
           });
       });
@@ -166,7 +167,7 @@ export default {
       let m = this.$refs.moneyInput;
       let realMoney = m.moneyNumber;
 
-      if(!this.agreement){
+      if (!this.agreement) {
         this.$jBox.error("请同意并阅读《提现协议》");
         return false;
       }
@@ -186,16 +187,21 @@ export default {
         return false;
       }
 
-      if (!this.bankNo || !this.bankInfo.code) {
-        this.$jBox.error("请选择银行卡相关信息");
+      if (parseFloat(realMoney) < 50) {
+        this.$jBox.error("提现金额必须大于50元");
         return false;
       }
+
+      // if (!this.bankNo || !this.bankInfo.code) {
+      //   this.$jBox.error("请选择银行卡相关信息");
+      //   return false;
+      // }
 
       if (this.payPwd !== 1) {
         this.$jBox.warn("您还没有设置支付密码<br>去设置支付密码？", {
           confirm: () => {
             this.$router.push("/usercenter/s/psd/settingpay");
-          }
+          },
         });
         return false;
       }
@@ -216,9 +222,9 @@ export default {
           money: realMoney,
           password: psd,
           bankCode: this.bankInfo.code,
-          bankCardno: this.bankNo
-        }
-      }).then(data => {
+          bankCardno: this.bankNo,
+        },
+      }).then((data) => {
         this.$jBox.success("提现成功！", {
           closeCallback: () => {
             this.$router.push("/usercenter");
@@ -228,8 +234,8 @@ export default {
     },
     forget() {
       this.$router.push("/usercenter/s/psd/vermobile");
-    }
-  }
+    },
+  },
 };
 </script>
 

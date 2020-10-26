@@ -128,6 +128,7 @@ const routes = [
       { path: 'incomedetails/:type?', name: 'incomeDetails', component: UserCenter.IncomeDetails, meta: { title: '我的收入详情', isAuth: true } },
       { path: 'order/:mobile?', name: 'order', component: UserCenter.Order, meta: { title: '我的保单', isAuth: true } },
       { path: 'customer/:mobile?', name: 'customer', component: UserCenter.Customer, meta: { title: '客户管理', isAuth: true } },
+      { path: 'sign/:mobile?', name: 'sign', component: UserCenter.Sign, meta: { title: '签约', isAuth: true } },
       { path: 'withdraw/:mobile?', name: 'withdraw', component: UserCenter.Withdraw, meta: { title: '提现', isAuth: true } },
       { path: 'help/:mobile?', name: 'help', component: UserCenter.Help, meta: { title: '理赔帮助', isAuth: true } },
       { path: 'question/:mobile?', name: 'question', component: UserCenter.Question, meta: { title: '常见问题', isAuth: true } }
