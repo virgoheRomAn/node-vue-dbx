@@ -7,10 +7,10 @@ if (process.env.NODE_ENV === "prod") {
   nativeHost = "http://www.dongbaoxian.cn";
 } else if (process.env.NODE_ENV === "test") {
   //测试
-  nativeHost = "http://apitest.dongbaoxian.cn";
+  nativeHost = "http://api.dongbaoxian.cn";
 } else {
   //本地
-  nativeHost = "http://apitest.dongbaoxian.cn";
+  nativeHost = "http://api.dongbaoxian.cn";
 }
 
 console.log("访问接口服务地址：" + nativeHost);

@@ -65,7 +65,7 @@ export default {
   data() {
     return {
       pageNum: 1,
-      pageSize: 5,
+      pageSize: 20,
       noticeList: [],
       bannerList: [],
 
@@ -182,7 +182,7 @@ export default {
       });
     },
     checkProductClass(id) {
-      this.pageNum = 0;
+      this.pageNum = 1;
       this.activeName = id;
       this.init(this.pageNum, this.pageSize, id, true);
     },
