@@ -13,7 +13,8 @@
             <li>
               <div class="content">
                 <span>姓名</span>
-                <el-input class="input" type="text" placeholder="请输入姓名" v-model="userInfo.username" readonly></el-input>
+                <el-input class="input" type="text" placeholder="请输入姓名" v-model="payName" :readonly="isSign" :clearable="!isSign && isCompany">
+                </el-input>
               </div>
             </li>
             <li>
@@ -45,7 +46,9 @@ export default {
   name: "sign",
   data() {
     return {
+      isCompany: false,
       isSign: false,
+      payName: "",
       userInfo: {},
       bankNo: "",
       balance: "",
@@ -71,6 +74,8 @@ export default {
             this.balance = data.balance;
             this.bankNo = data.bankcardno;
             this.isSign = data.signstatus !== "0";
+            this.isCompany = data.is_company === 1;
+            this.payName = data.pay_name;
           }
         },
       },
@@ -126,7 +131,7 @@ export default {
 
       // 去签约
       if (!this.isSign) {
-        this.API.post({ url: `/usercenter/withdrawSign`, params: { idCard: this.userInfo.idcard, bankCardno: this.bankNo }, type: false })
+        this.API.post({ url: `/usercenter/withdrawSign`, params: { idCard: this.userInfo.idcard, bankCardno: this.bankNo, payName: this.payName }, type: false })
           .then((data) => {
             this.$router.push("/usercenter/s/withdraw");
           })
