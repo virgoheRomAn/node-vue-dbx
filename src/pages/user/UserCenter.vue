@@ -7,7 +7,7 @@
           <label>{{userInfo.username}}<em class="status" :class="userInfo.approveCls">{{userInfo.approveText}}</em></label>
           <span>{{userInfo.mobile}}</span>
         </div>
-        <a href="javascript:;" @click="goToSetting()">
+        <a  @click="goToSetting()">
           <i class="sprite s-icon-setting"></i>
         </a>
       </div>

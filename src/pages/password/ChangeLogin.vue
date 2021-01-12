@@ -29,7 +29,7 @@
         <el-button class="user-btn" @click="sure()">确定修改</el-button>
       </label>
       <!-- <label class="tips">
-        <a href="javascript:;" @click="forget()">忘记原密码？</a>
+        <a  @click="forget()">忘记原密码？</a>
       </label> -->
     </div>
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="invite-bar">
+  <div class="invite-bar footer">
     <h2 class="title">邀请好友注册</h2>
     <div class="content">
       <div class="ewm-bar" id="ewmBox">
@@ -7,18 +7,20 @@
         <img ref="ewm">
       </div>
       <div class="invite-btn">
-        <a href="javascript:;" @click="share()">立即注册</a>
+        <a @click="share()">立即注册</a>
       </div>
       <div class="invite-nav">
-        <a href="javascript:;" @click="inviteList()">我的邀请</a>
+        <a @click="inviteList()">我的邀请</a>
         <span>|</span>
-        <a href="javascript:;" @click="inviteExplain()">邀请说明</a>
+        <a @click="inviteExplain()">邀请说明</a>
       </div>
     </div>
 
     <div class="share-tips" v-if="showTips" @click="close()">
       <label><img src="../../assets/img/invite/share.png"></label>
     </div>
+
+    <fb-footer></fb-footer>
   </div>
 </template>
 
@@ -32,17 +34,15 @@ export default {
   data() {
     return {
       share_url: "",
-      showTips: false
+      showTips: false,
     };
   },
   created() {
     this.API.get({ url: `/usercenter/userInfo` })
-      .then(data => {
+      .then((data) => {
         this.breakName = data.mobile;
         this.breakId = data.userID;
-        this.share_url = `http://${
-          window.location.host
-        }/invite/s/friend?breakName=${this.breakName}&breakId=${this.breakId}`;
+        this.share_url = `http://${window.location.host}/invite/s/friend?breakName=${this.breakName}&breakId=${this.breakId}`;
 
         let opts = {
           errorCorrectionLevel: "H",
@@ -50,8 +50,8 @@ export default {
           margin: 2,
           maskPattern: 3,
           rendererOpts: {
-            quality: 0.9
-          }
+            quality: 0.9,
+          },
         };
         QRCode.toDataURL(this.share_url, opts, (err, url) => {
           if (err) throw err;
@@ -59,7 +59,7 @@ export default {
           img.src = url;
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   },
@@ -90,8 +90,8 @@ export default {
     },
     inviteExplain() {
       this.$router.push({ name: "inviteInfor" });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="less">
@@ -109,6 +109,10 @@ export default {
   background-size: cover;
   overflow-x: hidden;
   overflow-y: auto;
+
+  &.footer{
+    padding-bottom: 51px;
+  }
 
   .title {
     font-size: 40px;
@@ -225,13 +229,7 @@ export default {
         width: 100%;
         height: 46px;
         line-height: 46px;
-        background: linear-gradient(
-          180deg,
-          #46c5db 0%,
-          #36b9d0 47%,
-          #29afc7 88%,
-          #098496 100%
-        );
+        background: linear-gradient(180deg, #46c5db 0%, #36b9d0 47%, #29afc7 88%, #098496 100%);
         box-shadow: 0px 10px 10px 0px #c2f7ff;
         border-radius: 25px;
         text-align: center;

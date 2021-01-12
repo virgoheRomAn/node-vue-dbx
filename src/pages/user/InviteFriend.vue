@@ -48,7 +48,7 @@
       <div class="user-handle">
         <label class="agreement">
           <el-checkbox v-model="agreement">
-            <span>已阅读并同意<a href="javascript:;" @click="showAgreement">《用户服务协议》</a></span>
+            <span>已阅读并同意<a  @click="showAgreement">《用户服务协议》</a></span>
           </el-checkbox>
         </label>
         <label class="btn">

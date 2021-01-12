@@ -330,7 +330,7 @@ body {
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            color: #8E8E93;
+            color: #A3A4B2;
             font-size: @fs-10;
 
             i {
@@ -338,7 +338,9 @@ body {
             }
 
             &.active {
-              color: @main;
+              color: #0C0D34;
+              background: url("../img/icon/link-bg.png") no-repeat 86% 0;
+              background-size: 77px 41px;
 
               i.s-icon-index {
                 &:extend(.s-icon-index.active);
@@ -450,6 +452,34 @@ body {
   }
 }
 
+// 首页滚动部分
+.index-wrapper {
+  background: #F7F7F7;
+
+  .swiper-tab {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 26px;
+    margin-bottom: 15px;
+    padding: 0 20px;
+
+    .swiper-slide {
+      width: auto;
+      margin-right: 14px;
+      color: #858699;
+      font-size: @fs-14;
+      border-bottom: 2px solid transparent;
+
+      &.active {
+        color: @text-main;
+        font-weight: 600;
+        border-bottom: 2px solid #CABFE3;
+      }
+    }
+  }
+}
+
 //banner
 .banner-bar {
   .p-rel;
@@ -478,19 +508,33 @@ body {
 
 //首页公告
 .notice-bar {
-  @h: 44px;
+  position: relative;
+  @h: 34px;
   display: flex;
   width: 100%;
-  background: @g-f5f5;
+  background: @white;
   height: @h;
   overflow: hidden;
   padding: 0 10px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.04));
+
+  &::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 11;
+    content: "";
+    display: block;
+    width: 60px;
+    height: 100%;
+    background: linear-gradient(270deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%);
+  }
 
   label.icon {
     display: flex;
     align-items: center;
-    width: 30px;
+    width: 25px;
   }
 
   a.more {

@@ -8,7 +8,7 @@
               <span>{{user_assets_field[index]}}</span>
               <template v-if="index===0">
                 <em></em>
-                <a href="javascript:;" v-if="see_total_assets" @click="showAssets()" :class="{'unlook':!uAssetsLook}">
+                <a  v-if="see_total_assets" @click="showAssets()" :class="{'unlook':!uAssetsLook}">
                   <i class="sprite s-icon-look"></i>
                 </a>
               </template>

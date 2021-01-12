@@ -60,8 +60,8 @@
                           <a :href="item.payurl">去支付</a>
                         </div>
                         <div class="handle" v-else>
-                          <a href="javascript:;" @click.stop="deleteItem(item.id,index)">删除保单</a>
-                          <a href="javascript:;" @click.stop="copyItem(item.no,item.beneficiary,item.down)">复制保单</a>
+                          <a  @click.stop="deleteItem(item.id,index)">删除保单</a>
+                          <a  @click.stop="copyItem(item.no,item.beneficiary,item.down)">复制保单</a>
                         </div>
                       </div>
                     </div>
@@ -155,8 +155,8 @@
                       </div>
                       <div class="item">
                         <div class="handle">
-                          <a href="javascript:;" @click.stop="deleteItem(item.id,index)">删除保单</a>
-                          <a href="javascript:;" @click.stop="copyItem(item.no,item.beneficiary,item.down)">复制保单</a>
+                          <a  @click.stop="deleteItem(item.id,index)">删除保单</a>
+                          <a  @click.stop="copyItem(item.no,item.beneficiary,item.down)">复制保单</a>
                         </div>
                       </div>
                     </div>
@@ -230,8 +230,8 @@
           <el-checkbox v-model="checkAll" @change="checkAllBtn">全选</el-checkbox>
         </label>
         <div class="handle">
-          <a href="javascript:;" @click.stop="batchDel()">批量删除</a>
-          <a href="javascript:;" @click.stop="batchCopy()">批量复制</a>
+          <a  @click.stop="batchDel()">批量删除</a>
+          <a  @click.stop="batchCopy()">批量复制</a>
         </div>
       </div>
 
@@ -242,8 +242,8 @@
     </div>
 
     <div class="management-fixed" v-if="!!somethingData">
-      <a v-if="!isManagement" href="javascript:;" @click="()=>{this.isManagement=true}">保单<br>管理</a>
-      <a v-else href="javascript:;" @click="()=>{this.isManagement=false}">管理<br>完成</a>
+      <a v-if="!isManagement"  @click="()=>{this.isManagement=true}">保单<br>管理</a>
+      <a v-else  @click="()=>{this.isManagement=false}">管理<br>完成</a>
     </div>
   </div>
 </template>

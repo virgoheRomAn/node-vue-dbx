@@ -20,8 +20,8 @@
 
             <div v-if="isFooter" class="footer" :class="footerCls">
               <div class="button">
-                <a href="javascript:;" @click="cancel()">取消</a>
-                <a href="javascript:;" @click="sure($event)">确定</a>
+                <a  @click="cancel()">取消</a>
+                <a  @click="sure($event)">确定</a>
               </div>
             </div>
           </div>

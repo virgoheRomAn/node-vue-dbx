@@ -5,7 +5,7 @@
       <el-input type="text" placeholder="请输入验证码" v-model="verCode" maxlength="6" clearable>
       </el-input>
     </div>
-    <a class="ver-code" :class="{'disabled': !isMobile,'loading': isCodeLoading}" href="javascript:;" @click="getVerCode($event)">{{codeText}}</a>
+    <a class="ver-code" :class="{'disabled': !isMobile,'loading': isCodeLoading}"  @click="getVerCode($event)">{{codeText}}</a>
   </div>
 </template>
 
