@@ -32,7 +32,7 @@ const webpackDevConfig = Object.assign(webpackBaseConfig, {
     hot: true,
     contentBase: false,
     compress: true,
-    host: '0.0.0.0',
+    host: '10.55.110.211',
     port: "9999",
     open: false,
     overlay: {

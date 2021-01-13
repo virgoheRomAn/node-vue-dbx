@@ -333,14 +333,28 @@ body {
             color: #A3A4B2;
             font-size: @fs-10;
 
+            >label {
+              position: relative;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              width: 95px;
+              height: 100%;
+              margin: auto;
+            }
+
             i {
               margin-bottom: 3px;
             }
 
             &.active {
               color: #0C0D34;
-              background: url("../img/icon/link-bg.png") no-repeat 86% 0;
-              background-size: 77px 41px;
+
+              >label {
+                background: url("../img/icon/link-bg.png") no-repeat 24px 0;
+                background-size: 77px 41px;
+              }
 
               i.s-icon-index {
                 &:extend(.s-icon-index.active);
@@ -562,6 +576,7 @@ body {
     top: 0;
     flex: 1;
     width: 0;
+    padding-top: 1px;
 
     li {
       .text-mid-line(@h);

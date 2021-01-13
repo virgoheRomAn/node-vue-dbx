@@ -26,7 +26,7 @@
     </div>
 
     <div class="user-handle">
-      <a class="user-btn radius mb-30" @click="loginFun()">登录</a>
+      <a class="user-btn radius mb-30" @click="login()">登录</a>
       <label class="tips"><a @click="forget()">忘记密码</a></label>
     </div>
   </div>
@@ -42,7 +42,7 @@ export default {
     };
   },
   methods: {
-    loginFun() {
+    login() {
       if (!this.mobile) {
         this.$jBox.error("请输入手机号");
         return false;
