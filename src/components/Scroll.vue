@@ -196,7 +196,9 @@ export default {
         mouseWheel: this.mouseWheel,
         bounce: this.bounce,
         zoom: this.zoom,
+        momentumLimitDistance: 30,
         bounceTime: 300,
+        swipeTime: 1000,
         swipeBounceTime: 300
       };
 
