@@ -118,7 +118,7 @@ export default {
     },
     //回弹
     bounce: {
-      default: true
+      default: false
     },
     //缩放
     zoom: {
@@ -198,7 +198,7 @@ export default {
         zoom: this.zoom,
         momentumLimitDistance: 30,
         bounceTime: 300,
-        swipeTime: 1000,
+        swipeTime: 600,
         swipeBounceTime: 300
       };
 
