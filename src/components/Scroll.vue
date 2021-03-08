@@ -118,7 +118,7 @@ export default {
     },
     //回弹
     bounce: {
-      default: false
+      default: true
     },
     //缩放
     zoom: {
