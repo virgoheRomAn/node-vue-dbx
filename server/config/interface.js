@@ -23,6 +23,7 @@ const URL = {
     bankList: "/front/api/user/bank_list",
     withdraw: "/front/api/user/save_withdraw",
     withdrawSign: "/front/api/user/withdraw_sign",
+    withdrawSignYunPay: "/front/api/user/withdraw_sign_yunpay",
     payPwdSmscode: "/front/api/user/smscode_tkpassword",
     checkPayPwdSmscode: "/front/api/user/smscode_check",
     changePayPwd: "/front/api/user/change_tkpassword",
