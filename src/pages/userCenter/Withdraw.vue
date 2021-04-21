@@ -37,7 +37,7 @@
       <div class="agreement-box-bar">
         <el-checkbox v-model="agreement" class="agreement">
           <span class="text">我已同意并阅读</span>
-          <a class="link" href="http://succ.dongbaoxian.cn/agreement/tx.pdf" @click="showAgreement">《提现协议》</a>
+          <a class="link" href="http://succ.dongbaoxian.cn/agreement/tx.pdf" @click="showAgreement">《共享经济合作伙伴协议》</a>
         </el-checkbox>
       </div>
 
