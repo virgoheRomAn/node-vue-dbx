@@ -131,9 +131,13 @@ export default {
 
       // 去签约
       if (!this.isSign) {
-        this.API.post({ url: `/usercenter/withdrawSign`, params: { idCard: this.userInfo.idcard, bankCardno: this.bankNo, payName: this.payName }, type: false })
+        this.API.post({ url: `/usercenter/withdrawSignYunPay`, params: { idCard: this.userInfo.idcard, bankCardno: this.bankNo, payName: this.payName }, type: false })
           .then((data) => {
-            this.$router.push("/usercenter/s/withdraw");
+            if (data.url) {
+              window.location.href = data.url;
+            } else {
+              this.$router.push("/usercenter/s/withdraw");
+            }
           })
           .catch((err) => {
             console.log(err);
