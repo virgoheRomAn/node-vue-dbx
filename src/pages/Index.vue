@@ -53,7 +53,7 @@
         </div>
       </scroll-item>
 
-      <div class="data-list-none" style="padding-top: 20%;" v-if="productList.length === 0">
+      <div class="data-list-none" v-if="productList.length === 0">
         <label>
           <img src="../assets/img/404.png">
         </label>
